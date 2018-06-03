@@ -37,4 +37,5 @@ npm install
 
 - and finally
 ```bash
-node index.js```
+node index.js
+```
