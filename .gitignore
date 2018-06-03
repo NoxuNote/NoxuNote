@@ -1,0 +1,10 @@
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+/.vscode/
+
+#NoxuNote files
+/node_modules/
+/mathjax/
+._code-prettify-master
+._font-awesome-4.7.0

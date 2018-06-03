@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Aperçu de l'exportation</title>
+    <link rel="stylesheet" type="text/css" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/preprint.css">
+</head>
+
+<body>
+    <div id="leftPart">
+        <center>
+            <a class="waves-effect waves-light btn">Exporter</a>
+            <a class="waves-effect waves-light red btn">Annuler</a>
+            <br><br>
+            <div class="input-field col s12" style="width: 260px">
+                <select id='format'>
+                    <option value="PDF" selected>Defaut</option>
+                    <option value="HTML" disabled>HTML</option>
+                    <option value="NoxuNote" disabled>NoxuNote</option>
+                </select>
+                <label>Preset</label>
+            </div>
+        </center>
+        <ul class="collapsible">
+            <li>
+                <div class="collapsible-header">
+                    Format du fichier</div>
+                <div class="collapsible-body">
+                    <h2 class="form">Format du fichier</h2>
+                    <p>Le format du fichier dans lequel sera formatté le document.</p>
+                    <div class="input-field col s12">
+                        <select id='format'>
+                            <option value="PDF" selected>PDF</option>
+                            <option value="HTML" disabled>HTML</option>
+                            <option value="NoxuNote" disabled>NoxuNote</option>
+                        </select>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    Titres</div>
+                <div class="collapsible-body">
+
+                    <div class="card">
+                        <h2 class="form">Titre ###</h2>
+                        <p>Police de caractère</p>
+                        <div class="input-field col s12">
+                            <select id="policeTitre3">
+                                <option value="Arial" selected>Arial</option>
+                                <option value="sans-serif">Sans serif</option>
+                                <option value="FlatLight">FlatLight</option>
+                                <option value="FlatBold">FlatBold</option>
+                            </select>
+                        </div>
+                        <p>Taille de police</p>
+                        <form action="#">
+                            <p class="range-field">
+                                <input type="range" id="sizeTitre3" min="5" max="70" />
+                            </p>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="form">Titre ##</h2>
+                        <p>Police de caractère</p>
+                        <div class="input-field col s12">
+                            <select id="policeTitre2">
+                                <option value="Arial" selected>Arial</option>
+                                <option value="sans-serif">Sans serif</option>
+                                <option value="FlatLight">FlatLight</option>
+                                <option value="FlatBold">FlatBold</option>
+                            </select>
+                        </div>
+                        <p>Taille de police</p>
+                        <form action="#">
+                            <p class="range-field">
+                                <input type="range" id="sizeTitre2" min="5" max="70" />
+                            </p>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="form">Titre #</h2>
+                        <p>Police de caractère</p>
+                        <div class="input-field col s12">
+                            <select id="policeTitre1">
+                                <option value="Arial" selected>Arial</option>
+                                <option value="sans-serif">Sans serif</option>
+                                <option value="FlatLight">FlatLight</option>
+                                <option value="FlatBold">FlatBold</option>
+                            </select>
+                        </div>
+                        <p>Taille de police</p>
+                        <form action="#">
+                            <p class="range-field">
+                                <input type="range" id="sizeTitre1" min="5" max="70" />
+                            </p>
+                        </form>
+                    </div>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    Paragraphes</div>
+                <div class="collapsible-body">
+                    <span>Lorem ipsum dolor sit amet.</span>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    Tableaux</div>
+                <div class="collapsible-body">
+                    <span></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div id="rightPart">
+        <div class="z-depth-3" id="page">
+            <div id="content"></div>
+        </div>
+    </div>
+</body>
+<footer>
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <script src="code-prettify-master/loader/run_prettify.js?skin=default"></script>
+    <script type="text/javascript" src="./mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
+    <script src="materialize/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <script src="materialize/materialize.min.js"></script>
+    <!-- Insert this line after script imports -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.collapsible');
+            var instances = M.Collapsible.init(elems, { accordion: true });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems, {});
+        });
+    </script>
+    <script src="preprint.js"></script>
+</footer>
+
+</html>

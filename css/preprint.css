@@ -1,0 +1,130 @@
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px #989898;
+	background-color: rgba(0,0,0,0.3);
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+	background-color: #5a5a5a;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #989898;
+}
+
+/* FLAT FONTS */
+@font-face {
+    font-family: FlatThin;
+    src: url("../fonts/Raleway-Thin.ttf");
+}
+@font-face {
+    font-family: FlatLight;
+    src: url("../fonts/Raleway-Light.ttf");
+}
+@font-face {
+    font-family: FlatBold;
+    src: url("../fonts/Raleway-Bold.ttf");
+}
+
+/* HANDWRITE FONT */
+@font-face {
+    font-family: handwrite;
+    src: url("../fonts/magnolia_script.otf");
+}
+
+body {
+    background-color:  rgb(184, 195, 199);
+    margin: -8px;
+    color: #DDDDDD;
+    font-family: Arial;
+    overflow-x: hidden;
+    cursor: default;
+}
+h1 {
+    font-size: 2.0em;
+}
+h2 {
+    font-size: 1.3em;
+}
+h3 {
+    font-size: 1.1em;
+}
+div#leftPart {
+    position: fixed;
+    float: left;
+    width: 300px;
+    height: 100%;
+    background-color: rgb(49, 56, 66);
+    z-index: 2;
+    padding-top: 40px;
+    overflow-y: scroll;
+}
+div#rightPart {
+    float: right;
+    height: 100%;
+    padding-right: 0px;
+    background-color:  rgb(184, 195, 199);
+    overflow-y: hidden;
+}
+div#page {
+    width: 21cm;
+    padding: 1.3cm;
+    margin-top: 19px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    color: black;
+    transform-origin: left top;
+}
+table {
+    border-collapse: collapse;
+    color: black;
+    width: 100%
+}
+table, th, td {
+    font-family: FlatLight;
+    padding-left: 8px;
+    background-color: #FFFFFF;
+}
+th {
+    background-color: #cccccc;
+}
+/* Modifications de MATERIALIZE */
+.collapsible-header {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: none;
+    outline: none;
+    font-family: FlatBold;
+    box-shadow: none;
+}
+.collapsible-body {
+    border: none;
+}
+.collapsible-body p {
+    margin-bottom: -18px;
+}
+.collapsible {
+    border: none;
+    box-shadow: none;
+}
+/* Left panel elements */
+h2.form {
+    font-size: 1.2em;
+    margin-top: 0px;
+    font-family: FlatLight;
+}
+.dropdown-trigger {
+    color: #87bbb6;
+}
+
+.card {
+    background-color: rgb(242, 242, 242);
+    margin-bottom: 15.2px;
+    padding: 15.8px;
+    padding-bottom: 25px;
+    color: black;
+}
+.card h2 {
+    font-family: FlatLight;
+    margin-bottom: 15px;
+}

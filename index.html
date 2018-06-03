@@ -1,0 +1,167 @@
+<!DOCTYPE html> 
+<head>
+	<title>NoxuNote</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="font-awesome-4.7.0/css/font-awesome.min.css">
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' /><script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>	
+</head>
+
+<header>
+	<div id="barre_haut">
+		<button id="headerButton" onClick='newFile()'><i class="fa fa-file" aria-hidden="true"></i> Nouveau</button>
+		<button id="headerButton" onClick='boutonMenuGaucheSauver()'><i class="fa fa-save" aria-hidden="true"></i> Sauver</button>
+		<button id="headerButton" onClick='boutonMenuGaucheOuvrir()'><i class="fa fa-folder-open" aria-hidden="true"></i> Ouvrir</button>
+		<button id="headerButton" onClick='export_as_html()'><i class="fa fa-print"></i> Exporter</button>
+		<button id="headerButton" onClick='boutonAide()'><i class="fa fa-info" aria-hidden="true"></i> Aide</button>
+		<button id="headerButton" onClick='dessiner()'><i class="fa fa-pencil" aria-hidden="true"></i> Dessiner</button>
+		<button id="headerButton" onClick='insertLocalImage()'><i class="fa fa-link" aria-hidden="true"></i> Image</button>
+		<button id="headerButton" onClick='boutonCalculatrice()'><i class="fa fa-calculator" aria-hidden="true"></i> Calculatrice</button>
+		<button id="headerButton" onClick='toDo()'><i class="fa fa-sticky-note" aria-hidden="true"></i> A faire</button>
+		<button id="headerButton" onClick='openSettings()'><i class="fa fa-cog" aria-hidden="true"></i> Réglages</button>
+		<div id="toDoBlock" class="toDoBlock">
+			<i class="fa fa-times leftPannelClose" style="top: 5px" aria-hidden="true" onClick="toDo()"></i>
+			<div id="toDoBlockheader" class="toDoTitle">À faire</div>
+			<textarea name="toDoContent" id="toDoContent" onKeyUp="toDoKeyPressed(event)" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
+		</div>
+		<div class="thumb">
+			<span id="TitrePrincipal" onClick='boutonMenuGaucheSauver()'>(Cliquez pour nommer la note)</span>
+		</div>
+	</div>
+
+	<div id="menuGaucheSauver">
+		<i class="fa fa-times leftPannelClose" aria-hidden="true" onClick="boutonMenuGaucheSauver()"></i>
+		<div id="menuNote">
+			<div class="formSave">
+				<span style="font-size: 1.2em;">
+					<i class="fa fa-pencil" aria-hidden="true"></i> 
+				</span>
+				<input id="menuGaucheSauverInput" type="text" name="nom" placeholder="Ma note" onKeyDown="onTypeOnTitle();"></p>
+				<input style="margin-top: -30px;" id="terminee" type="checkbox">
+				<label for="terminee">Favori (en développement)</label>
+				<div class="savebutton" onClick="save_as_noxunote()">Sauvegarder</div>
+			</div>
+		</div>
+		<div style="font-size: 2.5em; text-align: center; margin: 5px"><i class="fa fa-arrow-down" aria-hidden="true"></i></div>
+		<form>
+			<div id="matiere" style="background: #FFFFFF;"><input id="matneutre" type="radio" name="mat" value="">Non triée</div>
+			<div id="matieres">
+			<!---<div id="matiere" style="background-color: #D8DBDB">(A trier)</i></div>-->
+			</div>
+		</form>
+		<div id="matiere" onClick="openSettings('Matières')"><i class="fa fa-plus-circle" aria-hidden="true"></i></div>
+	</div>
+
+	<div id="menuGaucheOuvrir">
+		<i class="fa fa-times leftPannelClose" aria-hidden="true" onClick='boutonMenuGaucheOuvrir()'></i>
+		<h2 style="margin-top: 5px; margin-bottom: 5px; font-size: 1.8em;">Ouvrir</h2>
+		<div id="listFiles"></div>
+		<div class="savebutton" onclick="openSettings('Notes')">Gérer les notes</div>
+	</div>
+
+	<div id="menuDroitAide" style="color: #FFFFFF;">
+		<i class="fa fa-times rightPannelClose" aria-hidden="true" onClick="boutonAide()"></i>
+		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Tutoriel</h2>
+		<div class="savebutton" onclick="showTutorial()">Afficher le tutoriel</div>
+		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Mise en page</h2>
+		### <span style="color:rgb(180, 180, 180);">Titre principal</span><br>
+		## <span style="color:rgb(180, 180, 180);">Titre</span><br>
+		# <span style="color:rgb(180, 180, 180);">Sous Titre</span><br>
+		[ <span style="color:rgb(180, 180, 180);">Encadré</span><br>
+		! <span style="color:rgb(180, 180, 180);">Exclamation</span><br>
+		( <span style="color:rgb(180, 180, 180);">texte marginal</span><br>
+		> <span style="color:rgb(180, 180, 180);">Code (HTML, Java etc.)</span><br>
+		img = <span style="color:rgb(180, 180, 180);">http://monurl.com/image.JPG</span><br>
+		<br>
+		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Balises</h2>
+		** <span style="color:rgb(180, 180, 180);">Surligné</span> **<br>
+		++ <span style="color:rgb(180, 180, 180);">Gras</span> ++<br>
+		__ <span style="color:rgb(180, 180, 180);">Souligné</span> __<br>
+		:: <span style="color:rgb(180, 180, 180);">Italique</span> ::<br>
+		<br>
+		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Formules</h2>
+		$$ <span style="color:rgb(180, 180, 180);">alpha/2</span> $$<br> 
+		$$ <span style="color:rgb(180, 180, 180);">[[a,b],[c,d]]</span> $$<br> 
+		$$ <span style="color:rgb(180, 180, 180);">norm( vecx )</span> $$<br>
+		$$ <span style="color:rgb(180, 180, 180);">forall x in RR</span> $$<br>
+		$$ <span style="color:rgb(180, 180, 180);">int_0^1 f(x)dx</span> $$<br> 
+		$$ <span style="color:rgb(180, 180, 180);">exists x (approx z</span> $$<br>
+		$$ <span style="color:rgb(180, 180, 180);">sum_(i=3)^(6) n*i</span> $$<br> 
+		$$ <span style="color:rgb(180, 180, 180);">lim_(x->oo) f(x) = +oo</span> $$<br>
+		$$ <span style="color:rgb(180, 180, 180);">(sin(x)d^2) / dx^2 = -sin(x)</span> $$<br>
+		<div class="savebutton" onclick="showAsciiMathHelp()">Voir +</div>
+		<p>(Nécessite internet)</p>
+		<br>
+		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Calculatrice</h2>
+		<span style="color:rgb(180, 180, 180);">Exemple d'expressions</span><br>
+		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">1.2 * (2 + 4.5)</span><br>
+		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">4m - 32cm</span><br>
+		&nbsp;<span style="color:rgb(180, 180, 180);">12.7 cm to inch</span><br>
+		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">sin(45 deg) ^ 2</span><br>
+		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">9 / 3 + 2i</span><br>
+		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">det([-1, 2; 3, 1])</span><br>
+		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">[[0, 1], [2, 3], [4, 5]] * [1, 2]</span><br>
+		<br>
+		<span style="color:rgb(180, 180, 180);">Dérivateur</span><br>
+		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">x^2</span><br>
+		<br>
+		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Tableaux</h2>
+		<span style="color:rgb(180, 180, 180);">Commencer la ligne par une / <br>et séparer les cellules avec /</span><br><br>
+		/<span style="color:rgb(180, 180, 180);"> C1 </span>/<span style="color:rgb(180, 180, 180);"> C2 </span>/<span style="color:rgb(180, 180, 180);"> C3 </span>/<br>
+		<br>
+		<span style="color:rgb(180, 180, 180);">Pour fusionner des cellules,<br> mettre plusieurs /</span><br><br>
+		/<span style="color:rgb(180, 180, 180);"> C1 C2 </span>//<span style="color:rgb(180, 180, 180);"> C3 </span>/<br>
+
+	</div>
+
+	<div id="menuBasCalc">
+		<div style="float: left; margin-top: 1px;  margin-bottom: 1px;">
+			<span class="calcText">Calculateur</span> 
+			<input id="calc" type="text" name="expr" onKeyDown="calcEvaluate()">
+			<span class="calcText">=</span>
+			<span id="calcResult" class="calcText">0</span>
+		</div>
+		<div style="float: right; margin-top: 1px;  margin-bottom: 1px; margin-right: 5px;">
+			<span class="calcText">Dérivateur</span> 
+			<input id="calcDerivative" type="text" name="expr" onKeyDown="calcEvaluateDerivative()">
+			<span class="calcText">=</span>
+			<span id="calcResultDerivative" class="calcText">0</span>
+		</div>
+	</div>
+
+</header>
+<body onkeydown="bodyKeyPressed(event)">
+	<div id="content" style="margin-top: 100px;"></div>
+	<div id="contentbot">
+			<!-- onKeyPress : Si la touche est entrée, on envoie la commande d'entrée. -->
+			<!--
+			<div 
+				contenteditable="true" 
+				id="form" 
+				class="form form_add"
+				type="text" 
+				name="texte" 
+				placeholder="Entrez du texte" 
+				onKeyPress="if (event.which == 13) ipc.send('entree_texte', -1, event.target.innerHTML)"
+				onKeyUp="auto_grow(this)"
+			></div>
+			-->
+		<!--<noxu-input></noxu-input>-->
+	</div>
+</body>
+
+<footer>
+	<script src="./code-prettify-master/loader/run_prettify.js?skin=sons-of-obsidian"></script>
+	<style>
+	.prettyprint {
+		background: rgba(0, 0, 0, 0.34);
+		padding: 4px;
+		margin: 0px;
+	}	
+	</style>
+	<script src="./mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
+	<script src="./draggable.js"></script>
+	<script src="./NoxuInput.js"></script>
+	<script src="./mainWindow.js"></script> <!-- Electron Script -->
+</footer>
+</html>
