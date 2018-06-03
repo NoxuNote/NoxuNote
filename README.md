@@ -20,7 +20,7 @@ NoxuNote est une application de note pour étudiants et professionnels fonctionn
 
 ## Installation
 
-Rendez vous sur le site [www.noxunote.fr](www.noxunote.fr) pour télécharger l'installeur du projet.
+Rendez vous sur le site [http://www.noxunote.fr](http://www.noxunote.fr) pour télécharger l'installeur du projet.
 
 ## Développement
 
