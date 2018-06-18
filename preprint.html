@@ -16,7 +16,7 @@
             <a class="waves-effect waves-light red btn">Annuler</a>
             <br><br>
             <div class="input-field col s12" style="width: 260px">
-                <select id='format'>
+                <select id='presetList'>
                     <option value="PDF" selected>Defaut</option>
                     <option value="HTML" disabled>HTML</option>
                     <option value="NoxuNote" disabled>NoxuNote</option>
@@ -32,7 +32,7 @@
                     <h2 class="form">Format du fichier</h2>
                     <p>Le format du fichier dans lequel sera formatté le document.</p>
                     <div class="input-field col s12">
-                        <select id='format'>
+                        <select id='format' onchange="onFormChange()">
                             <option value="PDF" selected>PDF</option>
                             <option value="HTML" disabled>HTML</option>
                             <option value="NoxuNote" disabled>NoxuNote</option>
@@ -46,33 +46,49 @@
                 <div class="collapsible-body">
 
                     <div class="card">
-                        <h2 class="form">Titre ###</h2>
+                        <span class="leftT2">Titre ###</span>
                         <p>Police de caractère</p>
                         <div class="input-field col s12">
-                            <select id="policeTitre3">
+                            <select id="policeTitre1" onchange="onFormChange()">
                                 <option value="Arial" selected>Arial</option>
                                 <option value="sans-serif">Sans serif</option>
                                 <option value="FlatLight">FlatLight</option>
                                 <option value="FlatBold">FlatBold</option>
                             </select>
                         </div>
+                        <p>Alignement</p>
+                        <div class="input-field col s12">
+                            <select id="alignTitre1" onchange="onFormChange()">
+                                <option value="left" selected>Gauche</option>
+                                <option value="center">Centré</option>
+                                <option value="right">Droite</option>
+                            </select>
+                        </div>
                         <p>Taille de police</p>
                         <form action="#">
                             <p class="range-field">
-                                <input type="range" id="sizeTitre3" min="5" max="70" />
+                                <input type="range" id="sizeTitre1" min="5" max="70" />
                             </p>
                         </form>
                     </div>
 
                     <div class="card">
-                        <h2 class="form">Titre ##</h2>
+                        <span class="leftT2">Titre ##</span>
                         <p>Police de caractère</p>
                         <div class="input-field col s12">
-                            <select id="policeTitre2">
+                            <select id="policeTitre2" onchange="onFormChange()">
                                 <option value="Arial" selected>Arial</option>
                                 <option value="sans-serif">Sans serif</option>
                                 <option value="FlatLight">FlatLight</option>
                                 <option value="FlatBold">FlatBold</option>
+                            </select>
+                        </div>
+                        <p>Alignement</p>
+                        <div class="input-field col s12">
+                            <select id="alignTitre2" onchange="onFormChange()">
+                                <option value="left" selected>Gauche</option>
+                                <option value="center">Centré</option>
+                                <option value="right">Droite</option>
                             </select>
                         </div>
                         <p>Taille de police</p>
@@ -84,20 +100,28 @@
                     </div>
 
                     <div class="card">
-                        <h2 class="form">Titre #</h2>
+                        <span class="leftT2">Titre #</span>
                         <p>Police de caractère</p>
                         <div class="input-field col s12">
-                            <select id="policeTitre1">
+                            <select id="policeTitre3" onchange="onFormChange()">
                                 <option value="Arial" selected>Arial</option>
                                 <option value="sans-serif">Sans serif</option>
                                 <option value="FlatLight">FlatLight</option>
                                 <option value="FlatBold">FlatBold</option>
                             </select>
                         </div>
+                        <p>Alignement</p>
+                        <div class="input-field col s12">
+                            <select id="alignTitre3" onchange="onFormChange()">
+                                <option value="left" selected>Gauche</option>
+                                <option value="center">Centré</option>
+                                <option value="right">Droite</option>
+                            </select>
+                        </div>
                         <p>Taille de police</p>
                         <form action="#">
                             <p class="range-field">
-                                <input type="range" id="sizeTitre1" min="5" max="70" />
+                                <input type="range" id="sizeTitre3" min="5" max="70" />
                             </p>
                         </form>
                     </div>
@@ -122,6 +146,7 @@
     </div>
 
     <div id="rightPart">
+        <style id="customStyle"></style>
         <div class="z-depth-3" id="page">
             <div id="content"></div>
         </div>
@@ -131,7 +156,7 @@
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
     <script src="code-prettify-master/loader/run_prettify.js?skin=default"></script>
     <script type="text/javascript" src="./mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
-    <script src="materialize/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <script src="materialize/jquery.min.js" onload=""></script>
     <script src="materialize/materialize.min.js"></script>
     <!-- Insert this line after script imports -->
 

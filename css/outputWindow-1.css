@@ -47,12 +47,14 @@ table {
 	margin-top: 6px;
 	margin-left: auto;
 	margin-right: auto;
+	page-break-inside: avoid;
 }
 td, tr {
     border: 1px solid #000000;
     padding: 5px;
     background-color: #e9f2f7;
-    text-align: center;
+	text-align: center;
+	page-break-inside: avoid;
 }
 .flat_text {
 	margin-left: 3%;

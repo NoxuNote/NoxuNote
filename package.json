@@ -2,6 +2,10 @@
   "name": "noxunote",
   "version": "0.5.1",
   "description": "NoxuNote, logiciel de note",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leorolland/NoxuNote.git"
+  },
   "main": "main.js",
   "scripts": {
     "test": "electron ."
@@ -12,6 +16,7 @@
     "electron": "^1.7.8",
     "electron-prompt": "^0.5.0",
     "fs": "^0.0.2",
+    "json-to-css": "^0.1.0",
     "mathjs": "^3.20.1",
     "os": "^0.1.1",
     "querystring": "^0.2.0"

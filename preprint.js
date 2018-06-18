@@ -5,6 +5,7 @@ const ipc = require('electron').ipcRenderer
 const { ipcRenderer } = require('electron')
 const effecteur = require('./Effecter.js')
 const parser = require("./parser.js")
+const { StylePreset } = require('./StylePreset.js')
 
 /***************************************************************************************************
  *                                  REDIMENSIONNEMENT DE LA PAGE                                   *
@@ -20,73 +21,6 @@ function updateDim() {
 }
 window.addEventListener('resize', () => updateDim())
 updateDim()
-
-/***************************************************************************************************
- *                                         STYLE DYNAMIQUE                                         *
- ***************************************************************************************************/
-// Ajout du style manuel pour les hover
-let css = ` div#content {
-                margin: 1.2cm;
-                font-size: 1.0em;
-            }
-            h3 {
-                margin-top: 25px;
-                margin-bottom: 5px;
-            }
-            h2 {
-                margin-left: auto;
-            }
-            h1 {
-                text-align: center;
-            }
-            em {
-                color: #16150B;
-                background-color: rgba(229, 234, 65, 0.89);
-                padding: 0.1em;
-                font-style: normal;
-            }
-            span#important {
-                background-color: #C95705;
-                border-radius: 3px;
-                color: #FFFFFF;
-                padding: 5px;
-                display: inline-block;
-                margin-top: 3px;
-            }
-            span#optionnal {
-                display: block;
-                text-align: right;
-                font-size: 0.8em;
-                color: #9FA2A1;
-            }
-            img {
-                max-width: 100%;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            .encadre {
-                border: 2px solid #121212;
-                padding: 1px;
-            }
-            table {
-                border-collapse: collapse;
-                margin-bottom: 12px;
-                margin-top: 6px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            td, tr {
-                border: 1px solid #000000;
-                padding: 5px;
-                background-color: #e9f2f7;
-                text-align: center;
-            }
-            .flat_text {
-                margin-left: 3%;
-            }`
-let style = document.createElement('style')
-style.appendChild(document.createTextNode(css));
-document.getElementsByTagName('head')[0].appendChild(style);
 
 
 /***************************************************************************************************
@@ -190,6 +124,7 @@ ipcRenderer.on('setNote', (event, note) => {
 /***************************************************************************************************
 *                               SYNTHÈSE DES DONNÉES DU FORMULAIRE                                *
 ***************************************************************************************************/
+customStyle = new StylePreset()
 
 function getSelectedValue(query) {
     return $(query).val()
@@ -201,45 +136,60 @@ function setRangeValue(query, value) {
     $(query).val(value)
 }
 
-var preset = {
-    format: 'PDF',
-    titres: {
-        titre3: {
-            fontFamily: 'Arial',
-            fontSize: 50
-        },
-        titre2: {
-            fontFamily: 'FlatLight',
-            fontSize: 25
-        },
-        titre1: {
-            fontFamily: 'FlatBold',
-            fontSize: 12
-        }
-    },
-    paragraphes: {
-        fontFamily: 'Arial',
-        fontSize: 12,
-        textAlign: 'left',
-    },
-    tableaux: {
-        border: '1px solid black',
-        fontSize: 12,
-        textAlign: 'left',
-        backgroundColor: '#FFFFFF',
-        color: 'black,'
-    }
-}
 
 function loadPreset(preset) {
+    let s = preset.jcss
+    // Format
     setSelectedValue('#format', preset.format)
-    setSelectedValue('#policeTitre3', preset.titres.titre3.fontFamily)
-    setRangeValue('#sizeTitre3', preset.titres.titre3.fontSize)
-    setSelectedValue('#policeTitre2', preset.titres.titre2.fontFamily)
-    setRangeValue('#sizeTitre2', preset.titres.titre2.fontSize)
-    setSelectedValue('#policeTitre1', preset.titres.titre1.fontFamily)
-    setRangeValue('#sizeTitre1', preset.titres.titre1.fontSize)
+    // h3
+    setSelectedValue('#policeTitre3', s.h3.fontFamily)
+    setRangeValue('#sizeTitre3', s.h3.fontSize)
+    setSelectedValue('#alignTitre3', s.h3.textAlign)
+    // h2
+    setSelectedValue('#policeTitre2', s.h2.fontFamily)
+    setRangeValue('#sizeTitre2', s.h2.fontSize)
+    setSelectedValue('#alignTitre2', s.h2.textAlign)
+    // h1
+    setSelectedValue('#policeTitre1', s.h1.fontFamily)
+    setRangeValue('#sizeTitre1', s.h1.fontSize)
+    setSelectedValue('#alignTitre1', s.h1.textAlign)
 }
 
-loadPreset(preset)
+function onFormChange() {
+    let s = customStyle.preset.jcss
+    // Format
+    customStyle.preset.format = getSelectedValue('#format')
+    // h3
+    s.h3.fontFamily = getSelectedValue('#policeTitre3')
+    s.h3.fontSize = getSelectedValue('#sizeTitre3')
+    s.h3.textAlign = getSelectedValue('#alignTitre3')
+    // h2
+    s.h2.fontFamily = getSelectedValue('#policeTitre2')
+    s.h2.fontSize = getSelectedValue('#sizeTitre2')
+    s.h2.textAlign = getSelectedValue('#alignTitre2')
+    // h1
+    s.h1.fontFamily = getSelectedValue('#policeTitre1')
+    s.h1.fontSize = getSelectedValue('#sizeTitre1')
+    s.h1.textAlign = getSelectedValue('#alignTitre1')
+    applyRawCss(customStyle.generateCss())
+}
+
+function applyRawCss(css) {
+    console.log(css);
+    // On récupère l'élément de style
+    let style = document.getElementById('customStyle')
+    // On supprime tous les noeuds enfants
+    while (style.firstChild) {
+        style.removeChild(style.firstChild);
+    }
+    // On ajoute notre style au noeud
+    style.appendChild(document.createTextNode(css))
+}
+
+applyRawCss(customStyle.generateCss())
+$("#sizeTitre3").on("input", function(){onFormChange()});
+$("#sizeTitre2").on("input", function(){onFormChange()});
+$("#sizeTitre1").on("input", function(){onFormChange()});
+
+loadPreset(customStyle.preset)
 console.log($('#policeTitre3').val())
