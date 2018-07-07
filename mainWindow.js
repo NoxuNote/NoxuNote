@@ -724,6 +724,15 @@ function generateAssocList() {
 	assoc = ipcRenderer.sendSync('db_getAssocList')
 }
 
+function maximizeWindow() {
+	ipc.send("maximizeWindow");
+}
+function minimizeWindow() {
+	ipc.send("minimizeWindow");
+}
+function closeWindow() {
+	window.close()
+}
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/

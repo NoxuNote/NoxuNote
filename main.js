@@ -539,7 +539,18 @@ function clickInserter(line, actualFormContent) {
 	edit_div(line, "")
 	console.log(noxuApp.note);
 }
+
 ipc.on('inserterClicked', (event, line, actualFormContent)=>clickInserter(line, actualFormContent))
+
+ipc.on('minimizeWindow', ()=>noxuApp.mainWindow.minimize())
+
+ipc.on('maximizeWindow', ()=>{
+	if (noxuApp.mainWindow.isMaximized()) {
+		noxuApp.mainWindow.unmaximize()	
+	} else {
+		noxuApp.mainWindow.maximize()	
+	}
+})
 
 ipc.on('db_getMatList', (event) => { event.returnValue = noxuApp.db.matieres.matList })
 ipc.on('db_addMat', (event, name, colorcode) => { event.returnValue = noxuApp.db.matieres.addMat(name, colorcode) })

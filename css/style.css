@@ -65,39 +65,68 @@ body {
 	background-color: #282F37;
 	padding: -20px;
 	color: #DDE0E0;
+	float: left;
+}
+div#windowTitle {
+    width: 88%;
+    -webkit-app-region: drag;
+    color: #6d6d6d;
+    text-align: center;
+    font-size: 0.7em;
+    font-family: FlatBold;
+    height: 20px;
+}
+div#windowTitleText {
+    position: absolute;
+    top: 24.8px;
+    width: 100%;
+    text-align: center;
+    font-family: HandWrite;
+    font-size: 1em;
+    color: #999999;
+}
+.pointable {
+	cursor: pointer;
 }
 div#barre_haut {
-	animation: apparitionHaut 1.0s forwards;
-	z-index: 10;
-	margin-left: -8px;
-	margin-top: -8px;
-	margin-right: -8px;
-	padding-left: 5px;
-	padding-top: 25px;
-	min-height: 34px;
-	min-width: 350px;
-	user-select: none;
-
-	width: 100%;
-	background-color: #6e7887;
-	opacity: 0.97;
-	top: 0px;
-	position: fixed;
-	-webkit-app-region: drag;
-	-webkit-box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
-	-moz-box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
-	box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
+    animation: apparitionHaut 1.0s forwards;
+    z-index: 10;
+    margin-left: -8px;
+    margin-top: -22px;
+    margin-right: -8px;
+    padding-top: 25px;
+    min-height: 34px;
+    min-width: 350px;
+    user-select: none;
+    width: 100%;
+    background-color: #28292e;
+    opacity: 0.97;
+    top: 0px;
+    position: fixed;
+    -webkit-box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
+    box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
+}
+#trayButtons {
+    position: absolute;
+    top: 24.8px;
+    right: 7.1px;
+    font-size: 0.7em;
+}
+.listeBoutons {
+	float: right;
 }
 .thumb {
-	color: #FFFFFF;
-	position: absolute;
-	top: 10px;
-	height: 18px;
-	left: 0; 
-	right: 30px; 
-	margin-left: auto; 
-	margin-right: auto; 
-	text-align: center;
+    padding-left: 10px;
+    display: inline-block;
+    overflow: hidden;
+}
+div#TitrePrincipal {
+	text-overflow: ellipsis;
+	float: left;
+	margin-top: 1px;
+    /* white-space: nowrap; */
+    /* overflow: hidden; */
 }
 div#content, div#contentbot {
 	font-size: 1.2em;
@@ -163,22 +192,24 @@ input#menuGaucheSauverInput {
 	background-color: rgb(52, 191, 13);
 }
 button#headerButton {
-    background-color: #3F4355;
-    margin-top: 5px;
-    margin-right: 4px;
-    font-size: 13px;
-    padding: 5px;
-    color: #DDE0E0;
-    border: none;
+    width: 27px;
+    background-color: transparent;
+    /* margin-top: 5px; */
+    margin-right: 11px;
+    font-size: 1.2em;
     float: left;
+    /* padding: 5px; */
+    color: #cdcdcd;
+    border: none;
+    /* float: left; */
     cursor: pointer;
-    z-index: 5;
+    /* z-index: 5; */
     transition: background-color 0.3s ease;
     border-radius: 3px;
 }
 button#headerButton:hover {
 	transition: background-color 0.1s ease;
-	background-color: #1A1C23;
+	color: white;
 }
 button#edit {
 	border: none;
