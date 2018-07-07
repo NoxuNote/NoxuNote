@@ -4,32 +4,36 @@ class StylePreset {
         this.preset = {
             format: 'PDF',
             jcss: {
+                general: {
+                    factAgrandissement: 1
+                },
                 h3: {
                     fontFamily: 'Arial',
-                    fontSize: '12',
+                    fontSize: 12,
                     textAlign: 'left'
                 },
                 h2: {
                     fontFamily: 'FlatLight',
-                    fontSize: '25',
+                    fontSize: 25,
                     textAlign: 'left'
                 },
                 h1: {
                     fontFamily: 'FlatBold',
-                    fontSize: '50',
+                    fontSize: 50,
                     textAlign: 'center'
                 },
                 p: {
                     fontFamily: 'Arial',
-                    fontSize: '12',
+                    fontSize: 12,
                     textAlign: 'left',
+                    marginLeft: 3
                 },
                 table: {
                     borderLength: 1,
-                    fontSize: '12',
+                    fontSize: 12,
+                    padding: 3,
+                    borderEffect: "solid",
                     textAlign: 'left',
-                    backgroundColor: '#FFFFFF',
-                    color: 'black'
                 }
             }
         }
@@ -66,10 +70,9 @@ class StylePreset {
                 backgroundColor: ${s.table.backgroundColor};
                 color: ${s.table.color};
             }
-
             div#content {
                 margin: 1.2cm;
-                font-size: 1.0em;
+                font-size: ${s.general.factAgrandissement};
             }
             em {
                 color: #16150B;
@@ -101,13 +104,17 @@ class StylePreset {
                 padding: 1px;
             }
             td, tr {
-                border: 1px solid #000000;
-                padding: 5px;
+                border: ${s.table.borderLength}px ${s.table.borderEffect} #000000;
+                font-size: ${e.table.fontSize}px;
+                padding: ${e.table.padding}px;
                 background-color: #e9f2f7;
-                text-align: center;
+                text-align: ${e.table.textAlign};
             }
             .flat_text {
-                margin-left: 3%;
+                margin-left: ${s.p.marginLeft}px;
+                font-size: ${s.p.fontSize}px;
+                font-family: ${s.p.fontFamily};
+                text-align: ${s.p.textAlign};
             }
         `
         return css

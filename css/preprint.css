@@ -110,14 +110,29 @@ span.leftT2 {
     color: #87bbb6;
 }
 
-.card {
+.carte {
     background-color: rgb(242, 242, 242);
-    margin-bottom: 15.2px;
-    padding: 15.8px;
-    padding-bottom: 25px;
     color: black;
 }
-.card h2 {
+.carte-header {
+    margin: 0px;
+    margin-top: 10px;
+    padding: 16.8px;
+    padding-bottom: 8px;
+}
+.carte-body {
     font-family: FlatLight;
-    margin-bottom: 15px;
+    padding: 15.8px;
+    padding-top: 0px;
+    padding-bottom: 30px;
+}
+li.carte {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+h2.form {
+    font-size: 1.3em;
+}
+.range-field {
+    margin-top: 17px;
 }
