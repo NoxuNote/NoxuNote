@@ -122,11 +122,15 @@ div#barre_haut {
     overflow: hidden;
 }
 div#TitrePrincipal {
-	text-overflow: ellipsis;
-	float: left;
-	margin-top: 1px;
+    text-overflow: ellipsis;
+    float: left;
+    margin-top: 1px;
     /* white-space: nowrap; */
     /* overflow: hidden; */
+    font-family: FlatLight;
+}
+div#TitrePrincipal:hover {
+	color: white;
 }
 div#content, div#contentbot {
 	font-size: 1.2em;
