@@ -65,7 +65,6 @@ body {
 	background-color: #282F37;
 	padding: -20px;
 	color: #DDE0E0;
-	float: left;
 }
 div#windowTitle {
     width: 88%;
@@ -99,13 +98,13 @@ div#barre_haut {
     min-width: 350px;
     user-select: none;
     width: 100%;
-    background-color: #28292e;
+    background-color: #36404c;
     opacity: 0.97;
     top: 0px;
     position: fixed;
-    -webkit-box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
+    /* -webkit-box-shadow: 2px -2px 19px -3px rgba(0, 0, 0, 0.12); */
     -moz-box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
-    box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
+    /* box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75); */
 }
 #trayButtons {
     position: absolute;
