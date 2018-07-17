@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Aperçu de l'exportation</title>
-    <link rel="stylesheet" type="text/css" href="font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="./node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="./node_modules/materialize-css/dist/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="./css/preprint.css">
 </head>
@@ -242,8 +242,10 @@
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
     <script src="./node_modules/code-prettify/loader/run_prettify.js?skin=default"></script>
     <script src="./node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
-    <script src="./node_modules/jquery/dist/jquery.min.js" onload=""></script>
-    <script src="./node_modules/materialize-css/dist/js/materialize.min.js" onload="">
+    <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js" onload=""></script>
+    <script type="text/javascript" src="./node_modules/hammerjs/hammer.min.js"></script>
+    <script type="text/javascript" src="./node_modules/materialize-css/dist/js/materialize.js" onload="">
+        M.AutoInit();
         document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('.collapsible');
             var instances = M.Collapsible.init(elems, { accordion: true });
@@ -253,6 +255,8 @@
             var instances = M.FormSelect.init(elems, {});
         });
     </script>
+    <script>
+    M.AutoInit();</script>
     <script src="preprint.js"></script>
 </footer>
 

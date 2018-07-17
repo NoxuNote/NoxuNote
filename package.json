@@ -15,10 +15,11 @@
   "dependencies": {
     "code-prettify": "^0.1.0",
     "electron-prompt": "^0.5.0",
+    "font-awesome": "^4.7.0",
     "fs": "^0.0.2",
     "jquery": "^3.3.1",
     "json-to-css": "^0.1.0",
-    "materialize-css": "^0.100.2",
+    "materialize-css": "^1.0.0-beta",
     "mathjax": "^2.7.4",
     "mathjs": "^3.20.1",
     "os": "^0.1.1",
