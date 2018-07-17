@@ -105,10 +105,10 @@ class StylePreset {
             }
             td, tr {
                 border: ${s.table.borderLength}px ${s.table.borderEffect} #000000;
-                font-size: ${e.table.fontSize}px;
-                padding: ${e.table.padding}px;
+                font-size: ${s.table.fontSize}px;
+                padding: ${s.table.padding}px;
                 background-color: #e9f2f7;
-                text-align: ${e.table.textAlign};
+                text-align: ${s.table.textAlign};
             }
             .flat_text {
                 margin-left: ${s.p.marginLeft}px;
