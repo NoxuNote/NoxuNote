@@ -27,15 +27,21 @@ Rendez vous sur le site [http://www.noxunote.fr](http://www.noxunote.fr) pour t√
 ### Requirements
 First you need to install NodeJS and NPM on your system in order to run the project.
 
-- Get the mathjax folder at [https://www.mathjax.org/](https://www.mathjax.org/)
-and place the mathjax folder in the root directory of NoxuNote
-
-- run
+Then run
 ```bash
 npm install
 ```
-
-- and finally
+and
 ```bash
-node index.js
+npm start
+```
+Done !
+
+**if it doesn't work**, install electron globally :
+```bash
+npm install -g electron
+```
+and run the project
+```bash
+electron .
 ```
