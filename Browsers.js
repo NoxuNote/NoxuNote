@@ -99,7 +99,7 @@ class MainOutputWindow extends BrowserWindow {
             frame: true,
             transparent: false,
             backgroundColor: '#FFFFFF',
-            zoomFactor: 0.01,
+            zoomFactor: 1,
             resizable: true
         })
         this.loadURL(`file://${__dirname}/outputWindow.html`)
