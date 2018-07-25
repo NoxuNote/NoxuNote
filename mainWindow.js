@@ -628,8 +628,8 @@ function getMat() {
 /**
  * Appelle le module d'exportation html
  */
-function export_as_html() {
-	ipc.send('export_as_html');
+function openExport() {
+	ipc.send('openExport');
 }
 
 

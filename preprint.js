@@ -7,6 +7,10 @@ const effecteur = require('./Effecter.js')
 const parser = require("./parser.js")
 const { StylePreset } = require('./StylePreset.js')
 
+function makeExport() {
+    ipcRenderer.send("makePreview", customStyle.preset.format, customStyle.generateCss())
+}
+
 /***************************************************************************************************
  *                                  REDIMENSIONNEMENT DE LA PAGE                                   *
  ***************************************************************************************************/
@@ -130,7 +134,11 @@ function getSelectedValue(query) {
     return $(query).val()
 }
 function setSelectedValue(query, value) {
-    $(query).find(`option[value="${value}"]`).prop('selected', true);
+    // Ancienne méthode
+    // $(query).find(`option[value="${value}"]`).prop('selected', true);
+    let el = $(query)
+    el.val(value)
+    el.formSelect()
 }
 function setRangeValue(query, value) {
     $(query).val(value)
@@ -150,9 +158,11 @@ function loadPreset(preset) {
     setRangeValue('#sizeTitre2', s.h2.fontSize)
     setSelectedValue('#alignTitre2', s.h2.textAlign)
     // h1
+    console.log("val : ", s.h1.fontFamily);
     setSelectedValue('#policeTitre1', s.h1.fontFamily)
     setRangeValue('#sizeTitre1', s.h1.fontSize)
     setSelectedValue('#alignTitre1', s.h1.textAlign)
+    onFormChange()
 }
 
 function onFormChange() {
@@ -185,7 +195,6 @@ function applyRawCss(css) {
     style.appendChild(document.createTextNode(css))
 }
 
-applyRawCss(customStyle.generateCss())
 $("#sizeTitre3").on("input", function(){onFormChange()});
 $("#sizeTitre2").on("input", function(){onFormChange()});
 $("#sizeTitre1").on("input", function(){onFormChange()});

@@ -371,25 +371,30 @@ ipc.on('deleteDessin', (event, line) => {
 
 ipc.on('save_as_noxunote', (event, title, matiere) => save_as_noxunote(title, matiere));
 
-// Import / export, appelé par noxuApp.mainWindow
-ipc.on('export_as_html', (event) => {
-	/*
+/***************************************************************************************************
+ *                                            PRINTING                                             *
+ ***************************************************************************************************/
+
+function openExport() {
+	noxuApp.createPrePrintWindow()
+}
+function makePreview(format, css) {
+	console.log('making preview..')
 	noxuApp.createMainOutputWindow()
 	noxuApp.mainOutputWindow.webContents.on('did-finish-load', () => {
 		for (var i = 1; i < noxuApp.note.length; i++) {
 			noxuApp.mainOutputWindow.webContents.send('addDiv', noteToHtml(noxuApp.note[i]), i)
 		}
+		noxuApp.mainOutputWindow.webContents.send('setFormat', format)
+		noxuApp.mainOutputWindow.webContents.send('setCSS', css)
 		// On informe le outputWindow que tous les éléments lui ont été envoyés
 		noxuApp.mainOutputWindow.webContents.send('uploadedContent')
 	})
-	*/
-	noxuApp.createPrePrintWindow()
-
-})
-
-// Quand la page de rendu final a terminé d'etre génerée
-ipc.on('outputReady', (event) => {
+}
+function makeFile(format) {
+	// format non pris en charge actuellement
 	setTimeout(() => {
+		console.log('making file..')
 		try {
 			var path = dialog.showSaveDialog(
 				{
@@ -402,7 +407,7 @@ ipc.on('outputReady', (event) => {
 			if (path) {
 				noxuApp.mainOutputWindow.webContents.printToPDF(
 					{
-						marginsType: 0,
+						marginsType: 1,
 						silent: false,
 						pageSize: "A4",
 						printBackground: true,
@@ -432,7 +437,11 @@ ipc.on('outputReady', (event) => {
 			})
 		}
 	}, 1);
-})
+}
+
+ipc.on('openExport', (event) => openExport())
+ipc.on('makePreview', (event, format, css) => makePreview(format, css))
+ipc.on('makeFile', (event, format) => makeFile(format))
 
 function promptImage(action) {
 	// Prompt the path
@@ -541,22 +550,22 @@ function clickInserter(line, actualFormContent) {
 }
 ipc.on('inserterClicked', (event, line, actualFormContent)=>clickInserter(line, actualFormContent))
 
+/***************************************************************************************************
+ *                                            DATABASE                                             *
+ ***************************************************************************************************/
+
 ipc.on('db_getMatList', (event) => { event.returnValue = noxuApp.db.matieres.matList })
 ipc.on('db_addMat', (event, name, colorcode) => { event.returnValue = noxuApp.db.matieres.addMat(name, colorcode) })
 ipc.on('db_editMat', (event, property, value, name) => { event.returnValue = noxuApp.db.matieres.setProperty(property, value, name) } )
 ipc.on('db_removeMat', (event, name) => { event.returnValue = noxuApp.db.matieres.removeMat(name) } )
-
 ipc.on('db_getColors', (event) => { event.returnValue = noxuApp.db.colors.colorsList })
 ipc.on('db_getFileList', (event)=> { event.returnValue = noxuApp.db.getFileList() })
-
 ipc.on('db_setNoteProperty', (event, property, value, name) => { event.returnValue = noxuApp.db.notes.setProperty(property, value, name) })
-
-ipc.on('openSettings', (event, key) => { noxuApp.createSettingsWindow(key) })
-
-ipc.on('getNoteLength', event=>event.returnValue = noxuApp.note.length-1)
 ipc.on('db_deleteNote', (event, name)=>event.returnValue = noxuApp.db.notes.deleteNote(name))
-
 ipc.on('db_getAssocList', (event) => event.returnValue = noxuApp.db.dactylo.assocList)
 ipc.on('db_removeAssoc', (event, input) => event.returnValue = noxuApp.db.dactylo.removeAssoc(input))
 ipc.on('db_addAssoc', (event, input, output) => event.returnValue = noxuApp.db.dactylo.addAssoc(input, output))
-// ipc.on('updateDb', (event) => { noxuApp.mainWindow.send('updateDb') })
+
+
+ipc.on('openSettings', (event, key) => { noxuApp.createSettingsWindow(key) })
+ipc.on('getNoteLength', event=>event.returnValue = noxuApp.note.length-1)

@@ -4,8 +4,9 @@
 <head>
 	<meta charset="utf-8">
 	<title>Aperçu de l'exportation</title>
-	<link rel="stylesheet" type="text/css" href="./css/outputWindow-1.css">
 	<link rel="stylesheet" type="text/css" href="./node_modules/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="./css/outputWindow.css">
+	<style id="customStyle"></style>
 </head>
 
 <body>
@@ -21,6 +22,11 @@
 		const ipc = require('electron').ipcRenderer
 		const { ipcRenderer } = require('electron')
 		const effecteur = require('./Effecter.js')
+
+		// Réglages de la previsualisation
+		let reglages = {
+			format: ''
+		}
 
 		/**
 		* @param content le contenu de la div
@@ -90,37 +96,62 @@
 			PR.prettyPrint()
 		}
 
+		function applyRawCss(css) {
+			if (!css) return
+			// On récupère l'élément de style
+			let style = document.getElementById('customStyle')
+			// On supprime tous les noeuds enfants
+			while (style.firstChild) {
+				style.removeChild(style.firstChild);
+			}
+			// On ajoute notre style au noeud
+			style.appendChild(document.createTextNode(css))
+		}
+
+		function setCSS(stylesheet) {
+			console.log("setCSS", stylesheet)
+			applyRawCss(stylesheet)
+		}
+
 		// Quand le main.js à envoyé tous les éléments de la note, on attend que MathJax ait fini le rendu et on
 		// Envoie l'ordre d'imprimer
 		function onUploadedContent() {
 			MathJax.Hub.Register.StartupHook("End", function () {
 				var images = document.querySelectorAll('img')
+				let transformations = new Array()
 				Array.from(images).forEach((image) => {
 					if (image.className != "schema") {
-						effecteur.whiteTransformation(image)
-							.then((result) => {
+						// Pour chaque image du document n'étant pas un schéma
+						let transformation = effecteur.whiteTransformation(image)
+						transformation.then((result) => {
 								image.src = result
-							})
+						})
+						// On applique une transformation (asynchrone)
+						transformations.push(transformation)
 					}
-					
 				})
-				// Méthode à modifier ! : On laisse 200ms au programme pour modifier toutes les images
-				setTimeout(()=>ipc.send('outputReady'), 1000)
-				var browser = new BrowserWindow({
-					width: 1024,
-					height: 600,
-					titleBarStyle: "default",
-					movable: true,
-					frame: true,
-					backgroundColor: '#1E232A',
-					//resizable: false,
-					autoHideMenuBar: true
-				})
+				// Quand les transformations sont terminées, on informe le mainProcess qu'on peut générer le fichier.
+				Promise.all(transformations).then(()=>ipc.send('makeFile', reglages.format))
+
+				// setTimeout(()=>ipc.send('makeFile'), 1000)
+				// var browser = new BrowserWindow({
+				// 	width: 1024,
+				// 	height: 600,
+				// 	titleBarStyle: "default",
+				// 	movable: true,
+				// 	frame: true,
+				// 	backgroundColor: '#1E232A',
+				// 	//resizable: false,
+				// 	autoHideMenuBar: true
+				// })
+				
 			})
 		}
 
 		ipcRenderer.on('addDiv', (event, content, index) => addDiv(content, index))
 		ipcRenderer.on('uploadedContent', (event) => onUploadedContent())
+		ipcRenderer.on('setFormat', (event, format) => reglages.format=format)
+		ipcRenderer.on('setCSS', (event, css) => setCSS(css))
 	</script>
 </footer>
 

@@ -14,12 +14,12 @@ class StylePreset {
                 },
                 h2: {
                     fontFamily: 'FlatLight',
-                    fontSize: 25,
+                    fontSize: 15,
                     textAlign: 'left'
                 },
                 h1: {
-                    fontFamily: 'FlatBold',
-                    fontSize: 50,
+                    fontFamily: 'FlatLight',
+                    fontSize: 32,
                     textAlign: 'center'
                 },
                 p: {
@@ -64,11 +64,17 @@ class StylePreset {
                 textAlign: ${s.p.textAlign};
             }
             table {
+                width: auto;
+                border-collapse: collapse;
                 border: ${s.table.borderLength}px solid black;
                 font-size: ${s.table.fontSize}px;
                 textAlign: ${s.table.textAlign};
                 backgroundColor: ${s.table.backgroundColor};
                 color: ${s.table.color};
+            }
+            table, th, td {
+                padding-left: 8px;
+                background-color: #FFFFFF;
             }
             div#content {
                 margin: 1.2cm;
@@ -115,6 +121,12 @@ class StylePreset {
                 font-size: ${s.p.fontSize}px;
                 font-family: ${s.p.fontFamily};
                 text-align: ${s.p.textAlign};
+            }
+            xmp {
+                margin: 0cm;
+                margin-left: 0.2cm;
+                padding-left: 2px;
+                background-color: #f8f8f8;
             }
         `
         return css

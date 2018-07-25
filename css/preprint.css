@@ -68,19 +68,6 @@ div#page {
     color: black;
     transform-origin: left top;
 }
-table {
-    border-collapse: collapse;
-    color: black;
-    width: 100%
-}
-table, th, td {
-    font-family: FlatLight;
-    padding-left: 8px;
-    background-color: #FFFFFF;
-}
-th {
-    background-color: #cccccc;
-}
 /* Modifications de MATERIALIZE */
 .collapsible-header {
     background-color: rgba(0, 0, 0, 0.3);
