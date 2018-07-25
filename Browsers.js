@@ -37,7 +37,7 @@ class MainWindow extends BrowserWindow {
             titleBarStyle: "hidden",
             center: false,
             movable: true,
-            //frame: (process.platform === "win32") ? false : true,
+            frame: false,
             minWidth: 200,
             transparent: false,
             backgroundColor: '#1E232A',
