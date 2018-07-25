@@ -5,8 +5,5 @@
 
 #NoxuNote files
 /node_modules/
-/mathjax/
-._code-prettify-master
-._font-awesome-4.7.0
 package-lock.json
 ._*

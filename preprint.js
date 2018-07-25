@@ -54,7 +54,7 @@ function addDiv(content, index) {
         // On construit le <tr>
         var innerTR = document.createElement("tr")
         innerTR.id = index
-        innerTR.onclick = function () { ipc.send('edit_div', index, document.getElementById('form').value) }
+        //innerTR.onclick = function () { ipc.send('edit_div', index, document.getElementById('form').value) }
 
         // Pour chaque cellule/groupe, on insère un TD de taille correspondante
         for (var i = 0; i < groups.length; i++) {
@@ -175,7 +175,6 @@ function onFormChange() {
 }
 
 function applyRawCss(css) {
-    console.log(css);
     // On récupère l'élément de style
     let style = document.getElementById('customStyle')
     // On supprime tous les noeuds enfants
@@ -192,4 +191,3 @@ $("#sizeTitre2").on("input", function(){onFormChange()});
 $("#sizeTitre1").on("input", function(){onFormChange()});
 
 loadPreset(customStyle.preset)
-console.log($('#policeTitre3').val())
