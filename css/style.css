@@ -67,7 +67,8 @@ body {
 	color: #DDE0E0;
 }
 div#windowTitle {
-    width: 88%;
+	width: 100%;
+	-webkit-user-select: none;
     -webkit-app-region: drag;
     color: #6d6d6d;
     text-align: center;
@@ -85,6 +86,7 @@ div#windowTitleText {
     color: #999999;
 }
 .pointable {
+	-webkit-app-region: no-drag;
 	cursor: pointer;
 }
 div#barre_haut {
@@ -123,7 +125,7 @@ div#barre_haut {
 div#TitrePrincipal {
     text-overflow: ellipsis;
     float: left;
-    margin-top: 1px;
+    margin-top: 4px;
     /* white-space: nowrap; */
     /* overflow: hidden; */
     font-family: FlatLight;
