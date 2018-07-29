@@ -27,7 +27,7 @@
 			</div>
 			<div class="listeBoutons">
 				<button title="Sauvegarder" id="headerButton" onClick='boutonMenuGaucheSauver()'><i class="fa fa-save" aria-hidden="true"></i></button>
-				<button title="Enregistrer" id="headerButton" onClick='boutonMenuGaucheOuvrir()'><i class="fa fa-folder-open" aria-hidden="true"></i></button>
+				<button title="Ouvrir" id="headerButton" onClick='boutonMenuGaucheOuvrir()'><i class="fa fa-folder-open" aria-hidden="true"></i></button>
 				<button title="Exporter" id="headerButton" onClick='openExport()'><i class="fa fa-print"></i></button>
 				<button title="Aide et tutoriel" id="headerButton" onClick='boutonAide()'><i class="fa fa-info" aria-hidden="true"></i></button>
 				<button title="Dessiner" id="headerButton" onClick='dessiner()'><i class="fa fa-pencil" aria-hidden="true"></i></button>
@@ -44,7 +44,7 @@
 		<textarea name="toDoContent" id="toDoContent" onKeyUp="toDoKeyPressed(event)" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
 	</div>
 
-	<div id="menuGaucheSauver">
+	<div id="menuGaucheSauver" class="mlateral mlateral-gauche">
 		<i class="fa fa-times leftPannelClose" aria-hidden="true" onClick="boutonMenuGaucheSauver()"></i>
 		<div id="menuNote">
 			<div class="formSave">
@@ -67,16 +67,15 @@
 		<div id="matiere" onClick="openSettings('Matières')"><i class="fa fa-plus-circle" aria-hidden="true"></i></div>
 	</div>
 
-	<div id="menuGaucheOuvrir">
+	<div id="menuGaucheOuvrir" class="mlateral mlateral-gauche">
 		<i class="fa fa-times leftPannelClose" aria-hidden="true" onClick='boutonMenuGaucheOuvrir()'></i>
 		<h2 style="margin-top: 5px; margin-bottom: 5px; font-size: 1.8em;">Ouvrir</h2>
 		<div id="listFiles"></div>
 		<div class="savebutton" onclick="openSettings('Notes')">Gérer les notes</div>
 	</div>
 
-	<div id="menuDroitAide" style="color: #FFFFFF;">
+	<div id="menuDroitAide" class="mlateral mlateral-droit" style="color: #FFFFFF;">
 		<i class="fa fa-times rightPannelClose" aria-hidden="true" onClick="boutonAide()"></i>
-		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Tutoriel</h2>
 		<div class="savebutton" onclick="showTutorial()">Afficher le tutoriel</div>
 		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Mise en page</h2>
 		### <span style="color:rgb(180, 180, 180);">Titre principal</span><br>

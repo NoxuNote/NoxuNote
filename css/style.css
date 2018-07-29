@@ -44,17 +44,17 @@
 }
 
 ::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px #989898;
-	background-color: rgba(0,0,0,0.3);
+	background-color: transparent;
 }
 
 ::-webkit-scrollbar {
-	width: 6px;
-	background-color: #5a5a5a;
+	width: 4px;
+	background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: #989898;
+	background-color: #63676b;
+	border-radius:2px;
 }
 
 button {
@@ -290,40 +290,68 @@ em {
 .flat_text {
 	margin-left: 1%;
 }
-div#menuGaucheSauver, div#menuGaucheOuvrir {
+/***************************************************************************************************
+ *                                         MENUS LATÉRAUX                                          *
+ ***************************************************************************************************/
+.mlateral {
 	position: fixed;
-	background-color: #3A3D42;
-	color: #232525;
-	min-width: 250px;
-	left: 0px;
-	top: 0px;
-	height: 85vh;
-	z-index: 5;
-	box-shadow: 1px 1px 12px #222;
-	visibility: hidden;
-	opacity: 0;
-	padding-top: 65px;
+    background-color: #36404c;
+    color: #232525;
+	padding-top: 3px;
+	padding-bottom: 10px;
 	padding-left: 14px;
 	padding-right: 14px;
-	overflow: auto;
-	
+	visibility: hidden;
+	opacity: 0;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	box-shadow: 1px 1px 12px #222;
+	z-index: 5;
+	top: 50px;
+	bottom: 0px;
 	transition: 0.6s;
-  	-webkit-transition: 0.6s;
-	
-	transform: translateX(-100%);
-  	-webkit-transform: translateX(-100%);
+	-webkit-transition: 0.6s;
 }
-div#menuGaucheSauver.appear, div#menuGaucheOuvrir.appear {
+.mlateral-gauche {
+    left: 0px;
+    min-width: 250px;
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+}
+.mlateral-gauche.appear {
 	visibility: visible;
 	opacity: 0.97;
 
 	transform: translateX(0);
 	-webkit-transform: translateX(0);
 }
-input#menuGaucheSauverInput {
-	width: 180px;
-	background-color: transparent;
-	color: #252626;
+/* MENU DROITE */
+.mlateral-droit {
+    right: 0px;
+	
+	transform: translateX(100%);
+	-webkit-transform: translateX(100%);
+}
+.mlateral-droit.appear {
+	visibility: visible;
+	opacity: 0.97;
+	
+	transform: translateX(0);
+	-webkit-transform: translateX(0);
+}
+.leftPannelClose {
+	position: absolute; 
+	right:5px; 
+	top:5px; 
+	color: #C05351;
+	cursor: pointer;
+}
+.rightPannelClose {
+	position: absolute; 
+	left:5px; 
+	top:5px; 
+	color: #C05351;
+	cursor: pointer;
 }
 div#menuNote {
 	background-image: url('../images/note_bg.png');
@@ -331,6 +359,12 @@ div#menuNote {
 	background-size: 90%;
 	min-height: 100px;
 	padding: 24px;
+	margin-top: 22px;
+}
+input#menuGaucheSauverInput {
+	width: 180px;
+	background-color: transparent;
+	color: #252626;
 }
 div#matiere {
 	background-color: #F2FEFA;
@@ -341,51 +375,20 @@ div#matiere {
 	margin: 5px;
 }
 
-/* MENU BAS */
-div#menuDroitAide {
-	position: fixed;
-	background-color: #3A3D42;
-	color: #232525;
-	top: 0px;
-	right: 0px;
-	height: 100%;
-	z-index: 4;
-	box-shadow: 1px 1px 12px #222;
-	visibility: hidden;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	opacity: 0;
-	padding-top: 65px;
-	height: 85vh;
-	padding-left: 14px;
-	padding-right: 14px;
-	
-	transition: 0.6s;
-  	-webkit-transition: 0.6s;
-	
-	transform: translateX(100%);
-  	-webkit-transform: translateX(100%);
-}
-div#menuDroitAide.appear {
-	visibility: visible;
-	opacity: 0.97;
-
-	transform: translateX(0);
-	-webkit-transform: translateX(0);
-}
-
-/* MENU CALC */
+/***************************************************************************************************
+ *                                          CALCULATRICE                                           *
+ ***************************************************************************************************/
 div#menuBasCalc {
 	position: fixed;
-	background-color: #6e7887;
-	color: #232525;
+	background-color: #36404c;
+	color: #979797;
 	left: -1px;
 	bottom: 0px;
 	width: 100%;
 	z-index: 4;
 	box-shadow: 1px 1px 12px #222;
 	visibility: hidden;
-	opacity: 0;
+	opacity: 0.97;
 	padding: 5px;
 	
 	transition: 0.6s;
@@ -413,20 +416,7 @@ pre{
 	max-height: 100vh;
 	clip: rect(0px,650px,650px,0px);
 }
-.leftPannelClose {
-	position: absolute; 
-	right:3%; 
-	top:50px; 
-	color: #C05351;
-	cursor: pointer;
-}
-.rightPannelClose {
-	position: absolute; 
-	left:3%; 
-	top:50px; 
-	color: #C05351;
-	cursor: pointer;
-}
+
 div#file {
 	color: #888888;
 	cursor: pointer;
