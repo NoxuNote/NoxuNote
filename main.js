@@ -551,14 +551,12 @@ function clickInserter(line, actualFormContent) {
 
 ipc.on('inserterClicked', (event, line, actualFormContent)=>clickInserter(line, actualFormContent))
 
-ipc.on('minimizeWindow', ()=>noxuApp.mainWindow.minimize())
+ipc.on('minimizeWindow', event => BrowserWindow.fromWebContents(event.sender).minimize())
 
-ipc.on('maximizeWindow', ()=>{
-	if (noxuApp.mainWindow.isMaximized()) {
-		noxuApp.mainWindow.unmaximize()	
-	} else {
-		noxuApp.mainWindow.maximize()	
-	}
+ipc.on('maximizeWindow', (event)=>{
+	let window = BrowserWindow.fromWebContents(event.sender)
+	if (window.isMaximized()) window.unmaximize()	
+	else window.maximize()
 })
 
 /***************************************************************************************************
@@ -572,11 +570,17 @@ ipc.on('db_removeMat', (event, name) => { event.returnValue = noxuApp.db.matiere
 ipc.on('db_getColors', (event) => { event.returnValue = noxuApp.db.colors.colorsList })
 ipc.on('db_getFileList', (event)=> { event.returnValue = noxuApp.db.getFileList() })
 ipc.on('db_setNoteProperty', (event, property, value, name) => { event.returnValue = noxuApp.db.notes.setProperty(property, value, name) })
-ipc.on('db_deleteNote', (event, name)=>event.returnValue = noxuApp.db.notes.deleteNote(name))
+ipc.on('db_deleteNote', (event, name) => event.returnValue = noxuApp.db.notes.deleteNote(name))
 ipc.on('db_getAssocList', (event) => event.returnValue = noxuApp.db.dactylo.assocList)
 ipc.on('db_removeAssoc', (event, input) => event.returnValue = noxuApp.db.dactylo.removeAssoc(input))
 ipc.on('db_addAssoc', (event, input, output) => event.returnValue = noxuApp.db.dactylo.addAssoc(input, output))
 
 
 ipc.on('openSettings', (event, key) => { noxuApp.createSettingsWindow(key) })
-ipc.on('getNoteLength', event=>event.returnValue = noxuApp.note.length-1)
+
+
+/***************************************************************************************************
+ *                               RÉCUPÉRATION D'INFORMATIONS TIERCES                               *
+ ***************************************************************************************************/
+ipc.on('getNoteLength', event => event.returnValue = noxuApp.note.length-1)
+ipc.on('amIMaximized', event => event.returnValue = BrowserWindow.fromWebContents(event.sender).isMaximized())

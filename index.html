@@ -17,7 +17,7 @@
 		</div>
 		<div id="trayButtons">
 			<i onClick="minimizeWindow()" class="fa fa-window-minimize pointable" style="color: rgb(100, 129, 184); font-size: 1.1em; margin-right: 5px;" aria-hidden="true"></i>
-			<i onClick="maximizeWindow()" class="fa fa-window-maximize pointable" style="color: rgb(184, 150, 100); font-size: 1.1em; margin-right: 5px" aria-hidden="true"></i>
+			<i id="maximizeButton" onClick="maximizeWindow()" class="fa fa-window-maximize pointable" style="color: rgb(184, 150, 100); font-size: 1.1em; margin-right: 5px" aria-hidden="true"></i>
 			<i onClick="closeWindow()" class="fa fa-times pointable" style="color: rgb(169, 71, 71); font-size: 1.3em" aria-hidden="true"></i>
 		</div>
 		<div>
@@ -177,6 +177,6 @@
 	<script src="./draggable.js"></script>
 	<script src="./NoxuInput.js"></script>
 	<script src="./mainWindow.js"></script> <!-- Electron Script -->
-	<script src="./macOsInterface.js"></script>
+	<script src="./osAdaptation.js"></script>
 </footer>
 </html>
