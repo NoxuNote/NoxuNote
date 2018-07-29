@@ -378,9 +378,10 @@ ipc.on('save_as_noxunote', (event, title, matiere) => save_as_noxunote(title, ma
 function openExport() {
 	noxuApp.createPrePrintWindow()
 }
-function makePreview(format, css) {
+// caller : the browser webcontent instance that calls the function
+function makePreview(format, css, caller) {
 	console.log('making preview..')
-	noxuApp.createMainOutputWindow()
+	noxuApp.createMainOutputWindow(caller)
 	noxuApp.mainOutputWindow.webContents.on('did-finish-load', () => {
 		for (var i = 1; i < noxuApp.note.length; i++) {
 			noxuApp.mainOutputWindow.webContents.send('addDiv', noteToHtml(noxuApp.note[i]), i)
@@ -415,32 +416,42 @@ function makeFile(format) {
 						landscape: false,
 					},  
 					(error, data) => {
-						if (error) throw error
+						if (error) {
+							dialog.showMessageBox({
+								type: "info", 
+								buttons: ['Ok'],
+								title: "Echec",
+								message: "Echec : Erreur lors de la génération du fichier PDF."
+							})
+						}
 						fs.writeFileSync(path, data, {flag:'w'}, (error) => {
 							if (error) throw error
 							console.log('Write PDF successfully.')
 						})
-					})
-				dialog.showMessageBox({
-					type: "info", 
-					buttons: ['Ok'],
-					title: "Succès",
-					message: "Votre fichier PDF à bien été enregistré !"
-				})
+						noxuApp.closeMainOutputWindow()
+						dialog.showMessageBox({
+							type: "info", 
+							buttons: ['Ok'],
+							title: "Succès",
+							message: "Votre fichier PDF à bien été enregistré !"
+						})
+					}
+				)
 			}
 		} catch(e) {
 			dialog.showMessageBox({
 				type: "info", 
 				buttons: ['Ok'],
-				title: "Echec de l'enregistrement",
-				message: e
+				title: "Echec",
+				message: "Echec de la tache d'exportation"
 			})
+			noxuApp.closeMainOutputWindow()
 		}
 	}, 1);
 }
 
 ipc.on('openExport', (event) => openExport())
-ipc.on('makePreview', (event, format, css) => makePreview(format, css))
+ipc.on('makePreview', (event, format, css) => makePreview(format, css, event.sender))
 ipc.on('makeFile', (event, format) => makeFile(format))
 
 function promptImage(action) {

@@ -49,6 +49,7 @@ class StylePreset {
                 text-align: ${s.h3.textAlign};
             }
             h2 {
+                margin-top: 5mm;
                 font-family: ${s.h2.fontFamily};
                 font-size: ${s.h2.fontSize}px;
                 text-align: ${s.h2.textAlign};
@@ -62,7 +63,6 @@ class StylePreset {
                 font-family: ${s.p.fontFamily};
                 font-size: ${s.p.fontSize}px;
                 textAlign: ${s.p.textAlign};
-                page-break-after: always;
             }
             table {
                 width: auto;
@@ -72,7 +72,6 @@ class StylePreset {
                 textAlign: ${s.table.textAlign};
                 backgroundColor: ${s.table.backgroundColor};
                 color: ${s.table.color};
-                page-break-after: always;
             }
             table, th, td {
                 padding-left: 8px;
