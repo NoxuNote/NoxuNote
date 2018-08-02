@@ -9,7 +9,12 @@ const { StylePreset } = require('./StylePreset.js')
 
 function makeExport() {
     ipcRenderer.send("makePreview", customStyle.preset.format, customStyle.generateCss())
+    document.getElementById("exportButton").className = "waves-effect waves-light btn disabled"
 }
+
+ipcRenderer.on('mainOutputWindowClosed', () => {
+    document.getElementById("exportButton").className = "waves-effect waves-light btn"
+})
 
 /***************************************************************************************************
  *                                  REDIMENSIONNEMENT DE LA PAGE                                   *

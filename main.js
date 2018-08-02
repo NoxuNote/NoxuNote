@@ -378,9 +378,10 @@ ipc.on('save_as_noxunote', (event, title, matiere) => save_as_noxunote(title, ma
 function openExport() {
 	noxuApp.createPrePrintWindow()
 }
-function makePreview(format, css) {
+// caller : the browser webcontent instance that calls the function
+function makePreview(format, css, caller) {
 	console.log('making preview..')
-	noxuApp.createMainOutputWindow()
+	noxuApp.createMainOutputWindow(caller)
 	noxuApp.mainOutputWindow.webContents.on('did-finish-load', () => {
 		for (var i = 1; i < noxuApp.note.length; i++) {
 			noxuApp.mainOutputWindow.webContents.send('addDiv', noteToHtml(noxuApp.note[i]), i)
@@ -415,32 +416,42 @@ function makeFile(format) {
 						landscape: false,
 					},  
 					(error, data) => {
-						if (error) throw error
+						if (error) {
+							dialog.showMessageBox({
+								type: "info", 
+								buttons: ['Ok'],
+								title: "Echec",
+								message: "Echec : Erreur lors de la génération du fichier PDF."
+							})
+						}
 						fs.writeFileSync(path, data, {flag:'w'}, (error) => {
 							if (error) throw error
 							console.log('Write PDF successfully.')
 						})
-					})
-				dialog.showMessageBox({
-					type: "info", 
-					buttons: ['Ok'],
-					title: "Succès",
-					message: "Votre fichier PDF à bien été enregistré !"
-				})
+						noxuApp.closeMainOutputWindow()
+						dialog.showMessageBox({
+							type: "info", 
+							buttons: ['Ok'],
+							title: "Succès",
+							message: "Votre fichier PDF à bien été enregistré !"
+						})
+					}
+				)
 			}
 		} catch(e) {
 			dialog.showMessageBox({
 				type: "info", 
 				buttons: ['Ok'],
-				title: "Echec de l'enregistrement",
-				message: e
+				title: "Echec",
+				message: "Echec de la tache d'exportation"
 			})
+			noxuApp.closeMainOutputWindow()
 		}
 	}, 1);
 }
 
 ipc.on('openExport', (event) => openExport())
-ipc.on('makePreview', (event, format, css) => makePreview(format, css))
+ipc.on('makePreview', (event, format, css) => makePreview(format, css, event.sender))
 ipc.on('makeFile', (event, format) => makeFile(format))
 
 function promptImage(action) {
@@ -548,7 +559,16 @@ function clickInserter(line, actualFormContent) {
 	edit_div(line, "")
 	console.log(noxuApp.note);
 }
+
 ipc.on('inserterClicked', (event, line, actualFormContent)=>clickInserter(line, actualFormContent))
+
+ipc.on('minimizeWindow', event => BrowserWindow.fromWebContents(event.sender).minimize())
+
+ipc.on('maximizeWindow', (event)=>{
+	let window = BrowserWindow.fromWebContents(event.sender)
+	if (window.isMaximized()) window.unmaximize()	
+	else window.maximize()
+})
 
 /***************************************************************************************************
  *                                            DATABASE                                             *
@@ -561,11 +581,17 @@ ipc.on('db_removeMat', (event, name) => { event.returnValue = noxuApp.db.matiere
 ipc.on('db_getColors', (event) => { event.returnValue = noxuApp.db.colors.colorsList })
 ipc.on('db_getFileList', (event)=> { event.returnValue = noxuApp.db.getFileList() })
 ipc.on('db_setNoteProperty', (event, property, value, name) => { event.returnValue = noxuApp.db.notes.setProperty(property, value, name) })
-ipc.on('db_deleteNote', (event, name)=>event.returnValue = noxuApp.db.notes.deleteNote(name))
+ipc.on('db_deleteNote', (event, name) => event.returnValue = noxuApp.db.notes.deleteNote(name))
 ipc.on('db_getAssocList', (event) => event.returnValue = noxuApp.db.dactylo.assocList)
 ipc.on('db_removeAssoc', (event, input) => event.returnValue = noxuApp.db.dactylo.removeAssoc(input))
 ipc.on('db_addAssoc', (event, input, output) => event.returnValue = noxuApp.db.dactylo.addAssoc(input, output))
 
 
 ipc.on('openSettings', (event, key) => { noxuApp.createSettingsWindow(key) })
-ipc.on('getNoteLength', event=>event.returnValue = noxuApp.note.length-1)
+
+
+/***************************************************************************************************
+ *                               RÉCUPÉRATION D'INFORMATIONS TIERCES                               *
+ ***************************************************************************************************/
+ipc.on('getNoteLength', event => event.returnValue = noxuApp.note.length-1)
+ipc.on('amIMaximized', event => event.returnValue = BrowserWindow.fromWebContents(event.sender).isMaximized())

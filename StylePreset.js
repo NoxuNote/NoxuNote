@@ -49,6 +49,7 @@ class StylePreset {
                 text-align: ${s.h3.textAlign};
             }
             h2 {
+                margin-top: 5mm;
                 font-family: ${s.h2.fontFamily};
                 font-size: ${s.h2.fontSize}px;
                 text-align: ${s.h2.textAlign};

@@ -37,7 +37,7 @@ class MainWindow extends BrowserWindow {
             titleBarStyle: "hidden",
             center: false,
             movable: true,
-            //frame: (process.platform === "win32") ? false : true,
+            frame: false,
             minWidth: 200,
             transparent: false,
             backgroundColor: '#1E232A',
@@ -100,7 +100,8 @@ class MainOutputWindow extends BrowserWindow {
             transparent: false,
             backgroundColor: '#FFFFFF',
             zoomFactor: 1,
-            resizable: true
+            resizable: true,
+            show: true
         })
         this.loadURL(`file://${__dirname}/outputWindow.html`)
     }
@@ -204,11 +205,15 @@ class NoxuNoteApp {
             })
         }
     }
-    createMainOutputWindow() {
+    createMainOutputWindow(caller) {
         this.mainOutputWindow = new MainOutputWindow()
         this.mainOutputWindow.on('closed', () => {
             this.mainOutputWindow = null;
+            if (caller) BrowserWindow.fromWebContents(caller).send('mainOutputWindowClosed')
         })
+    }
+    closeMainOutputWindow() {
+        this.mainOutputWindow.close()
     }
     createSettingsWindow(key) {
         if (!this.settingsWindow) {

@@ -44,17 +44,17 @@
 }
 
 ::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px #989898;
-	background-color: rgba(0,0,0,0.3);
+	background-color: transparent;
 }
 
 ::-webkit-scrollbar {
-	width: 6px;
-	background-color: #5a5a5a;
+	width: 4px;
+	background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: #989898;
+	background-color: #63676b;
+	border-radius:2px;
 }
 
 button {
@@ -66,38 +66,72 @@ body {
 	padding: -20px;
 	color: #DDE0E0;
 }
-div#barre_haut {
-	animation: apparitionHaut 1.0s forwards;
-	z-index: 10;
-	margin-left: -8px;
-	margin-top: -8px;
-	margin-right: -8px;
-	padding-left: 5px;
-	padding-top: 25px;
-	min-height: 34px;
-	min-width: 350px;
-	user-select: none;
-
+div#windowTitle {
 	width: 100%;
-	background-color: #6e7887;
-	opacity: 0.97;
-	top: 0px;
-	position: fixed;
-	-webkit-app-region: drag;
-	-webkit-box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
-	-moz-box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
-	box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
+	-webkit-user-select: none;
+    -webkit-app-region: drag;
+    color: #6d6d6d;
+    text-align: center;
+    font-size: 0.7em;
+    font-family: FlatBold;
+    height: 20px;
+}
+div#windowTitleText {
+    position: absolute;
+    top: 24.8px;
+    width: 100%;
+    text-align: center;
+    font-family: HandWrite;
+    font-size: 1em;
+    color: #999999;
+}
+.pointable {
+	-webkit-app-region: no-drag;
+	cursor: pointer;
+}
+div#barre_haut {
+    animation: apparitionHaut 1.0s forwards;
+    z-index: 10;
+    margin-left: -8px;
+    margin-top: -22px;
+    margin-right: -8px;
+    padding-top: 25px;
+    min-height: 34px;
+    min-width: 350px;
+    user-select: none;
+    width: 100%;
+    background-color: #36404c;
+    opacity: 0.97;
+    top: 0px;
+    position: fixed;
+    /* -webkit-box-shadow: 2px -2px 19px -3px rgba(0, 0, 0, 0.12); */
+    -moz-box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75);
+    /* box-shadow: 2px -2px 19px -3px rgba(0,0,0,0.75); */
+}
+#trayButtons {
+    position: absolute;
+    top: 24.8px;
+    right: 7.1px;
+    font-size: 0.7em;
+}
+.listeBoutons {
+	float: right;
 }
 .thumb {
-	color: #FFFFFF;
-	position: absolute;
-	top: 10px;
-	height: 18px;
-	left: 0; 
-	right: 30px; 
-	margin-left: auto; 
-	margin-right: auto; 
-	text-align: center;
+    padding-left: 10px;
+    display: inline-block;
+    overflow: hidden;
+}
+div#TitrePrincipal {
+    text-overflow: ellipsis;
+    float: left;
+    margin-top: 4px;
+    /* white-space: nowrap; */
+    /* overflow: hidden; */
+    font-family: FlatLight;
+}
+div#TitrePrincipal:hover {
+	color: white;
 }
 div#content, div#contentbot {
 	font-size: 1.2em;
@@ -163,22 +197,24 @@ input#menuGaucheSauverInput {
 	background-color: rgb(52, 191, 13);
 }
 button#headerButton {
-    background-color: #3F4355;
-    margin-top: 5px;
-    margin-right: 4px;
-    font-size: 13px;
-    padding: 5px;
-    color: #DDE0E0;
-    border: none;
+    width: 27px;
+    background-color: transparent;
+    /* margin-top: 5px; */
+    margin-right: 11px;
+    font-size: 1.2em;
     float: left;
+    /* padding: 5px; */
+    color: #cdcdcd;
+    border: none;
+    /* float: left; */
     cursor: pointer;
-    z-index: 5;
+    /* z-index: 5; */
     transition: background-color 0.3s ease;
     border-radius: 3px;
 }
 button#headerButton:hover {
 	transition: background-color 0.1s ease;
-	background-color: #1A1C23;
+	color: white;
 }
 button#edit {
 	border: none;
@@ -256,40 +292,68 @@ em {
 .flat_text {
 	margin-left: 1%;
 }
-div#menuGaucheSauver, div#menuGaucheOuvrir {
+/***************************************************************************************************
+ *                                         MENUS LATÉRAUX                                          *
+ ***************************************************************************************************/
+.mlateral {
 	position: fixed;
-	background-color: #3A3D42;
-	color: #232525;
-	min-width: 250px;
-	left: 0px;
-	top: 0px;
-	height: 85vh;
-	z-index: 5;
-	box-shadow: 1px 1px 12px #222;
-	visibility: hidden;
-	opacity: 0;
-	padding-top: 65px;
+    background-color: #36404c;
+    color: #232525;
+	padding-top: 3px;
+	padding-bottom: 10px;
 	padding-left: 14px;
 	padding-right: 14px;
-	overflow: auto;
-	
+	visibility: hidden;
+	opacity: 0;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	box-shadow: 1px 1px 12px #222;
+	z-index: 5;
+	top: 50px;
+	bottom: 0px;
 	transition: 0.6s;
-  	-webkit-transition: 0.6s;
-	
-	transform: translateX(-100%);
-  	-webkit-transform: translateX(-100%);
+	-webkit-transition: 0.6s;
 }
-div#menuGaucheSauver.appear, div#menuGaucheOuvrir.appear {
+.mlateral-gauche {
+    left: 0px;
+    min-width: 250px;
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+}
+.mlateral-gauche.appear {
 	visibility: visible;
 	opacity: 0.97;
 
 	transform: translateX(0);
 	-webkit-transform: translateX(0);
 }
-input#menuGaucheSauverInput {
-	width: 180px;
-	background-color: transparent;
-	color: #252626;
+/* MENU DROITE */
+.mlateral-droit {
+    right: 0px;
+	
+	transform: translateX(100%);
+	-webkit-transform: translateX(100%);
+}
+.mlateral-droit.appear {
+	visibility: visible;
+	opacity: 0.97;
+	
+	transform: translateX(0);
+	-webkit-transform: translateX(0);
+}
+.leftPannelClose {
+	position: absolute; 
+	right:5px; 
+	top:5px; 
+	color: #C05351;
+	cursor: pointer;
+}
+.rightPannelClose {
+	position: absolute; 
+	left:5px; 
+	top:5px; 
+	color: #C05351;
+	cursor: pointer;
 }
 div#menuNote {
 	background-image: url('../images/note_bg.png');
@@ -297,6 +361,12 @@ div#menuNote {
 	background-size: 90%;
 	min-height: 100px;
 	padding: 24px;
+	margin-top: 22px;
+}
+input#menuGaucheSauverInput {
+	width: 180px;
+	background-color: transparent;
+	color: #252626;
 }
 div#matiere {
 	background-color: #F2FEFA;
@@ -307,51 +377,20 @@ div#matiere {
 	margin: 5px;
 }
 
-/* MENU BAS */
-div#menuDroitAide {
-	position: fixed;
-	background-color: #3A3D42;
-	color: #232525;
-	top: 0px;
-	right: 0px;
-	height: 100%;
-	z-index: 4;
-	box-shadow: 1px 1px 12px #222;
-	visibility: hidden;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	opacity: 0;
-	padding-top: 65px;
-	height: 85vh;
-	padding-left: 14px;
-	padding-right: 14px;
-	
-	transition: 0.6s;
-  	-webkit-transition: 0.6s;
-	
-	transform: translateX(100%);
-  	-webkit-transform: translateX(100%);
-}
-div#menuDroitAide.appear {
-	visibility: visible;
-	opacity: 0.97;
-
-	transform: translateX(0);
-	-webkit-transform: translateX(0);
-}
-
-/* MENU CALC */
+/***************************************************************************************************
+ *                                          CALCULATRICE                                           *
+ ***************************************************************************************************/
 div#menuBasCalc {
 	position: fixed;
-	background-color: #6e7887;
-	color: #232525;
+	background-color: #36404c;
+	color: #979797;
 	left: -1px;
 	bottom: 0px;
 	width: 100%;
 	z-index: 4;
 	box-shadow: 1px 1px 12px #222;
 	visibility: hidden;
-	opacity: 0;
+	opacity: 0.97;
 	padding: 5px;
 	
 	transition: 0.6s;
@@ -379,20 +418,7 @@ pre{
 	max-height: 100vh;
 	clip: rect(0px,650px,650px,0px);
 }
-.leftPannelClose {
-	position: absolute; 
-	right:3%; 
-	top:50px; 
-	color: #C05351;
-	cursor: pointer;
-}
-.rightPannelClose {
-	position: absolute; 
-	left:3%; 
-	top:50px; 
-	color: #C05351;
-	cursor: pointer;
-}
+
 div#file {
 	color: #888888;
 	cursor: pointer;

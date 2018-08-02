@@ -12,15 +12,13 @@
 <body>
     <div id="leftPart">
         <center>
-            <a class="waves-effect waves-light btn" onClick="makeExport()">Exporter</a>
+            <a id="exportButton" class="waves-effect waves-light btn" onClick="makeExport()">Exporter</a>
             <a class="waves-effect waves-light red btn" onClick="window.close()">Annuler</a>
             <br>
             <br>
             <div class="input-field col s12" style="width: 260px">
                 <select id='presetList'>
-                    <option value="PDF" selected>Defaut</option>
-                    <option value="HTML" disabled>HTML</option>
-                    <option value="NoxuNote" disabled>NoxuNote</option>
+                    <option value="PDF" selected disabled>Non disponible</option>
                 </select>
                 <label>Preset</label>
             </div>

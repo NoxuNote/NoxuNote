@@ -1,4 +1,5 @@
 <!DOCTYPE html> 
+<html>
 <head>
 	<title>NoxuNote</title>
 	<meta charset="utf-8">
@@ -10,27 +11,40 @@
 
 <header>
 	<div id="barre_haut">
-		<button id="headerButton" onClick='newFile()'><i class="fa fa-file" aria-hidden="true"></i> Nouveau</button>
-		<button id="headerButton" onClick='boutonMenuGaucheSauver()'><i class="fa fa-save" aria-hidden="true"></i> Sauver</button>
-		<button id="headerButton" onClick='boutonMenuGaucheOuvrir()'><i class="fa fa-folder-open" aria-hidden="true"></i> Ouvrir</button>
-		<button id="headerButton" onClick='openExport()'><i class="fa fa-print"></i> Exporter</button>
-		<button id="headerButton" onClick='boutonAide()'><i class="fa fa-info" aria-hidden="true"></i> Aide</button>
-		<button id="headerButton" onClick='dessiner()'><i class="fa fa-pencil" aria-hidden="true"></i> Dessiner</button>
-		<button id="headerButton" onClick='insertLocalImage()'><i class="fa fa-link" aria-hidden="true"></i> Image</button>
-		<button id="headerButton" onClick='boutonCalculatrice()'><i class="fa fa-calculator" aria-hidden="true"></i> Calculatrice</button>
-		<button id="headerButton" onClick='toDo()'><i class="fa fa-sticky-note" aria-hidden="true"></i> A faire</button>
-		<button id="headerButton" onClick='openSettings()'><i class="fa fa-cog" aria-hidden="true"></i> Réglages</button>
-		<div id="toDoBlock" class="toDoBlock">
-			<i class="fa fa-times leftPannelClose" style="top: 5px" aria-hidden="true" onClick="toDo()"></i>
-			<div id="toDoBlockheader" class="toDoTitle">À faire</div>
-			<textarea name="toDoContent" id="toDoContent" onKeyUp="toDoKeyPressed(event)" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
+		<div id="windowTitle"></div>
+		<div id="windowTitleText">
+			<img src="images/noxunote.png" height="12px"></img> NoxuNote
 		</div>
-		<div class="thumb">
-			<span id="TitrePrincipal" onClick='boutonMenuGaucheSauver()'>(Cliquez pour nommer la note)</span>
+		<div id="trayButtons">
+			<i onClick="minimizeWindow()" class="fa fa-window-minimize pointable" style="color: rgb(100, 129, 184); font-size: 1.1em; margin-right: 5px;" aria-hidden="true"></i>
+			<i id="maximizeButton" onClick="maximizeWindow()" class="fa fa-window-maximize pointable" style="color: rgb(184, 150, 100); font-size: 1.1em; margin-right: 5px" aria-hidden="true"></i>
+			<i onClick="closeWindow()" class="fa fa-times pointable" style="color: rgb(169, 71, 71); font-size: 1.3em" aria-hidden="true"></i>
+		</div>
+		<div>
+			<div class="thumb">
+				<button title="Nouvelle note" id="headerButton" onClick='newFile()'><i class="fa fa-plus" aria-hidden="true"></i></button>
+				<div id="TitrePrincipal" onClick='boutonMenuGaucheSauver()'>(Cliquez pour nommer la note)</div>
+			</div>
+			<div class="listeBoutons">
+				<button title="Sauvegarder" id="headerButton" onClick='boutonMenuGaucheSauver()'><i class="fa fa-save" aria-hidden="true"></i></button>
+				<button title="Ouvrir" id="headerButton" onClick='boutonMenuGaucheOuvrir()'><i class="fa fa-folder-open" aria-hidden="true"></i></button>
+				<button title="Exporter" id="headerButton" onClick='openExport()'><i class="fa fa-print"></i></button>
+				<button title="Aide et tutoriel" id="headerButton" onClick='boutonAide()'><i class="fa fa-info" aria-hidden="true"></i></button>
+				<button title="Dessiner" id="headerButton" onClick='dessiner()'><i class="fa fa-pencil" aria-hidden="true"></i></button>
+				<button title="Insérer une image" id="headerButton" onClick='insertLocalImage()'><i class="fa fa-link" aria-hidden="true"></i></button>
+				<button title="Calculatrice" id="headerButton" onClick='boutonCalculatrice()'><i class="fa fa-calculator" aria-hidden="true"></i></button>
+				<button title="Bloc notes" id="headerButton" onClick='toDo()'><i class="fa fa-sticky-note" aria-hidden="true"></i></button>
+				<button title="Réglages de l'application" id="headerButton" onClick='openSettings()'><i class="fa fa-cog" aria-hidden="true"></i></button>
+			</div>
 		</div>
 	</div>
+	<div id="toDoBlock" class="toDoBlock">
+		<i class="fa fa-times leftPannelClose" style="top: 5px" aria-hidden="true" onClick="toDo()"></i>
+		<div id="toDoBlockheader" class="toDoTitle">À faire</div>
+		<textarea name="toDoContent" id="toDoContent" onKeyUp="toDoKeyPressed(event)" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
+	</div>
 
-	<div id="menuGaucheSauver">
+	<div id="menuGaucheSauver" class="mlateral mlateral-gauche">
 		<i class="fa fa-times leftPannelClose" aria-hidden="true" onClick="boutonMenuGaucheSauver()"></i>
 		<div id="menuNote">
 			<div class="formSave">
@@ -53,16 +67,15 @@
 		<div id="matiere" onClick="openSettings('Matières')"><i class="fa fa-plus-circle" aria-hidden="true"></i></div>
 	</div>
 
-	<div id="menuGaucheOuvrir">
+	<div id="menuGaucheOuvrir" class="mlateral mlateral-gauche">
 		<i class="fa fa-times leftPannelClose" aria-hidden="true" onClick='boutonMenuGaucheOuvrir()'></i>
 		<h2 style="margin-top: 5px; margin-bottom: 5px; font-size: 1.8em;">Ouvrir</h2>
 		<div id="listFiles"></div>
 		<div class="savebutton" onclick="openSettings('Notes')">Gérer les notes</div>
 	</div>
 
-	<div id="menuDroitAide" style="color: #FFFFFF;">
+	<div id="menuDroitAide" class="mlateral mlateral-droit" style="color: #FFFFFF;">
 		<i class="fa fa-times rightPannelClose" aria-hidden="true" onClick="boutonAide()"></i>
-		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Tutoriel</h2>
 		<div class="savebutton" onclick="showTutorial()">Afficher le tutoriel</div>
 		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Mise en page</h2>
 		### <span style="color:rgb(180, 180, 180);">Titre principal</span><br>
@@ -164,5 +177,6 @@
 	<script src="./draggable.js"></script>
 	<script src="./NoxuInput.js"></script>
 	<script src="./mainWindow.js"></script> <!-- Electron Script -->
+	<script src="./osAdaptation.js"></script>
 </footer>
 </html>
