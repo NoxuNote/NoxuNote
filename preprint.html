@@ -277,24 +277,30 @@
                         
                         <br><br>
                         <span class="leftT2">Positionnement</span>
-                        <p>Alignement du tableau</p>
+                        <!--<p>Alignement du tableau</p>
                         <div class="input-field col s12">
                             <select id="alignTableau" onchange="onFormChange()">
                                 <option value="left" selected>Gauche</option>
                                 <option value="center">Centré</option>
                                 <option value="right">Droite</option>
                             </select>
-                        </div>
+                        </div>-->
                         <p>Marge à gauche du tableau</p>
                         <form action="#">
                             <p class="range-field">
-                                <input type="range" id="marginLeftTableau" min="5" max="70" />
+                                <input type="range" id="marginLeftTableau" min="0" max="70" />
                             </p>
                         </form>
                         <p>Marge en haut du tableau</p>
                         <form action="#">
                             <p class="range-field">
-                                <input type="range" id="marginRightTableau" min="5" max="70" />
+                                <input type="range" id="marginTopTableau" min="0" max="70" />
+                            </p>
+                        </form>
+                        <p>Marge en bas du tableau</p>
+                        <form action="#">
+                            <p class="range-field">
+                                <input type="range" id="marginBottomTableau" min="0" max="70" />
                             </p>
                         </form>
                 </div>

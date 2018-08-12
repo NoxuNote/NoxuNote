@@ -188,6 +188,7 @@ function loadPreset(preset) {
     setRangeValue('#alignTableau', s.table.alignTable)
     setRangeValue('#marginLeftTableau', s.table.marginLeft)
     setRangeValue('#marginTopTableau', s.table.marginTop)
+    setRangeValue('#marginBottomTableau', s.table.marginBottom)
 
     onFormChange()
 }
@@ -230,6 +231,7 @@ function onFormChange() {
     s.table.alignTable = getSelectedValue('#alignTableau')
     s.table.marginLeft = getSelectedValue('#marginLeftTableau')
     s.table.marginTop = getSelectedValue('#marginTopTableau')
+    s.table.marginBottom = getSelectedValue('#marginBottomTableau')
     applyRawCss(customStyle.generateCss())
 }
 
@@ -258,5 +260,12 @@ $("#sizeCorps").on("input", function(){onFormChange()});
 $("#marginLeftCorps").on("input", function(){onFormChange()});
 $("#marginRightCorps").on("input", function(){onFormChange()});
 $("#marginTopCorps").on("input", function(){onFormChange()});
+$("#sizeTableau").on("input", function(){onFormChange()});
+$("#paddingCellulesTableau").on("input", function(){onFormChange()});
+$("#epaisseurLignesTableau").on("input", function(){onFormChange()});
+$("#alignTableau").on("input", function(){onFormChange()});
+$("#marginLeftTableau").on("input", function(){onFormChange()});
+$("#marginTopTableau").on("input", function(){onFormChange()});
+$("#marginBottomTableau").on("input", function(){onFormChange()});
 
 loadPreset(customStyle.preset)

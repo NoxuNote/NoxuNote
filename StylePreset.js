@@ -37,6 +37,7 @@ class StylePreset {
                     marginTop: 0
                 },
                 table: {
+                    fontFamily: 'Arial',
                     borderLength: 1,
                     fontSize: 12,
                     padding: 3,
@@ -44,7 +45,8 @@ class StylePreset {
                     textAlign: 'left',
                     alignTable: 'left',
                     marginLeft: 0,
-                    marginTop: 0
+                    marginTop: 0,
+                    marginBottom: 0
                 }
             }
         }
@@ -80,14 +82,19 @@ class StylePreset {
                 width: auto;
                 border-collapse: collapse;
                 border: ${s.table.borderLength}px solid black;
-                font-size: ${s.table.fontSize}px;
-                textAlign: ${s.table.textAlign};
                 backgroundColor: ${s.table.backgroundColor};
                 color: ${s.table.color};
+                margin-left: ${s.table.marginLeft}mm;
+                margin-top: ${s.table.marginTop}mm;
+                margin-bottom: ${s.table.marginBottom}mm;
             }
-            table, th, td {
-                padding-left: 8px;
-                background-color: #FFFFFF;
+            td, tr {
+                font-family: ${s.table.fontFamily};
+                border: ${s.table.borderLength}px ${s.table.borderEffect} #000000;
+                font-size: ${s.table.fontSize}px;
+                padding: ${s.table.padding}px;
+                background-color: #e9f2f7;
+                text-align: ${s.table.textAlign};
             }
             div#content {
                 margin: 1.2cm;
@@ -121,13 +128,6 @@ class StylePreset {
             .encadre {
                 border: 2px solid #121212;
                 padding: 1px;
-            }
-            td, tr {
-                border: ${s.table.borderLength}px ${s.table.borderEffect} #000000;
-                font-size: ${s.table.fontSize}px;
-                padding: ${s.table.padding}px;
-                background-color: #e9f2f7;
-                text-align: ${s.table.textAlign};
             }
             .flat_text {
                 display: block;
