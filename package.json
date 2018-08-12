@@ -25,6 +25,6 @@
     "querystring": "^0.2.0"
   },
   "devDependencies": {
-    "electron": "^1.7.8"
+    "electron": "^2.0.7"
   }
 }
