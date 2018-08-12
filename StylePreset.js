@@ -10,23 +10,31 @@ class StylePreset {
                 h3: {
                     fontFamily: 'Arial',
                     fontSize: 12,
-                    textAlign: 'left'
+                    textAlign: 'left',
+                    marginLeft: 0,
+                    marginTop: 0
                 },
                 h2: {
                     fontFamily: 'FlatLight',
                     fontSize: 15,
-                    textAlign: 'left'
+                    textAlign: 'left',
+                    marginLeft: 0,
+                    marginTop: 0
                 },
                 h1: {
                     fontFamily: 'FlatLight',
                     fontSize: 32,
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    marginLeft: 0,
+                    marginTop: 5
                 },
                 p: {
                     fontFamily: 'Arial',
-                    fontSize: 12,
+                    fontSize: 11,
                     textAlign: 'left',
-                    marginLeft: 3
+                    marginLeft: 0,
+                    marginRight: 0,
+                    marginTop: 0
                 },
                 table: {
                     borderLength: 1,
@@ -34,6 +42,9 @@ class StylePreset {
                     padding: 3,
                     borderEffect: "solid",
                     textAlign: 'left',
+                    alignTable: 'left',
+                    marginLeft: 0,
+                    marginTop: 0
                 }
             }
         }
@@ -47,22 +58,23 @@ class StylePreset {
                 font-family: ${s.h3.fontFamily};
                 font-size: ${s.h3.fontSize}px;
                 text-align: ${s.h3.textAlign};
+                margin-left: ${s.h3.marginLeft}mm;
+                margin-top: ${s.h3.marginTop}mm;
             }
             h2 {
                 margin-top: 5mm;
                 font-family: ${s.h2.fontFamily};
                 font-size: ${s.h2.fontSize}px;
                 text-align: ${s.h2.textAlign};
+                margin-left: ${s.h2.marginLeft}mm;
+                margin-top: ${s.h2.marginTop}mm;
             }
             h1 {
                 font-family: ${s.h1.fontFamily};
                 font-size: ${s.h1.fontSize}px;
                 text-align: ${s.h1.textAlign};
-            }
-            p {
-                font-family: ${s.p.fontFamily};
-                font-size: ${s.p.fontSize}px;
-                textAlign: ${s.p.textAlign};
+                margin-left: ${s.h1.marginLeft}mm;
+                margin-top: ${s.h1.marginTop}mm;
             }
             table {
                 width: auto;
@@ -118,7 +130,10 @@ class StylePreset {
                 text-align: ${s.table.textAlign};
             }
             .flat_text {
-                margin-left: ${s.p.marginLeft}px;
+                display: block;
+                margin-left: ${s.p.marginLeft}mm;
+                margin-right: ${s.p.marginRight}mm;
+                margin-top: ${s.p.marginTop}mm;
                 font-size: ${s.p.fontSize}px;
                 font-family: ${s.p.fontFamily};
                 text-align: ${s.p.textAlign};
