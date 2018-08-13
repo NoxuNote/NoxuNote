@@ -41,7 +41,7 @@ function noteToHtml(texte) {
 			return "<HR size='1px' width='20%'><h2>" + texte.replace('##', '') + "</h2>";
 		}
 		else if (texte.search(regex.title3) != -1) {
-			return "<HR><br><h1>" + texte.replace('###', '') + "</h1>";
+			return "<HR><h1>" + texte.replace('###', '') + "</h1>";
 		}
 		else if (texte.substr(0, 4) == "img=") {
 			return "<img src=\"" + texte.substr(4).trim() + "\">";

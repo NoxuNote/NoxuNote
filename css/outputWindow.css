@@ -14,10 +14,8 @@
 	font-family: handwrite;
 	src: url("../fonts/magnolia_script.otf");
 }
-body {
+div#content {
 	width: 21cm;
-	margin: -8px;
-	padding: 1.3cm;
 }
 em {
 	color: #16150B;
@@ -47,7 +45,4 @@ img {
 .encadre {
 	border: 2px solid #121212;
 	padding: 1px;
-}
-.flat_text {
-	margin-left: 3%;
 }

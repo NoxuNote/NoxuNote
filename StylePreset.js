@@ -5,35 +5,51 @@ class StylePreset {
             format: 'PDF',
             jcss: {
                 general: {
-                    factAgrandissement: 1
+                    factAgrandissement: 1,
+                    paddingTop: 12,
+                    paddingLeft: 12,
+                    paddingRight: 12
                 },
                 h3: {
                     fontFamily: 'Arial',
                     fontSize: 12,
-                    textAlign: 'left'
+                    textAlign: 'left',
+                    marginLeft: 0,
+                    marginTop: 0
                 },
                 h2: {
                     fontFamily: 'FlatLight',
                     fontSize: 15,
-                    textAlign: 'left'
+                    textAlign: 'left',
+                    marginLeft: 0,
+                    marginTop: 0
                 },
                 h1: {
                     fontFamily: 'FlatLight',
                     fontSize: 32,
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    marginLeft: 0,
+                    marginTop: 5
                 },
                 p: {
                     fontFamily: 'Arial',
-                    fontSize: 12,
+                    fontSize: 11,
                     textAlign: 'left',
-                    marginLeft: 3
+                    marginLeft: 0,
+                    marginRight: 0,
+                    marginTop: 0
                 },
                 table: {
+                    fontFamily: 'Arial',
                     borderLength: 1,
                     fontSize: 12,
                     padding: 3,
                     borderEffect: "solid",
                     textAlign: 'left',
+                    alignTable: 'left',
+                    marginLeft: 0,
+                    marginTop: 0,
+                    marginBottom: 0
                 }
             }
         }
@@ -47,39 +63,47 @@ class StylePreset {
                 font-family: ${s.h3.fontFamily};
                 font-size: ${s.h3.fontSize}px;
                 text-align: ${s.h3.textAlign};
+                margin-left: ${s.h3.marginLeft}mm;
+                margin-top: ${s.h3.marginTop}mm;
             }
             h2 {
                 margin-top: 5mm;
                 font-family: ${s.h2.fontFamily};
                 font-size: ${s.h2.fontSize}px;
                 text-align: ${s.h2.textAlign};
+                margin-left: ${s.h2.marginLeft}mm;
+                margin-top: ${s.h2.marginTop}mm;
             }
             h1 {
                 font-family: ${s.h1.fontFamily};
                 font-size: ${s.h1.fontSize}px;
                 text-align: ${s.h1.textAlign};
-            }
-            p {
-                font-family: ${s.p.fontFamily};
-                font-size: ${s.p.fontSize}px;
-                textAlign: ${s.p.textAlign};
+                margin-left: ${s.h1.marginLeft}mm;
+                margin-top: ${s.h1.marginTop}mm;
             }
             table {
                 width: auto;
                 border-collapse: collapse;
                 border: ${s.table.borderLength}px solid black;
-                font-size: ${s.table.fontSize}px;
-                textAlign: ${s.table.textAlign};
                 backgroundColor: ${s.table.backgroundColor};
                 color: ${s.table.color};
+                margin-left: ${s.table.marginLeft}mm;
+                margin-top: ${s.table.marginTop}mm;
+                margin-bottom: ${s.table.marginBottom}mm;
             }
-            table, th, td {
-                padding-left: 8px;
-                background-color: #FFFFFF;
+            td, tr {
+                font-family: ${s.table.fontFamily};
+                border: ${s.table.borderLength}px ${s.table.borderEffect} #000000;
+                font-size: ${s.table.fontSize}px;
+                padding: ${s.table.padding}px;
+                background-color: #e9f2f7;
+                text-align: ${s.table.textAlign};
             }
             div#content {
-                margin: 1.2cm;
-                font-size: ${s.general.factAgrandissement};
+                padding-top: ${s.general.paddingTop}mm;
+                padding-left: ${s.general.paddingLeft}mm;
+                padding-right: ${s.general.paddingRight}mm;
+                font-size: ${s.general.factAgrandissement}em;
             }
             em {
                 color: #16150B;
@@ -110,15 +134,11 @@ class StylePreset {
                 border: 2px solid #121212;
                 padding: 1px;
             }
-            td, tr {
-                border: ${s.table.borderLength}px ${s.table.borderEffect} #000000;
-                font-size: ${s.table.fontSize}px;
-                padding: ${s.table.padding}px;
-                background-color: #e9f2f7;
-                text-align: ${s.table.textAlign};
-            }
             .flat_text {
-                margin-left: ${s.p.marginLeft}px;
+                display: block;
+                margin-left: ${s.p.marginLeft}mm;
+                margin-right: ${s.p.marginRight}mm;
+                margin-top: ${s.p.marginTop}mm;
                 font-size: ${s.p.fontSize}px;
                 font-family: ${s.p.fontFamily};
                 text-align: ${s.p.textAlign};
@@ -127,6 +147,8 @@ class StylePreset {
                 margin: 0cm;
                 margin-left: 0.2cm;
                 padding-left: 2px;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 background-color: #f8f8f8;
             }
         `

@@ -154,19 +154,46 @@ function loadPreset(preset) {
     let s = preset.jcss
     // Format
     setSelectedValue('#format', preset.format)
+    // Page
+    setRangeValue('#pagePaddingTop', s.general.paddingTop)
+    setRangeValue('#pagePaddingLeft', s.general.paddingLeft)
+    setRangeValue('#pagePaddingRight', s.general.paddingRight)
     // h3
     setSelectedValue('#policeTitre3', s.h3.fontFamily)
     setRangeValue('#sizeTitre3', s.h3.fontSize)
     setSelectedValue('#alignTitre3', s.h3.textAlign)
+    setRangeValue('#marginLeftTitre3', s.h3.marginLeft)
+    setRangeValue('#marginTopTitre3', s.h3.marginTop)
     // h2
     setSelectedValue('#policeTitre2', s.h2.fontFamily)
     setRangeValue('#sizeTitre2', s.h2.fontSize)
     setSelectedValue('#alignTitre2', s.h2.textAlign)
+    setRangeValue('#marginLeftTitre2', s.h2.marginLeft)
+    setRangeValue('#marginTopTitre2', s.h2.marginTop)
     // h1
-    console.log("val : ", s.h1.fontFamily);
     setSelectedValue('#policeTitre1', s.h1.fontFamily)
     setRangeValue('#sizeTitre1', s.h1.fontSize)
     setSelectedValue('#alignTitre1', s.h1.textAlign)
+    setRangeValue('#marginLeftTitre1', s.h1.marginLeft)
+    setRangeValue('#marginTopTitre1', s.h1.marginTop)
+    // Corps de texte
+    setSelectedValue('#policeCorps', s.p.fontFamily)
+    setRangeValue('#sizeCorps', s.p.fontSize)
+    setSelectedValue('#alignCorps', s.p.textAlign)
+    setRangeValue('#marginLeftCorps', s.p.marginLeft)
+    setRangeValue('#marginTopCorps', s.p.marginTop)
+    setRangeValue('#marginRightCorps', s.p.marginRight)
+    // Tableau
+    setSelectedValue('#policeTableau', s.table.fontFamily)
+    setSelectedValue('#alignCellulesTableau', s.table.textAlign)
+    setRangeValue('#sizeTableau', s.table.fontSize)
+    setRangeValue('#paddingCellulesTableau', s.table.padding)
+    setRangeValue('#epaisseurLignesTableau', s.table.borderLength)
+    setRangeValue('#alignTableau', s.table.alignTable)
+    setRangeValue('#marginLeftTableau', s.table.marginLeft)
+    setRangeValue('#marginTopTableau', s.table.marginTop)
+    setRangeValue('#marginBottomTableau', s.table.marginBottom)
+
     onFormChange()
 }
 
@@ -174,18 +201,45 @@ function onFormChange() {
     let s = customStyle.preset.jcss
     // Format
     customStyle.preset.format = getSelectedValue('#format')
+    // Page
+    s.general.paddingTop = getSelectedValue('#pagePaddingTop')
+    s.general.paddingLeft = getSelectedValue('#pagePaddingLeft')
+    s.general.paddingRight = getSelectedValue('#pagePaddingRight')
     // h3
     s.h3.fontFamily = getSelectedValue('#policeTitre3')
     s.h3.fontSize = getSelectedValue('#sizeTitre3')
     s.h3.textAlign = getSelectedValue('#alignTitre3')
+    s.h3.marginLeft = getSelectedValue('#marginLeftTitre3')
+    s.h3.marginTop = getSelectedValue('#marginTopTitre3')
     // h2
     s.h2.fontFamily = getSelectedValue('#policeTitre2')
     s.h2.fontSize = getSelectedValue('#sizeTitre2')
     s.h2.textAlign = getSelectedValue('#alignTitre2')
+    s.h2.marginLeft = getSelectedValue('#marginLeftTitre2')
+    s.h2.marginTop = getSelectedValue('#marginTopTitre2')
     // h1
     s.h1.fontFamily = getSelectedValue('#policeTitre1')
     s.h1.fontSize = getSelectedValue('#sizeTitre1')
     s.h1.textAlign = getSelectedValue('#alignTitre1')
+    s.h1.marginLeft = getSelectedValue('#marginLeftTitre1')
+    s.h1.marginTop = getSelectedValue('#marginTopTitre1')
+    // Corps de texte
+    s.p.fontFamily = getSelectedValue('#policeCorps')
+    s.p.fontSize = getSelectedValue('#sizeCorps')
+    s.p.textAlign = getSelectedValue('#alignCorps')
+    s.p.marginLeft = getSelectedValue('#marginLeftCorps')
+    s.p.marginTop = getSelectedValue('#marginTopCorps')
+    s.p.marginRight = getSelectedValue('#marginRightCorps')
+    // Tableau
+    s.table.fontFamily = getSelectedValue('#policeTableau')
+    s.table.textAlign = getSelectedValue('#alignCellulesTableau')
+    s.table.fontSize = getSelectedValue('#sizeTableau')
+    s.table.padding = getSelectedValue('#paddingCellulesTableau')
+    s.table.borderLength = getSelectedValue('#epaisseurLignesTableau')
+    s.table.alignTable = getSelectedValue('#alignTableau')
+    s.table.marginLeft = getSelectedValue('#marginLeftTableau')
+    s.table.marginTop = getSelectedValue('#marginTopTableau')
+    s.table.marginBottom = getSelectedValue('#marginBottomTableau')
     applyRawCss(customStyle.generateCss())
 }
 
@@ -200,8 +254,29 @@ function applyRawCss(css) {
     style.appendChild(document.createTextNode(css))
 }
 
+// Sliders
 $("#sizeTitre3").on("input", function(){onFormChange()});
+$("#marginLeftTitre3").on("input", function(){onFormChange()});
+$("#marginTopTitre3").on("input", function(){onFormChange()});
 $("#sizeTitre2").on("input", function(){onFormChange()});
+$("#marginLeftTitre2").on("input", function(){onFormChange()});
+$("#marginTopTitre2").on("input", function(){onFormChange()});
 $("#sizeTitre1").on("input", function(){onFormChange()});
+$("#marginLeftTitre1").on("input", function(){onFormChange()});
+$("#marginTopTitre1").on("input", function(){onFormChange()});
+$("#sizeCorps").on("input", function(){onFormChange()});
+$("#marginLeftCorps").on("input", function(){onFormChange()});
+$("#marginRightCorps").on("input", function(){onFormChange()});
+$("#marginTopCorps").on("input", function(){onFormChange()});
+$("#sizeTableau").on("input", function(){onFormChange()});
+$("#paddingCellulesTableau").on("input", function(){onFormChange()});
+$("#epaisseurLignesTableau").on("input", function(){onFormChange()});
+$("#alignTableau").on("input", function(){onFormChange()});
+$("#marginLeftTableau").on("input", function(){onFormChange()});
+$("#marginTopTableau").on("input", function(){onFormChange()});
+$("#marginBottomTableau").on("input", function(){onFormChange()});
+$("#pagePaddingTop").on("input", function(){onFormChange()});
+$("#pagePaddingLeft").on("input", function(){onFormChange()});
+$("#pagePaddingRight").on("input", function(){onFormChange()});
 
 loadPreset(customStyle.preset)
