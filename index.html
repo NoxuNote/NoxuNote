@@ -5,6 +5,8 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<link rel="stylesheet" type="text/css" href="./node_modules/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="./node_modules/html5tooltipsjs/html5tooltips.css">
+	<link rel="stylesheet" type="text/css" href="./node_modules/html5tooltipsjs/html5tooltips.animation.css">
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	<script src="./node_modules/code-prettify/loader/run_prettify.js"></script>	
 </head>
@@ -22,19 +24,19 @@
 		</div>
 		<div>
 			<div class="thumb">
-				<button title="Nouvelle note" id="headerButton" onClick='newFile()'><i class="fa fa-plus" aria-hidden="true"></i></button>
+				<button data-tooltip="Nouvelle note" data-tooltip-color="slate" data-tooltip-stickto="right" data-tooltip-animate-function="foldin" class="headerButton" onClick='newFile()'><i class="fa fa-plus" aria-hidden="true"></i></button>
 				<div id="TitrePrincipal" onClick='boutonMenuGaucheSauver()'>(Cliquez pour nommer la note)</div>
 			</div>
 			<div class="listeBoutons">
-				<button title="Sauvegarder" id="headerButton" onClick='boutonMenuGaucheSauver()'><i class="fa fa-save" aria-hidden="true"></i></button>
-				<button title="Ouvrir" id="headerButton" onClick='boutonMenuGaucheOuvrir()'><i class="fa fa-folder-open" aria-hidden="true"></i></button>
-				<button title="Exporter" id="headerButton" onClick='openExport()'><i class="fa fa-print"></i></button>
-				<button title="Aide et tutoriel" id="headerButton" onClick='boutonAide()'><i class="fa fa-info" aria-hidden="true"></i></button>
-				<button title="Dessiner" id="headerButton" onClick='dessiner()'><i class="fa fa-pencil" aria-hidden="true"></i></button>
-				<button title="Insérer une image" id="headerButton" onClick='insertLocalImage()'><i class="fa fa-link" aria-hidden="true"></i></button>
-				<button title="Calculatrice" id="headerButton" onClick='boutonCalculatrice()'><i class="fa fa-calculator" aria-hidden="true"></i></button>
-				<button title="Bloc notes" id="headerButton" onClick='toDo()'><i class="fa fa-sticky-note" aria-hidden="true"></i></button>
-				<button title="Réglages de l'application" id="headerButton" onClick='openSettings()'><i class="fa fa-cog" aria-hidden="true"></i></button>
+				<button data-tooltip="Sauvegarder"class="headerButton" data-tooltip-color="slate" data-tooltip-animate-function="foldin" onClick='boutonMenuGaucheSauver()'><i class="fa fa-save" aria-hidden="true"></i></button>
+				<button data-tooltip="Ouvrir" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='boutonMenuGaucheOuvrir()'><i class="fa fa-folder-open" aria-hidden="true"></i></button>
+				<button data-tooltip="Exporter" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='openExport()'><i class="fa fa-print"></i></button>
+				<button data-tooltip="Aide et tutoriel" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='boutonAide()'><i class="fa fa-info" aria-hidden="true"></i></button>
+				<button data-tooltip="Dessiner" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='dessiner()'><i class="fa fa-pencil" aria-hidden="true"></i></button>
+				<button data-tooltip="Insérer une image" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='insertLocalImage()'><i class="fa fa-link" aria-hidden="true"></i></button>
+				<button data-tooltip="Calculatrice" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='boutonCalculatrice()'><i class="fa fa-calculator" aria-hidden="true"></i></button>
+				<button data-tooltip="Bloc notes" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='toDo()'><i class="fa fa-sticky-note" aria-hidden="true"></i></button>
+				<button data-tooltip="Réglages de l'application" data-tooltip-stickto="left" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='openSettings()'><i class="fa fa-cog" aria-hidden="true"></i></button>
 			</div>
 		</div>
 	</div>
@@ -174,6 +176,7 @@
 	}	
 	</style>
 	<script src="./node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
+	<script src="./node_modules/html5tooltipsjs/html5tooltips.js"></script>
 	<script src="./draggable.js"></script>
 	<script src="./NoxuInput.js"></script>
 	<script src="./mainWindow.js"></script> <!-- Electron Script -->

@@ -17,6 +17,7 @@
     "electron-prompt": "^0.5.0",
     "font-awesome": "^4.7.0",
     "fs": "^0.0.2",
+    "html5tooltipsjs": "^1.7.3",
     "jquery": "^3.3.1",
     "materialize-css": "^1.0.0-beta",
     "mathjax": "^2.7.4",
