@@ -154,6 +154,10 @@ function loadPreset(preset) {
     let s = preset.jcss
     // Format
     setSelectedValue('#format', preset.format)
+    // Page
+    setRangeValue('#pagePaddingTop', s.general.paddingTop)
+    setRangeValue('#pagePaddingLeft', s.general.paddingLeft)
+    setRangeValue('#pagePaddingRight', s.general.paddingRight)
     // h3
     setSelectedValue('#policeTitre3', s.h3.fontFamily)
     setRangeValue('#sizeTitre3', s.h3.fontSize)
@@ -197,6 +201,10 @@ function onFormChange() {
     let s = customStyle.preset.jcss
     // Format
     customStyle.preset.format = getSelectedValue('#format')
+    // Page
+    s.general.paddingTop = getSelectedValue('#pagePaddingTop')
+    s.general.paddingLeft = getSelectedValue('#pagePaddingLeft')
+    s.general.paddingRight = getSelectedValue('#pagePaddingRight')
     // h3
     s.h3.fontFamily = getSelectedValue('#policeTitre3')
     s.h3.fontSize = getSelectedValue('#sizeTitre3')
@@ -267,5 +275,8 @@ $("#alignTableau").on("input", function(){onFormChange()});
 $("#marginLeftTableau").on("input", function(){onFormChange()});
 $("#marginTopTableau").on("input", function(){onFormChange()});
 $("#marginBottomTableau").on("input", function(){onFormChange()});
+$("#pagePaddingTop").on("input", function(){onFormChange()});
+$("#pagePaddingLeft").on("input", function(){onFormChange()});
+$("#pagePaddingRight").on("input", function(){onFormChange()});
 
 loadPreset(customStyle.preset)

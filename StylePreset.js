@@ -5,7 +5,10 @@ class StylePreset {
             format: 'PDF',
             jcss: {
                 general: {
-                    factAgrandissement: 1
+                    factAgrandissement: 1,
+                    paddingTop: 12,
+                    paddingLeft: 12,
+                    paddingRight: 12
                 },
                 h3: {
                     fontFamily: 'Arial',
@@ -97,8 +100,10 @@ class StylePreset {
                 text-align: ${s.table.textAlign};
             }
             div#content {
-                margin: 1.2cm;
-                font-size: ${s.general.factAgrandissement};
+                padding-top: ${s.general.paddingTop}mm;
+                padding-left: ${s.general.paddingLeft}mm;
+                padding-right: ${s.general.paddingRight}mm;
+                font-size: ${s.general.factAgrandissement}em;
             }
             em {
                 color: #16150B;
@@ -142,6 +147,8 @@ class StylePreset {
                 margin: 0cm;
                 margin-left: 0.2cm;
                 padding-left: 2px;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 background-color: #f8f8f8;
             }
         `

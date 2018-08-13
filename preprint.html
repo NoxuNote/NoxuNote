@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Aperçu de l'exportation</title>
-	<link rel="stylesheet" type="text/css" href="./node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="./node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="./node_modules/materialize-css/dist/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="./css/preprint.css">
 </head>
@@ -26,7 +26,7 @@
         <ul class="collapsible">
             <li>
                 <div class="collapsible-header">
-                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Format</div>
+                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Fichier</div>
                 <div class="collapsible-body">
                     <h2 class="form">Format du fichier</h2>
                     <p>Le format du fichier dans lequel sera formatté le document.</p>
@@ -37,6 +37,30 @@
                             <option value="NoxuNote" disabled>NoxuNote</option>
                         </select>
                     </div>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    <i class="fa fa-file-text" aria-hidden="true"></i> Page</div>
+                <div class="collapsible-body">
+                    <p>Marge en haut</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="pagePaddingTop" min="0" max="120" />
+                        </p>
+                    </form>
+                    <p>Marge à gauche</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="pagePaddingLeft" min="0" max="120" />
+                        </p>
+                    </form>
+                    <p>Marge à droite</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="pagePaddingRight" min="0" max="120" />
+                        </p>
+                    </form>
                 </div>
             </li>
             <li>
@@ -191,93 +215,94 @@
                 <div class="collapsible-body">
                     <span class="leftT2">Lignes de texte</span>
                     <p>Police de caractère</p>
-                        <div class="input-field col s12">
-                            <select id="policeCorps" onchange="onFormChange()">
-                                <option value="Arial" selected>Arial</option>
-                                <option value="sans-serif">Sans serif</option>
-                                <option value="FlatLight">FlatLight</option>
-                                <option value="FlatBold">FlatBold</option>
-                            </select>
-                        </div>
-                        <p>Alignement</p>
-                        <div class="input-field col s12">
-                            <select id="alignCorps" onchange="onFormChange()">
-                                <option value="left" selected>Gauche</option>
-                                <option value="center">Centré</option>
-                                <option value="right">Droite</option>
-                            </select>
-                        </div>
-                        <p>Taille de police</p>
-                        <form action="#">
-                            <p class="range-field">
-                                <input type="range" id="sizeCorps" min="5" max="70" />
-                            </p>
-                        </form>
-                        <p>Marge à gauche (mm)</p>
-                        <form action="#">
-                            <p class="range-field">
-                                <input type="range" id="marginLeftCorps" min="0" max="60" />
-                            </p>
-                        </form>
-                        <p>Marge à droite (mm)</p>
-                        <form action="#">
-                            <p class="range-field">
-                                <input type="range" id="marginRightCorps" min="0" max="60" />
-                            </p>
-                        </form>
-                        <p>Marge en haut (mm)</p>
-                        <form action="#">
-                            <p class="range-field">
-                                <input type="range" id="marginTopCorps" min="0" max="20" />
-                            </p>
-                        </form>
+                    <div class="input-field col s12">
+                        <select id="policeCorps" onchange="onFormChange()">
+                            <option value="Arial" selected>Arial</option>
+                            <option value="sans-serif">Sans serif</option>
+                            <option value="FlatLight">FlatLight</option>
+                            <option value="FlatBold">FlatBold</option>
+                        </select>
+                    </div>
+                    <p>Alignement</p>
+                    <div class="input-field col s12">
+                        <select id="alignCorps" onchange="onFormChange()">
+                            <option value="left" selected>Gauche</option>
+                            <option value="center">Centré</option>
+                            <option value="right">Droite</option>
+                        </select>
+                    </div>
+                    <p>Taille de police</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="sizeCorps" min="5" max="70" />
+                        </p>
+                    </form>
+                    <p>Marge à gauche (mm)</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginLeftCorps" min="0" max="60" />
+                        </p>
+                    </form>
+                    <p>Marge à droite (mm)</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginRightCorps" min="0" max="60" />
+                        </p>
+                    </form>
+                    <p>Marge en haut (mm)</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginTopCorps" min="0" max="20" />
+                        </p>
+                    </form>
                 </div>
             </li>
             <li>
                 <div class="collapsible-header">
                     <i class="fa fa-table" aria-hidden="true"></i> Tableaux</div>
                 <div class="collapsible-body">
-                        <span class="leftT2">Cellules</span>
-                        <p>Police de caractère</p>
-                        <div class="input-field col s12">
-                            <select id="policeTableau" onchange="onFormChange()">
-                                <option value="Arial" selected>Arial</option>
-                                <option value="sans-serif">Sans serif</option>
-                                <option value="FlatLight">FlatLight</option>
-                                <option value="FlatBold">FlatBold</option>
-                            </select>
-                        </div>
-                        <p>Alignement</p>
-                        <div class="input-field col s12">
-                            <select id="alignCellulesTableau" onchange="onFormChange()">
-                                <option value="left" selected>Gauche</option>
-                                <option value="center">Centré</option>
-                                <option value="right">Droite</option>
-                            </select>
-                        </div>
-                        <p>Taille de police</p>
-                        <form action="#">
-                            <p class="range-field">
-                                <input type="range" id="sizeTableau" min="5" max="70" />
-                            </p>
-                        </form>
-                        <br>
-                        <p>Taille des cellules</p>
-                        <form action="#">
-                            <p class="range-field">
-                                <input type="range" id="paddingCellulesTableau" min="0" max="30" />
-                            </p>
-                        </form>
-                        <p>Épaisseur des lignes</p>
-                        <form action="#">
-                            <p class="range-field">
-                                <input type="range" id="epaisseurLignesTableau" min="0" max="30" />
-                            </p>
-                        </form>
-                        
-                        <br><br>
-                        <span class="leftT2">Positionnement</span>
-                        <!--<p>Alignement du tableau</p>
+                    <span class="leftT2">Cellules</span>
+                    <p>Police de caractère</p>
+                    <div class="input-field col s12">
+                        <select id="policeTableau" onchange="onFormChange()">
+                            <option value="Arial" selected>Arial</option>
+                            <option value="sans-serif">Sans serif</option>
+                            <option value="FlatLight">FlatLight</option>
+                            <option value="FlatBold">FlatBold</option>
+                        </select>
+                    </div>
+                    <p>Alignement</p>
+                    <div class="input-field col s12">
+                        <select id="alignCellulesTableau" onchange="onFormChange()">
+                            <option value="left" selected>Gauche</option>
+                            <option value="center">Centré</option>
+                            <option value="right">Droite</option>
+                        </select>
+                    </div>
+                    <p>Taille de police</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="sizeTableau" min="5" max="70" />
+                        </p>
+                    </form>
+                    <br>
+                    <p>Taille des cellules</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="paddingCellulesTableau" min="0" max="30" />
+                        </p>
+                    </form>
+                    <p>Épaisseur des lignes</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="epaisseurLignesTableau" min="0" max="30" />
+                        </p>
+                    </form>
+
+                    <br>
+                    <br>
+                    <span class="leftT2">Positionnement</span>
+                    <!--<p>Alignement du tableau</p>
                         <div class="input-field col s12">
                             <select id="alignTableau" onchange="onFormChange()">
                                 <option value="left" selected>Gauche</option>
@@ -285,24 +310,24 @@
                                 <option value="right">Droite</option>
                             </select>
                         </div>-->
-                        <p>Marge à gauche du tableau</p>
-                        <form action="#">
-                            <p class="range-field">
-                                <input type="range" id="marginLeftTableau" min="0" max="70" />
-                            </p>
-                        </form>
-                        <p>Marge en haut du tableau</p>
-                        <form action="#">
-                            <p class="range-field">
-                                <input type="range" id="marginTopTableau" min="0" max="70" />
-                            </p>
-                        </form>
-                        <p>Marge en bas du tableau</p>
-                        <form action="#">
-                            <p class="range-field">
-                                <input type="range" id="marginBottomTableau" min="0" max="70" />
-                            </p>
-                        </form>
+                    <p>Marge à gauche du tableau</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginLeftTableau" min="0" max="70" />
+                        </p>
+                    </form>
+                    <p>Marge en haut du tableau</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginTopTableau" min="0" max="70" />
+                        </p>
+                    </form>
+                    <p>Marge en bas du tableau</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginBottomTableau" min="0" max="70" />
+                        </p>
+                    </form>
                 </div>
             </li>
         </ul>
