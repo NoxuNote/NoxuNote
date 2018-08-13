@@ -131,7 +131,6 @@ function parseTR(index, content) {
 */
 function addDiv(index, content) {
 	// Si on reçoit un tableau
-	console.log(content);
 	if (content.substr(0, 1) == "/" && content.length > 3) {
 		console.log('adding TR');
 		var innerTR = parseTR(index, content)
@@ -163,7 +162,29 @@ function addDiv(index, content) {
 	var insertDiv = document.createElement('div')
 	insertDiv.id = index + "insertBefore"
 	insertDiv.className = "insert_text"
-	insertDiv.onclick = () => { clickInserter(index) }
+
+	// Creation du tooltip
+	var tooltip = new HTML5TooltipUIComponent;
+	tooltip.set({
+		animateFunction: "foldin",
+		color: "teal",
+		contentText: "Insérer",
+		stickTo: "left",
+		target: insertDiv
+	});
+	insertDiv.addEventListener('mouseenter', () => {
+		insertDiv.setAttribute('mouseIn', null);
+		setTimeout(()=>{
+			if (insertDiv.getAttribute('mouseIn')) tooltip.show()
+		}, 50)
+	});
+	insertDiv.addEventListener('mouseleave', () => {
+		insertDiv.removeAttribute('mouseIn');
+		tooltip.hide()
+	});
+	tooltip.mount();
+
+	insertDiv.onclick = () => { tooltip.hide(); clickInserter(index) }
 
 	elt.innerHTML = "<div class=\"insert\"></div>" + elt.innerHTML
 	elt.parentNode.insertBefore(insertDiv, elt)
@@ -551,7 +572,6 @@ function generateFileList() {
 		var matDiv = document.createElement('div')
 		matDiv.classList += "pastille"
 		matDiv.innerHTML = "•"
-		matDiv.title = f.matiere
 		matDiv.style.color = f.color
 		listFilesDiv.appendChild(matDiv)
 
@@ -559,7 +579,21 @@ function generateFileList() {
 		var innerDiv = document.createElement('div')
 		innerDiv.style.display = "inline"
 		innerDiv.id = "file"
-		innerDiv.title = f.matiere
+		// Ajout du tooltip
+		if (f.lastedit) {
+			let tooltip = new HTML5TooltipUIComponent;
+			tooltip.set({
+				animateFunction: "spin",
+				color: "slate",
+				stickDistance: 20,
+				contentText: '<i class="fa fa-clock-o" aria-hidden="true"></i> Dernière modif : ' + f.lastedit,
+				stickTo: "right",
+				target: innerDiv
+			});
+			innerDiv.addEventListener('mouseenter', () => tooltip.show());
+			innerDiv.addEventListener('mouseleave', () => tooltip.hide());
+			tooltip.mount();
+		}
 		innerDiv.innerHTML = f.nom.replace(".txt", "")
 		innerDiv.onclick = () => load_noxunote(f.nom.replace(".txt", ""))
 		listFilesDiv.appendChild(innerDiv);
@@ -581,12 +615,12 @@ function generateFileList() {
 	// Affichage des matieres
 	matieres.forEach(m => {
 		addCategory(m.nom)
-		files.filter(e => e['matiere'] === m.nom).forEach(f => addFile(f))
+		files.filter(e => e['matiere'] === m.nom).forEach(addFile)
 	})
 
 	// Affichage des éléments non inscrits
 	addCategory("Non triés")
-	files.filter(e => !shownFiles.includes(e.nom)).forEach(f => addFile(f))
+	files.filter(e => !shownFiles.includes(e.nom)).forEach(addFile)
 }
 
 /**

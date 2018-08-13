@@ -3,6 +3,8 @@
         <title>NoxuNote - Dessin</title> 
         <link rel="stylesheet" type="text/css" href="css/draw.css">
         <link rel="stylesheet" type="text/css" href="./node_modules/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="./node_modules/html5tooltipsjs/html5tooltips.css">
+        <link rel="stylesheet" type="text/css" href="./node_modules/html5tooltipsjs/html5tooltips.animation.css">
     </header>
     <body id="body" onkeydown="bodyKeyDown(event)" onkeyup="bodyKeyUp(event)">
         <div class="header">
@@ -25,25 +27,25 @@
                 <div class="coloritem" style="background:#75E2E8;" id="#75E2E8" onclick="color(this)"></div>
             </div>
 
-            <div title="Texte" class="eraser" id="rgba(0,0,0,0)" onclick="text()">
+            <div data-tooltip-delay=50 data-tooltip="Texte" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="text()">
                 <i class="fa fa-font" aria-hidden="true"></i>
             </div>
-            <div title="Image" class="eraser" id="rgba(0,0,0,0)" onclick="insertImg()">
+            <div data-tooltip-delay=50 data-tooltip="Image" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="insertImg()">
                 <i class="fa fa-image" aria-hidden="true"></i>
             </div>
-            <div title="Gomme" class="eraser" id="rgba(0,0,0,0)" onclick="gomme()">
+            <div data-tooltip-delay=50 data-tooltip="Gomme" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="gomme()">
                 <i class="fa fa-eraser" aria-hidden="true"></i>
             </div>
-            <div title="Annuler l'action" class="eraser" id="rgba(0,0,0,0)" onclick="restoreCanvas()">
+            <div data-tooltip-delay=50 data-tooltip="Annuler l'action" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="restoreCanvas()">
                 <i class="fa fa-undo" aria-hidden="true"></i>
             </div>
-            <div title="Supprimer définitivement" class="eraser" id="#282F37" onclick="supprimerDessin()">
+            <div data-tooltip-delay=50 data-tooltip="Supprimer cette image" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="#282F37" onclick="supprimerDessin()">
                 <span style="color: #FC6961;"><i class="fa fa-times" aria-hidden="true"></i></span>
             </div>
-            <div title="Sauver" class="eraser" id="#282F37" onclick="save()">
+            <div data-tooltip-delay=50 data-tooltip="Sauver" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="#282F37" onclick="save()">
                 <i class="fa fa-floppy-o" aria-hidden="true"></i>
             </div>
-            <div title="Tout effacer" class="eraser" id="#282F37" onclick="clearDraw()">
+            <div data-tooltip-delay=50 data-tooltip="Réinitialiser l'image" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="#282F37" onclick="clearDraw()">
                 <i class="fa fa-trash" aria-hidden="true"></i>
             </div>
             <div class="dropdown">
@@ -166,5 +168,6 @@
     </script>
     <footer>
         <script src="./mainDrawWindow.js"></script>
+        <script src="./node_modules/html5tooltipsjs/html5tooltips.js"></script>
     </footer>
 </html>

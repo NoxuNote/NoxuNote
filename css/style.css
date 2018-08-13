@@ -196,7 +196,7 @@ input#menuGaucheSauverInput {
 	transition: background-color 0.05s ease;
 	background-color: rgb(52, 191, 13);
 }
-button#headerButton {
+button.headerButton {
     width: 27px;
     background-color: transparent;
     /* margin-top: 5px; */
@@ -465,7 +465,7 @@ td:hover {
 	height: 4px;
 	width: 60%;
 	position: absolute;
-	left: 5%;
+	left: 10%;
 	z-index: 2;
 	cursor: copy;
 	border-radius: 2px;
