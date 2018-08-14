@@ -122,3 +122,13 @@ h2.form {
 .range-field {
     margin-top: 17px;
 }
+.fontSelector, .fontSelector:focus {
+    background-color: transparent;
+    background-color: transparent;
+    margin-top: 20px;
+    color: #87bbb6;
+    border: none;
+    border-bottom: 1px solid #9e9e9e;
+    outline: none;
+    padding-left: 0px;
+}
