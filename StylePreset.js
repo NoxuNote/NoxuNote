@@ -60,6 +60,7 @@ class StylePreset {
         let s = this.preset.jcss
         let css = `
             h3 {
+                page-break-inside:avoid; page-break-after:auto;
                 font-family: ${s.h3.fontFamily};
                 font-size: ${s.h3.fontSize}px;
                 text-align: ${s.h3.textAlign};
@@ -67,6 +68,7 @@ class StylePreset {
                 margin-top: ${s.h3.marginTop}mm;
             }
             h2 {
+                page-break-inside:avoid; page-break-after:auto;
                 margin-top: 5mm;
                 font-family: ${s.h2.fontFamily};
                 font-size: ${s.h2.fontSize}px;
@@ -75,6 +77,7 @@ class StylePreset {
                 margin-top: ${s.h2.marginTop}mm;
             }
             h1 {
+                page-break-inside:avoid; page-break-after:auto;
                 font-family: ${s.h1.fontFamily};
                 font-size: ${s.h1.fontSize}px;
                 text-align: ${s.h1.textAlign};
@@ -83,6 +86,7 @@ class StylePreset {
             }
             table {
                 width: auto;
+                page-break-inside:avoid; page-break-after:auto;
                 border-collapse: collapse;
                 border: ${s.table.borderLength}px solid black;
                 backgroundColor: ${s.table.backgroundColor};
@@ -106,6 +110,7 @@ class StylePreset {
                 font-size: ${s.general.factAgrandissement}em;
             }
             em {
+                page-break-inside:avoid; page-break-after:auto;
                 color: #16150B;
                 background-color: rgba(229, 234, 65, 0.89);
                 padding: 0.1em;
@@ -126,11 +131,13 @@ class StylePreset {
                 color: #9FA2A1;
             }
             img {
+                page-break-inside:avoid; page-break-after:auto;
                 max-width: 100%;
                 margin-left: auto;
                 margin-right: auto;
             }
             .encadre {
+                page-break-inside:avoid; page-break-after:auto;
                 border: 2px solid #121212;
                 padding: 1px;
             }
@@ -144,6 +151,7 @@ class StylePreset {
                 text-align: ${s.p.textAlign};
             }
             xmp {
+                page-break-inside:avoid; page-break-after:auto;
                 margin: 0cm;
                 margin-left: 0.2cm;
                 padding-left: 2px;
