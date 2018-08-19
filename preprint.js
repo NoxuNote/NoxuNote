@@ -6,6 +6,7 @@ const { ipcRenderer } = require('electron')
 const effecteur = require('./Effecter.js')
 const parser = require("./parser.js")
 const { StylePreset } = require('./StylePreset.js')
+const fontList = require('font-list')
 
 function makeExport() {
     ipcRenderer.send("makePreview", customStyle.preset.format, customStyle.generateCss())
@@ -255,28 +256,73 @@ function applyRawCss(css) {
 }
 
 // Sliders
-$("#sizeTitre3").on("input", function(){onFormChange()});
-$("#marginLeftTitre3").on("input", function(){onFormChange()});
-$("#marginTopTitre3").on("input", function(){onFormChange()});
-$("#sizeTitre2").on("input", function(){onFormChange()});
-$("#marginLeftTitre2").on("input", function(){onFormChange()});
-$("#marginTopTitre2").on("input", function(){onFormChange()});
-$("#sizeTitre1").on("input", function(){onFormChange()});
-$("#marginLeftTitre1").on("input", function(){onFormChange()});
-$("#marginTopTitre1").on("input", function(){onFormChange()});
-$("#sizeCorps").on("input", function(){onFormChange()});
-$("#marginLeftCorps").on("input", function(){onFormChange()});
-$("#marginRightCorps").on("input", function(){onFormChange()});
-$("#marginTopCorps").on("input", function(){onFormChange()});
-$("#sizeTableau").on("input", function(){onFormChange()});
-$("#paddingCellulesTableau").on("input", function(){onFormChange()});
-$("#epaisseurLignesTableau").on("input", function(){onFormChange()});
-$("#alignTableau").on("input", function(){onFormChange()});
-$("#marginLeftTableau").on("input", function(){onFormChange()});
-$("#marginTopTableau").on("input", function(){onFormChange()});
-$("#marginBottomTableau").on("input", function(){onFormChange()});
-$("#pagePaddingTop").on("input", function(){onFormChange()});
-$("#pagePaddingLeft").on("input", function(){onFormChange()});
-$("#pagePaddingRight").on("input", function(){onFormChange()});
+$("#sizeTitre3").on("input", function () { onFormChange() });
+$("#marginLeftTitre3").on("input", function () { onFormChange() });
+$("#marginTopTitre3").on("input", function () { onFormChange() });
+$("#sizeTitre2").on("input", function () { onFormChange() });
+$("#marginLeftTitre2").on("input", function () { onFormChange() });
+$("#marginTopTitre2").on("input", function () { onFormChange() });
+$("#sizeTitre1").on("input", function () { onFormChange() });
+$("#marginLeftTitre1").on("input", function () { onFormChange() });
+$("#marginTopTitre1").on("input", function () { onFormChange() });
+$("#sizeCorps").on("input", function () { onFormChange() });
+$("#marginLeftCorps").on("input", function () { onFormChange() });
+$("#marginRightCorps").on("input", function () { onFormChange() });
+$("#marginTopCorps").on("input", function () { onFormChange() });
+$("#sizeTableau").on("input", function () { onFormChange() });
+$("#paddingCellulesTableau").on("input", function () { onFormChange() });
+$("#epaisseurLignesTableau").on("input", function () { onFormChange() });
+$("#alignTableau").on("input", function () { onFormChange() });
+$("#marginLeftTableau").on("input", function () { onFormChange() });
+$("#marginTopTableau").on("input", function () { onFormChange() });
+$("#marginBottomTableau").on("input", function () { onFormChange() });
+$("#pagePaddingTop").on("input", function () { onFormChange() });
+$("#pagePaddingLeft").on("input", function () { onFormChange() });
+$("#pagePaddingRight").on("input", function () { onFormChange() });
+
+/***************************************************************************************************
+ *                                              FONTS                                              *
+ ***************************************************************************************************/
+let fonts = []
+
+function applyFonts() {
+    // let idsFormSelectors = ["policeTitre3"]
+    // // Suppression de tous les enfants
+    // idsFormSelectors.forEach(id => {
+    //     let form = document.getElementById(id)
+    //     while (form.firstChild) {
+    //         form.removeChild(form.firstChild)
+    //     }
+    // })
+    // Ajout des enfants
+
+    // setup listener for custom event to re-initialize on change
+
+    // initialize
+
+    const selectorIds = ['#policeTitre3', '#policeTitre2', '#policeTitre1', '#policeCorps', '#policeTableau']
+    const selectors = selectorIds.map(id => $(id))
+    fonts.forEach(font => {
+        selectors.forEach(s=>{
+            let $newOpt = $(`<option style='font-family: ${font}; color: black'>`).attr("value", font).text(font.replace(/"/g, ''))
+            s.append($newOpt)
+            s.formSelect();
+        })
+    })
+}
+
+function loadFontList() {
+    fontList.getFonts()
+        .then(availableFonts => {
+            fonts = availableFonts
+            applyFonts()
+        })
+        .catch(err => {
+            console.log(err)
+        })
+
+
+}
 
 loadPreset(customStyle.preset)
+loadFontList()
