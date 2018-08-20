@@ -14,7 +14,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "code-prettify": "^0.1.0",
-    "electron-prompt": "^0.5.0",
+    "electron-prompt": "^1.1.0",
     "font-awesome": "^4.7.0",
     "font-list": "^1.1.0",
     "fs": "^0.0.2",
