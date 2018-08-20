@@ -22,7 +22,7 @@
     "jquery": "^3.3.1",
     "materialize-css": "^1.0.0-beta",
     "mathjax": "^2.7.4",
-    "mathjs": "^3.20.1",
+    "mathjs": "^5.1.0",
     "os": "^0.1.1",
     "querystring": "^0.2.0"
   },
