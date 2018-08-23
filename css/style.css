@@ -486,7 +486,7 @@ td:hover {
 	font-size: 1em;
 	color: #222222;
 	border-radius: 16px;
-	position: absolute;
+	position: fixed;
 	padding: 5px;
 	right: 2%;
 	top: 75px;

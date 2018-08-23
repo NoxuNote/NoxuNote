@@ -5,7 +5,7 @@ var os = require("os")
 class Licence {
 
     constructor(callback) {
-        this.actualVersion = "0.5.1"
+        this.actualVersion = "0.5.2"
         this.lastVersion = null
         this.changeLog = null
         this.id = Math.floor(Math.random() * Math.floor(99999))
