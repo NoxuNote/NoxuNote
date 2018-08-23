@@ -1,7 +1,7 @@
 {
   "name": "noxunote",
-  "version": "0.5.1",
-  "description": "NoxuNote, logiciel de note",
+  "version": "0.5.2",
+  "description": "www.noxunote.fr",
   "repository": {
     "type": "git",
     "url": "https://github.com/leorolland/NoxuNote.git"
