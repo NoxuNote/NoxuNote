@@ -61,6 +61,12 @@ function noteToHtml(texte) {
 		else if (texte.substr(0, 1) == "!") {
 			return "<span id='important'><i class='fa fa-exclamation-triangle' aria-hidden='true'></i> " + texte.substr(1).trim() + "</span>";
 		}
+		else if (texte.substr(0, 1) == "++") {
+			return "<span id='success'><i class='fa fa-check' aria-hidden='true'></i> " + texte.substr(1).trim() + "</span>";
+		}
+		else if (texte.substr(0, 1) == "--") {
+			return "<span id='error'><i class='fa fa-times' aria-hidden='true'></i> " + texte.substr(1).trim() + "</span>";
+		}
 		else if (texte.substr(0, 1) == "(") {
 			return "<span id='optionnal'>(" + texte.substr(1).trim().replace(')', '') + ")</span>";
 		}
