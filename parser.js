@@ -25,6 +25,9 @@ function noteToHtml(texte) {
 		// Remplacement des $$ en ` pour les formules mathématiques
 		texte = texte.replace(regex.math, "`");
 
+		// Ajout easter egg eloy
+		texte = texte.replace("::eloy::", "¡ Hola, soy Eloy ! <img src='./images/eloy.png'></img>");
+
 		// Les tableaux sont générés à part
 		if (texte.substr(0, 1) == "/") {
 			return texte
