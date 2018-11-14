@@ -266,6 +266,22 @@ span#important {
 	display: inline-block;
 	margin-top: 3px;
 }
+span#success {
+	background-color: #03e08e;
+	border-radius: 3px;
+	color: #FFFFFF;
+	padding: 5px;
+	display: inline-block;
+	margin-top: 3px;
+}
+span#error {
+	background-color: #dc3545;
+	border-radius: 3px;
+	color: #FFFFFF;
+	padding: 5px;
+	display: inline-block;
+	margin-top: 3px;
+}
 span#optionnal {
 	display: block;
 	text-align: right;
