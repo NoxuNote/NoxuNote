@@ -26,9 +26,9 @@ function mkdirSync(dirPath) {
     }
 }
 
-class MainWindow extends BrowserWindow {
+class MainWindow {
     constructor() {
-        super({
+        this.browserWindow = new BrowserWindow({
             width: 950,
             height: 600,
             minHeight: 200,
@@ -43,8 +43,10 @@ class MainWindow extends BrowserWindow {
             backgroundColor: '#1E232A',
             autoHideMenuBar: true,
         })
-        this.loadURL(`file://${__dirname}/index.html`); // Loads the renderer processs
-        this.on('close', (e) => {
+        // Shortcut to webContents (retrocompatibility)
+        this.webContents = this.browserWindow.webContents;
+        this.browserWindow.loadURL(`file://${__dirname}/index.html`); // Loads the renderer processs
+        this.browserWindow.on('close', (e) => {
             var answer = dialog.showMessageBox({
                 type: "question",
                 buttons: ['Oui', 'Non', 'Annuler'],
@@ -53,7 +55,7 @@ class MainWindow extends BrowserWindow {
                 message: "Enregistrer la note ?"
             })
             if (answer == 0) {
-                this.webContents.send('callSaveAsNoxuNote')
+                this.browserWindow.webContents.send('callSaveAsNoxuNote')
             } else if (answer == 2) {
                 e.preventDefault()
             }
@@ -64,9 +66,9 @@ class MainWindow extends BrowserWindow {
     }
 }
 
-class MainDrawWindow extends BrowserWindow {
+class MainDrawWindow {
     constructor(inserterPosition) {
-        super({
+        this.browserWindow = new BrowserWindow({
             width: 950,
             height: 600,
             maximized: true,
@@ -83,13 +85,13 @@ class MainDrawWindow extends BrowserWindow {
         // (optionnel) la ligne ou insérer le prochain dessin, utilisé lors de l'insertion 
         this.inserterPosition = inserterPosition
 
-        this.loadURL(`file://${__dirname}/draw.html`) // Loads the renderer process
+        this.browserWindow.loadURL(`file://${__dirname}/draw.html`) // Loads the renderer process
     }
 }
 
-class MainOutputWindow extends BrowserWindow {
+class MainOutputWindow {
     constructor() {
-        super({
+        this.browserWindow = new BrowserWindow({
             width: 640,
             height: 480,
             maximized: true,
@@ -103,13 +105,13 @@ class MainOutputWindow extends BrowserWindow {
             resizable: true,
             show: true
         })
-        this.loadURL(`file://${__dirname}/outputWindow.html`)
+        this.browserWindow.loadURL(`file://${__dirname}/outputWindow.html`)
     }
 }
 
-class SettingsWindow extends BrowserWindow {
+class SettingsWindow {
     constructor(key) {
-        super({
+        this.browserWindow = new BrowserWindow({
             width: 1024,
             height: 600,
             titleBarStyle: "default",
@@ -119,20 +121,20 @@ class SettingsWindow extends BrowserWindow {
             //resizable: false,
             autoHideMenuBar: true
         })
-        this.loadURL(`file://${__dirname}/settings.html`)
+        this.browserWindow.loadURL(`file://${__dirname}/settings.html`)
     }
     /**
      * Change l'onglet visualisé dans la fenetre
      * @param {String} key L'onglet à atteindre
      */
     switch(key) {
-        this.send('switch', key)
+        this.browserWindow.send('switch', key)
     }
 }
 
-class PrePrintWindow extends BrowserWindow {
+class PrePrintWindow {
     constructor(key) {
-        super({
+        this.browserWindow = new BrowserWindow({
             width: 1200,
             height: 720,
             titleBarStyle: "default",
@@ -142,10 +144,10 @@ class PrePrintWindow extends BrowserWindow {
             //resizable: false,
             autoHideMenuBar: true
         })
-        this.loadURL(`file://${__dirname}/preprint.html`)
+        this.browserWindow.loadURL(`file://${__dirname}/preprint.html`)
     }
     setNote(note) {
-        this.send('setNote', note)
+        this.browserWindow.send('setNote', note)
     }
 }
 
@@ -185,7 +187,7 @@ class NoxuNoteApp {
     }
     createMainWindow() {
         this.mainWindow = new MainWindow()
-        this.mainWindow.on('closed', (event) => {
+        this.mainWindow.browserWindow.on('closed', (event) => {
             this.db.saveAllJson()
             this.mainWindow = null
         })
@@ -198,41 +200,41 @@ class NoxuNoteApp {
     createMainDrawWindow(line) {
         if (!this.mainDrawWindow) {
             this.mainDrawWindow = new MainDrawWindow(line)
-            this.mainDrawWindow.on('closed', () => {
+            this.mainDrawWindow.browserWindow.on('closed', () => {
                 this.mainDrawWindow = null;
                 this.mode = "new"
-                this.mainWindow.webContents.send('restoreMainForm')
+                this.mainWindow.browserWindow.webContents.send('restoreMainForm')
             })
         }
     }
     createMainOutputWindow(caller) {
         this.mainOutputWindow = new MainOutputWindow()
-        this.mainOutputWindow.on('closed', () => {
+        this.mainOutputWindow.browserWindow.on('closed', () => {
             this.mainOutputWindow = null;
             if (caller) BrowserWindow.fromWebContents(caller).send('mainOutputWindowClosed')
         })
     }
     closeMainOutputWindow() {
-        this.mainOutputWindow.close()
+        this.mainOutputWindow.browserWindow.close()
     }
     createSettingsWindow(key) {
         if (!this.settingsWindow) {
             this.settingsWindow = new SettingsWindow()
-            this.settingsWindow.webContents.on('did-finish-load', ()=>{
+            this.settingsWindow.browserWindow.webContents.on('did-finish-load', ()=>{
                 this.settingsWindow.switch(key)
             })
-            this.settingsWindow.on('closed', () => {
+            this.settingsWindow.browserWindow.on('closed', () => {
                 this.settingsWindow = null
-                this.mainWindow.send('updateDb')
+                this.mainWindow.browserWindow.send('updateDb')
             })
         }   
     }
     createPrePrintWindow() {
         this.prePrintWindow = new PrePrintWindow()
-        this.prePrintWindow.webContents.on('did-finish-load', ()=>{
+        this.prePrintWindow.browserWindow.webContents.on('did-finish-load', ()=>{
             this.prePrintWindow.setNote(this.note)
         })
-        this.prePrintWindow.on('closed', () => {
+        this.prePrintWindow.browserWindow.on('closed', () => {
             this.mainOutputWindow = null;
         })
     }

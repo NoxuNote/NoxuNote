@@ -38,7 +38,7 @@ let noxuApp
 // Handles the renderer process instanciation when app is ready, used most of the time.
 app.on('ready', () => {
 	function undo() {
-		if (noxuApp.mainDrawWindow) noxuApp.mainDrawWindow.webContents.send('undo')
+		if (noxuApp.mainDrawWindow) noxuApp.mainDrawWindow.browserWindow.webContents.send('undo')
 	}
 	// Création de la fenêtre principale
 	noxuApp = new browsers.NoxuNoteApp()
@@ -183,9 +183,9 @@ function edit_div(line, actualFormContent) {
 		// Isolement de la source
 		data = data.slice(5, -1);
 		// Quand la fenêtre de dessin est prête, on lui demande de charger l'image
-		noxuApp.mainDrawWindow.webContents.on('did-finish-load', ()=>{
-			noxuApp.mainDrawWindow.webContents.send('setEditState', line)
-			noxuApp.mainDrawWindow.webContents.send('loadImage', data)
+		noxuApp.mainDrawWindow.browserWindow.webContents.on('did-finish-load', ()=>{
+			noxuApp.mainDrawWindow.browserWindow.webContents.send('setEditState', line)
+			noxuApp.mainDrawWindow.browserWindow.webContents.send('loadImage', data)
 		})
 	} else {			
 		// Déplacement du form avec le contenu édité
@@ -252,12 +252,12 @@ function save_as_noxunote(title, matiere) {
  */
 function reloadContent() {
 	// Resetting renderThread content
-	noxuApp.mainWindow.send('clearContent')
+	noxuApp.mainWindow.webContents.send('clearContent')
 	for (var i = 1; i < noxuApp.note.length; i++) {
 		// Envoi du contenu traité
 		noxuApp.mainWindow.webContents.send('addDiv', i, noteToHtml(noxuApp.note[i]))
 	}
-	noxuApp.mainWindow.send('restoreMainForm')
+	noxuApp.mainWindow.webContents.send('restoreMainForm')
 }
 ipc.on('reloadContent', (event) => reloadContent())
 
@@ -266,8 +266,8 @@ ipc.on('reloadContent', (event) => reloadContent())
  */
 function reset() {
 	// Resetting renderThread content
-	noxuApp.mainWindow.send('clearContent')
-	noxuApp.mainWindow.send('restoreMainForm')
+	noxuApp.mainWindow.webContents.send('clearContent')
+	noxuApp.mainWindow.webContents.send('restoreMainForm')
 	// Resetting all variables
 	noxuApp.note = new Array()
 	noxuApp.note.push("@NOXUNOTE_BEGIN")
@@ -347,7 +347,7 @@ ipc.on('dessiner', (event) => {
 // Utilisé quand un nouveau dessin est reçu par le mainDrawWindow. au format brut.
 ipc.on('newDessin', (event, data) => {
 	if (noxuApp.mainDrawWindow.inserterPosition == undefined) {
-		noxuApp.mainDrawWindow.close()
+		noxuApp.mainDrawWindow.browserWindow.close()
 		entree_texte(0, '<img class="schema negative" src="' + data + '"></img>')
 	} else newEditedDessin(data, noxuApp.mainDrawWindow.inserterPosition)
 })
@@ -355,7 +355,7 @@ ipc.on('newDessin', (event, data) => {
 // Appelé par draw.html lorsque l'on clique sur sauver en noxuApp.mode edition.
 function newEditedDessin(data, line) {
 	// new Date().getTime() indique à chromium que l'image à été modifiée en changeant son URL.
-	noxuApp.mainDrawWindow.close()
+	noxuApp.mainDrawWindow.browserWindow.close()
 	// On redéfinit le noxuApp.mode edit car le close met en noxuApp.mode new
 	noxuApp.mode = "edit"
 	entree_texte(line, '<img class="schema negative" src="' + data + '?' + new Date().getTime() + '"></img>')
@@ -366,7 +366,7 @@ ipc.on('newEditedDessin', (event, data, line) => newEditedDessin(data, line))
 // Utilisé pour supprimer un dessin puis de fermer la fenêtre de dessin.
 ipc.on('deleteDessin', (event, line) => {
 	delete_div(line)
-	noxuApp.mainDrawWindow.close()
+	noxuApp.mainDrawWindow.browserWindow.close()
 })
 
 ipc.on('save_as_noxunote', (event, title, matiere) => save_as_noxunote(title, matiere));
@@ -382,14 +382,14 @@ function openExport() {
 function makePreview(format, css, caller) {
 	console.log('making preview..')
 	noxuApp.createMainOutputWindow(caller)
-	noxuApp.mainOutputWindow.webContents.on('did-finish-load', () => {
+	noxuApp.mainOutputWindow.browserWindow.webContents.on('did-finish-load', () => {
 		for (var i = 1; i < noxuApp.note.length; i++) {
-			noxuApp.mainOutputWindow.webContents.send('addDiv', noteToHtml(noxuApp.note[i]), i)
+			noxuApp.mainOutputWindow.browserWindow.webContents.send('addDiv', noteToHtml(noxuApp.note[i]), i)
 		}
-		noxuApp.mainOutputWindow.webContents.send('setFormat', format)
-		noxuApp.mainOutputWindow.webContents.send('setCSS', css)
+		noxuApp.mainOutputWindow.browserWindow.webContents.send('setFormat', format)
+		noxuApp.mainOutputWindow.browserWindow.webContents.send('setCSS', css)
 		// On informe le outputWindow que tous les éléments lui ont été envoyés
-		noxuApp.mainOutputWindow.webContents.send('uploadedContent')
+		noxuApp.mainOutputWindow.browserWindow.webContents.send('uploadedContent')
 	})
 }
 function makeFile(format) {
@@ -406,7 +406,7 @@ function makeFile(format) {
 				}
 			)
 			if (path) {
-				noxuApp.mainOutputWindow.webContents.printToPDF(
+				noxuApp.mainOutputWindow.browserWindow.webContents.printToPDF(
 					{
 						marginsType: 1,
 						silent: false,
@@ -493,7 +493,7 @@ ipc.on('insertLocalImage', (event) => {
 ipc.on('insertLocalImageDrawer', (event)=> {
 	if (noxuApp.mainDrawWindow) {
 		promptImage((fileName)=>{
-			noxuApp.mainDrawWindow.webContents.send('insertLocalImage', fileName)
+			noxuApp.mainDrawWindow.browserWindow.webContents.send('insertLocalImage', fileName)
 		})
 	}
 })
