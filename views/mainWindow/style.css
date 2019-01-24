@@ -27,20 +27,20 @@
 /* FLAT FONTS */
 @font-face {
     font-family: FlatThin;
-    src: url("../fonts/Raleway-Thin.ttf");
+    src: url("../../fonts/Raleway-Thin.ttf");
 }
 @font-face {
     font-family: FlatLight;
-    src: url("../fonts/Raleway-Light.ttf");
+    src: url("../../fonts/Raleway-Light.ttf");
 }
 @font-face {
     font-family: FlatBold;
-    src: url("../fonts/Raleway-Bold.ttf");
+    src: url("../../fonts/Raleway-Bold.ttf");
 }
 
 @font-face {
     font-family: handwrite;
-    src: url("../fonts/magnolia_script.otf");
+    src: url("../../fonts/magnolia_script.otf");
 }
 
 ::-webkit-scrollbar-track {
@@ -372,7 +372,7 @@ em {
 	cursor: pointer;
 }
 div#menuNote {
-	background-image: url('../images/note_bg.png');
+	background-image: url('../../images/note_bg.png');
 	border-radius: 12px;
 	background-size: 90%;
 	min-height: 100px;
@@ -497,7 +497,7 @@ td:hover {
 	width: 300px;
 	height: 400px;
 	min-height: 100px;
-	background-image: url('../images/note_bg.png');
+	background-image: url('../../images/note_bg.png');
 	font-family: handwrite;
 	font-size: 1em;
 	color: #222222;

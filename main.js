@@ -1,5 +1,5 @@
 /**
- * main.js - The core script of NoxuNote (backend side), which represents the main Electron thread,
+ * main.js - The core script of NoxuNote, which represents the main Electron thread,
  * it instanciates and communicates with the renderer processes like noxuApp.mainWindow and mainDrawWindow
  * through the IPCRenderer. 
  *                         

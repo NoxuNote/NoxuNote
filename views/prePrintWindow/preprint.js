@@ -3,8 +3,8 @@ const electron = require('electron')
 const BrowserWindow = electron.BrowserWindow
 const ipc = require('electron').ipcRenderer
 const { ipcRenderer } = require('electron')
-const effecteur = require('./Effecter.js')
-const parser = require("./parser.js")
+const effecteur = require('../mainDrawWindow/Effecter.js')
+const parser = require("../../parser.js")
 const { StylePreset } = require('./StylePreset.js')
 const fontList = require('font-list')
 
