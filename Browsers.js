@@ -32,7 +32,6 @@ class MainWindow {
             width: 950,
             height: 600,
             minHeight: 200,
-            icon: './icon.png',
             maximized: false,
             titleBarStyle: "hidden",
             center: false,
@@ -45,7 +44,7 @@ class MainWindow {
         })
         // Shortcut to webContents (retrocompatibility)
         this.webContents = this.browserWindow.webContents;
-        this.browserWindow.loadURL(`file://${__dirname}/index.html`); // Loads the renderer processs
+        this.browserWindow.loadURL(`file://${__dirname}/views/mainWindow/index.html`); // Loads the renderer processs
         this.browserWindow.on('close', (e) => {
             var answer = dialog.showMessageBox({
                 type: "question",
@@ -85,7 +84,7 @@ class MainDrawWindow {
         // (optionnel) la ligne ou insérer le prochain dessin, utilisé lors de l'insertion 
         this.inserterPosition = inserterPosition
 
-        this.browserWindow.loadURL(`file://${__dirname}/draw.html`) // Loads the renderer process
+        this.browserWindow.loadURL(`file://${__dirname}/views/mainDrawWindow/draw.html`) // Loads the renderer process
     }
 }
 
@@ -105,7 +104,7 @@ class MainOutputWindow {
             resizable: true,
             show: true
         })
-        this.browserWindow.loadURL(`file://${__dirname}/outputWindow.html`)
+        this.browserWindow.loadURL(`file://${__dirname}/views/outputWindow/outputWindow.html`)
     }
 }
 
@@ -121,7 +120,7 @@ class SettingsWindow {
             //resizable: false,
             autoHideMenuBar: true
         })
-        this.browserWindow.loadURL(`file://${__dirname}/settings.html`)
+        this.browserWindow.loadURL(`file://${__dirname}/views/settingsWindow/settings.html`)
     }
     /**
      * Change l'onglet visualisé dans la fenetre
@@ -144,7 +143,7 @@ class PrePrintWindow {
             //resizable: false,
             autoHideMenuBar: true
         })
-        this.browserWindow.loadURL(`file://${__dirname}/preprint.html`)
+        this.browserWindow.loadURL(`file://${__dirname}/views/prePrintWindow/preprint.html`)
     }
     setNote(note) {
         this.browserWindow.send('setNote', note)

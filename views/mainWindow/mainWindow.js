@@ -16,7 +16,7 @@ const { dialog } = require('electron').remote
 const homedir = require('os').homedir()
 const fs = require("fs")
 const math = require("mathjs")
-const parser = require("./parser.js")
+const parser = require("../../parser.js")
 
 var title = "not defined";
 var isFileModified = false
