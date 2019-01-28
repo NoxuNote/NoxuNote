@@ -13,6 +13,8 @@
   "author": "Léo Rolland",
   "license": "GPL-3.0",
   "dependencies": {
+    "ContentTools": "^1.6.10",
+    "bootstrap": "^4.2.1",
     "code-prettify": "^0.1.0",
     "electron-prompt": "^1.1.0",
     "font-awesome": "^4.7.0",
@@ -24,7 +26,9 @@
     "mathjax": "^2.7.4",
     "mathjs": "^5.1.0",
     "os": "^0.1.1",
-    "querystring": "^0.2.0"
+    "popper.js": "^1.14.6",
+    "querystring": "^0.2.0",
+    "summernote": "^0.8.11"
   },
   "devDependencies": {
     "electron": "^4.0.0"

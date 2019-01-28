@@ -22,225 +22,10 @@ var title = "not defined";
 var isFileModified = false
 
 let assoc // table des association abbréviation -> mot original
-let mainInput // Formulaire principal
-let editInput // Formulaire d'édition
-let db
 
 /***************************************************************************************************
  *                                    DÉCLARATION DES FONCTIONS                                    *
  ***************************************************************************************************/
-
-/**
-* Action lorsqu'une touche est pressée dans le body
-*/
-function bodyKeyPressed(event) {
-	isFileModified = true
-	if (event.which == 38) {
-		// Appui sur la flèche vers le haut
-		if (editInput && editInput.getModifiedLine() - 1 >= 0) {
-			ipc.send('edit_div', editInput.getModifiedLine() - 1, getFormValue())
-		} else {
-			/*
-			// Editer la dernière ligne de la note
-			var lastElement = document.getElementById('content').lastChild
-			// Si le dernier élément est un tableau, alors on sélectionne le dernier tr
-			if (lastElement) {
-				if (lastElement.nodeName == "TABLE") {
-					lastElement = lastElement.lastChild
-				}
-				ipc.send('edit_div', lastElement.id, "")
-			}
-			*/
-			ipc.send('edit_div', 0, '')
-		}
-	} else if (event.which == 40) {
-		// Appui sur la flèche vers le bas
-		ipc.send('edit_div', editInput.getModifiedLine() + 1, getFormValue())
-	} else if (event.which == 32) {
-		// Appui sur la touche espace, on extrait le dernier mot tapé
-		let form = getActualForm()
-		let posCursor = form.textarea.selectionStart
-		let cutIn = form.value.slice(0, posCursor)
-		let lastWord = /[\S]*?$/g.exec(cutIn)
-		if (lastWord[0]) {
-			// Maintenant que nous avons extrait le dernier mot, regardons s'il est dans la liste des abbréviations
-			let query = assoc.find((e)=>e['input'] == lastWord[0])
-			if (query) {
-				event.preventDefault()
-				let cutOut = form.value.slice(posCursor, form.value.length)
-				let newCutIn = cutIn.replace(/[\S]*?$/, query.output.replace(/\$/g, '$\$$'))
-				form.value = newCutIn + ' ' + cutOut
-				form.textarea.selectionStart = newCutIn.length+1
-				form.textarea.selectionEnd = newCutIn.length+1
-			}
-		}
-	}
-}
-
-/**
-* @param el l'élément que l'on veut modifier
-* Ajoute la fonction de TAB sur un input/textarea
-* source : https://jsfiddle.net/2wAzx/13/
-*/
-function enableTab(el) {
-	el.onkeydown = function (e) {
-		if (e.keyCode === 9) { // tab was pressed
-			// get caret position/selection
-			var val = this.value,
-				start = this.selectionStart,
-				end = this.selectionEnd;
-			// set textarea value to: text before caret + tab + text after caret
-			this.value = val.substring(0, start) + '\t' + val.substring(end);
-			// put caret at right position again
-			this.selectionStart = this.selectionEnd = start + 1;
-			// prevent the focus lose
-			return false;
-		}
-	};
-}
-
-/** 
- * @return le formulaire qui édite actuelement
-*/
-function getActualForm() {
-	console.log(editInput || mainInput);
-	return editInput || mainInput
-}
-
-/**
-* @return le contenu du formulaire d'édition
-*/
-function getFormValue() {
-	return getActualForm().value
-}
-
-/**
- * Génère une TR a partir d'une note brute type /a/b/c//
- * @param index {number} le numero de la tr
- * @param content {string} le contenu de la tr
- */
-function parseTR(index, content) {
-	console.log('parsing', content);
-	return parser.parseTR(index, content)
-}
-
-/**
-* @param index le numero de la div à ajouter
-* @param content le contenu de la div
-* Ajoute une balise de numero index et de contenu content à la fin des div child de "content"
-*/
-function addDiv(index, content) {
-	// Si on reçoit un tableau
-	if (content.substr(0, 1) == "/" && content.length > 3) {
-		console.log('adding TR');
-		var innerTR = parseTR(index, content)
-		// Si l'élément précédent est une <tr></tr> alors on ajoute le innerTR à cette table précédente
-		try {
-			if (document.getElementById(index - 1).nodeName == "TR") {
-				document.getElementById(index - 1).parentElement.appendChild(innerTR)
-			} else { throw Error }
-		}
-		// Dans le cas contraire, on créee une table
-		catch (e) {
-			var innerTable = document.createElement('table')
-			document.getElementById('content').appendChild(innerTable)
-			innerTable.appendChild(innerTR)
-		}
-	} else {
-		// Création et indexation de la nouvelle div
-		var innerDiv = document.createElement('div');
-		innerDiv.id = index;
-		innerDiv.className = "line";
-		innerDiv.onclick = function () { ipc.send('edit_div', index, getFormValue()) };
-		document.getElementById("content").appendChild(innerDiv);
-		// Remplissage de la div
-		innerDiv.innerHTML = content;
-	}
-
-	// Insertion d'une balise d'insertion avant l'element
-	var elt = document.getElementById(index)
-	var insertDiv = document.createElement('div')
-	insertDiv.id = index + "insertBefore"
-	insertDiv.className = "insert_text"
-
-	// Creation du tooltip
-	var tooltip = new HTML5TooltipUIComponent;
-	tooltip.set({
-		animateFunction: "foldin",
-		color: "teal",
-		contentText: "Insérer",
-		stickTo: "left",
-		target: insertDiv
-	});
-	insertDiv.addEventListener('mouseenter', () => {
-		insertDiv.setAttribute('mouseIn', null);
-		setTimeout(()=>{
-			if (insertDiv.getAttribute('mouseIn')) tooltip.show()
-		}, 50)
-	});
-	insertDiv.addEventListener('mouseleave', () => {
-		insertDiv.removeAttribute('mouseIn');
-		tooltip.hide()
-	});
-	tooltip.mount();
-
-	insertDiv.onclick = () => { tooltip.hide(); clickInserter(index) }
-
-	elt.innerHTML = "<div class=\"insert\"></div>" + elt.innerHTML
-	elt.parentNode.insertBefore(insertDiv, elt)
-
-	MathJax.Hub.Queue(["Typeset", MathJax.Hub, content]);
-	PR.prettyPrint();
-}
-
-
-/**
- * @param line la ligne SUIVANT le curseur
- * Fonction qui insère un input au DESSUS d'une ligne line
- */
-function clickInserter(line) {
-	var actualFormContent = getFormValue()
-	ipc.send('inserterClicked', line, actualFormContent)
-}
-
-/**
-* @param index l'index de la div à modifier
-* @param ancien_contenu 
-* Masque le formulaire 'form_new' et remplace la div index par un textArea rempli par 'ancien contenu', (note NON PARSÉE)
-*/
-function moveForm(index, ancien_contenu) {
-	// Cacher l'ancien formulaire
-	mainInput.hide()
-	// Form
-	editInput = new NoxuInput(true, index, ipc, ancien_contenu)
-	// Modif button
-	boutonM = document.createElement("button")
-	boutonM.id = 'edit'
-	boutonM.onclick = () => { ipc.send('entree_texte', index, getFormValue()) }
-	boutonM.innerHTML = "Modifier"
-	// Delete button
-	boutonS = document.createElement("button")
-	boutonS.id = 'delete'
-	boutonS.onclick = () => { ipc.send('delete_div', index) }
-	boutonS.innerHTML = "Supprimer"
-	// Insertion des elements dans la div
-	var edited_div = document.getElementById(index);
-	edited_div.innerHTML = ""
-	edited_div.onclick = null
-	edited_div.appendChild(editInput)
-	edited_div.appendChild(boutonM)
-	edited_div.appendChild(boutonS)
-	editInput.setFocus()
-}
-
-/**
- * Réceptionnaire de l'évènement onKeyPressed lors de l'édition d'une ligne
- * @param event {event} evenement de frappe
- */
-function inputKeyPressed(event) {
-	if (event.which == 13) ipc.send('entree_texte', parseInt(event.target.id), event.target.value)
-}
-
 
 /**
 * @param line la ligne sur laquelle le formulaire de modification est envoyée
@@ -252,90 +37,6 @@ function clicBoutonSupprimer(line) {
 
 function clicBoutonModifier(line) {
 	ipc.send('entree_texte', line, getFormValue())
-}
-
-/**
-* @param {number} line ligne de la div à éditer
-* @param {string} content nouveau contenu de la div
-* Modification du contenu de la DIV et réécriture du déclencheur onClick.
-*/
-function setDivContent(line, content) {
-	// Si on reçoit un tableau
-	console.log('entree');
-	if (content.substr(0, 1) == "/" && content.length > 3) {
-		var innerTR = parseTR(line, content)
-		console.log('ECHEC');
-
-		// On supprime la div actuelle
-		var toDel = document.getElementById(line)
-		toDel.parentNode.removeChild(toDel)
-
-		// On mémorise les éléments précédents et suivants s'ils existent
-		var prec;
-		var suiv;
-		try { prec = document.getElementById(line - 1) } catch (e) { prec = null }
-		try { suiv = document.getElementById(line + 1) } catch (e) { suiv = null }
-
-
-		/* L'extrait de code si dessous est un peu laborieux,
-		 * mais il permet de traiter tous les cas possibles de modification de tableaux sans avoir à
-		 * recharger toute la page (à éviter !!). Si la modification est trop complexe pour etre réalisée ici, 
-		 * comme une fusion/séparation de <table>, alors on recharge la page
-		 *
-		if ( (prec!=null && prec.nodeName == "TR") && ( (suiv!=null && suiv.nodeName!="TR") || suiv==null ) ) {
-			// Si l'élément précédent est une <tr></tr> mais pas le suivant alors on ajoute le innerTR après cet élément
-			// On ajoute la notre à la fin
-			var prec = document.getElementById(line-1)
-			if (prec.nextSibling) { // Si il éxiste un élément après l'élément précédent, on l'insère avant
-				prec.parentNode.insertBefore(innerTR, prec.nextSibling)
-			} else {
-				prec.parentNode.appendChild(innerTR)
-			}
-		} else if ( ( (prec!=null && prec.nodeName != "TR") || prec==null) && (suiv!=null && suiv.nodeName=="TR") ) {
-			// Si l'élément suivant est une <tr></tr> mais pas le précédent alors on ajoute le innerTR au début de la table
-			var suiv = document.getElementById(line+1)
-			console.log(line)
-			suiv.parentNode.insertBefore(innerTR, suiv)
-			console.log(suiv)
-		} else if ( (prec!=null && prec.nodeName != "TR") && (suiv!=null && suiv.nodeName!="TR") ) {
-			// Si aucun des éléments a coté n'est une tr
-			var innerTable = document.createElement('table')
-			document.getElementById('content').appendChild(innerTable)
-			// On ajoute la TR a notre table
-			innerTable.appendChild(innerTR)
-			// On ajoute notre table avant l'element suivant
-			suiv.parentNode.insertBefore(innerTable, suiv) 
-		} else {
-			// Si l'élément est situé entre deux tableaux, il faut les fusionner ou les séparer
-			// On regénère la page.
-			ipc.send('reloadContent');
-		}*/
-		ipc.send('reloadContent');
-
-	} else {
-		var oldElt = document.getElementById(line)
-		// Si l'élément était une div, alors on met juste à jour son contenu
-		if (oldElt.nodeName == "DIV") {
-			oldElt.innerHTML = content;
-			oldElt.onclick = function () { ipc.send('edit_div', line, getFormValue()) }
-		} else {
-			// Si l'élément était une ligne de tableau, en ultime recours, on regénère la page.
-			// Nécessaire car trop compliqué à traiter si l'élément romp un tableau.
-			ipc.send('reloadContent');
-		}
-
-	}
-	MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById(line)]);
-	PR.prettyPrint();
-}
-
-/**
-* Fait réapparaître le formulaire initial form.
-*/
-function restoreMainForm() {
-	mainInput.show()
-	mainInput.setFocus()
-	editInput = null
 }
 
 /**
@@ -767,6 +468,15 @@ function minimizeWindow() {
 function closeWindow() {
 	window.close()
 }
+
+/***************************************************************************************************
+ *                                   				 SUMMERNOTE      			                                 *
+ ***************************************************************************************************/
+$(document).ready(function() {
+  $('#summernote').summernote({
+		
+	});
+});
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/
@@ -782,19 +492,10 @@ generateMatList()
 // Generate association table
 generateAssocList()
 
-mainInput = new NoxuInput(false, -1, ipc)
-document.getElementById("contentbot").appendChild(mainInput)
-
 
 /***************************************************************************************************
  *      ASSOCIATION DES ÉVÈNEMENTS DE L'IPC AUX FONCTIONS DU PROCESSUS GRAPHIQUE (AU DESSUS).      *
  ***************************************************************************************************/
-ipcRenderer.on('changeInput', (event, field_content) => mainInput.value = field_content)
-ipcRenderer.on('addDiv', (event, index, content) => addDiv(index, content))
-ipcRenderer.on('moveForm', (event, index, ancien_contenu) => moveForm(index, ancien_contenu))
-ipcRenderer.on('setDivContent', (event, line, content) => setDivContent(line, content))
-ipcRenderer.on('restoreMainForm', (event) => restoreMainForm())
-ipcRenderer.on('clearContent', (event) => clearContent())
 ipcRenderer.on('setNoteTitle', (event, title) => setNoteTitle(title))
 ipcRenderer.on('setNoteMatiere', (event, matiere) => setNoteMatiere(matiere))
 ipcRenderer.on('callSaveAsNoxuNote', (event) => ipc.send('save_as_noxunote', title))

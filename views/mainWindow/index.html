@@ -7,6 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="../../node_modules/font-awesome/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="../../node_modules/html5tooltipsjs/html5tooltips.css">
 	<link rel="stylesheet" type="text/css" href="../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
+	<link rel="stylesheet" href="./bootstrap.min.css">
+	<link rel="stylesheet" href="../../node_modules/summernote/dist/summernote.css">
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	<script src="../../node_modules/code-prettify/loader/run_prettify.js"></script>	
 </head>
@@ -146,23 +148,11 @@
 	</div>
 
 </header>
-<body onkeydown="bodyKeyPressed(event)">
-	<div id="content" style="margin-top: 100px;"></div>
-	<div id="contentbot">
-			<!-- onKeyPress : Si la touche est entrée, on envoie la commande d'entrée. -->
-			<!--
-			<div 
-				contenteditable="true" 
-				id="form" 
-				class="form form_add"
-				type="text" 
-				name="texte" 
-				placeholder="Entrez du texte" 
-				onKeyPress="if (event.which == 13) ipc.send('entree_texte', -1, event.target.innerHTML)"
-				onKeyUp="auto_grow(this)"
-			></div>
-			-->
-		<!--<noxu-input></noxu-input>-->
+<br><br><br>
+<body>
+	<div id="summernote">
+		<p>Hello</p>
+		<b>Summernote</b>
 	</div>
 </body>
 
@@ -177,6 +167,10 @@
 	</style>
 	<script src="../../node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
 	<script src="../../node_modules/html5tooltipsjs/html5tooltips.js"></script>
+	<script src="../../node_modules/jquery/dist/jquery.js"></script>
+	<script src="../../node_modules/popper.js/dist/umd/popper.min.js"></script>
+	<script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="../../node_modules/summernote/dist/summernote.js"></script>
 	<script src="draggable.js"></script>
 	<script src="NoxuInput.js"></script>
 	<script src="mainWindow.js"></script> <!-- Electron Script -->

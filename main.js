@@ -9,7 +9,7 @@
  */
 
 // Verbose
-const DEBUG = false
+const DEBUG = true
 
 // Importing electron library
 const electron 		= require('electron')
@@ -72,6 +72,9 @@ app.on('ready', () => {
 	];
 	if(!DEBUG) {
 		Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+	} else {
+		noxuApp.mainWindow.browserWindow.openDevTools()
+		noxuApp.mainWindow.browserWindow.setFullScreen(true)
 	}
 });
 
