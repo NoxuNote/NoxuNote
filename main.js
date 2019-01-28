@@ -74,7 +74,7 @@ app.on('ready', () => {
 		Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 	} else {
 		noxuApp.mainWindow.browserWindow.openDevTools()
-		noxuApp.mainWindow.browserWindow.setFullScreen(true)
+		noxuApp.mainWindow.browserWindow.maximize()
 	}
 });
 

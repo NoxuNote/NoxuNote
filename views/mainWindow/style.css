@@ -92,7 +92,6 @@ div#windowTitleText {
 div#barre_haut {
     animation: apparitionHaut 1.0s forwards;
     z-index: 10;
-    margin-left: -8px;
     margin-top: -22px;
     margin-right: -8px;
     padding-top: 25px;

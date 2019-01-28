@@ -1,0 +1,20 @@
+.note-editor.note-frame .note-editing-area .note-editable {
+  background-color: #282F37;
+  color: rgb(228, 228, 228);
+  height: 88vh;
+}
+.note-toolbar {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+}
+.note-popover .popover-content, .card-header.note-toolbar {
+  background: #36404c;
+  opacity: 0.97;
+}
+.note-editor.note-frame {
+  border: none;
+}
+.note-editor.note-frame {
+  margin-top: 60px;
+}
