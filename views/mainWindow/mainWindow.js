@@ -478,12 +478,9 @@ var MediaButton = function (context) {
 
   // create button
   var button = ui.button({
-    contents: '<i class="fa fa-picture-o"/>',
+    contents: '<i data-toggle="modal" data-target="#choixMediaModal" class="fa fa-picture-o"/>',
     tooltip: 'Image, vidéo, dessin',
-    click: function () {
-      // invoke insertText method with 'hello' on editor module.
-      context.invoke('editor.insertText', 'hello');
-    }
+    click: ()=>{}
   });
 
   return button.render();   // return button as jquery object
