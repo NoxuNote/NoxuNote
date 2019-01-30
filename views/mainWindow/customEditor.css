@@ -1,7 +1,7 @@
 .note-editor.note-frame .note-editing-area .note-editable {
   background-color: #282F37;
   color: rgb(228, 228, 228);
-  height: 88vh;
+  /* height: 88vh; */
   padding: 13px 5vw 0px 5vw;
 }
 .note-toolbar {
@@ -12,10 +12,21 @@
 .note-popover .popover-content, .card-header.note-toolbar {
   background: #36404c;
   opacity: 0.97;
+  position: fixed !important;
+  margin-top: 61px;
+  width: 100vw;
+  margin-left: auto; margin-right: auto;
+}
+.note-editor.note-frame .note-editing-area {
+  overflow: hidden;
+  margin-top: 100px;
+}
+.note-editor.note-frame .note-statusbar {
+  display: none;
 }
 .note-editor.note-frame {
   border: none;
 }
 .note-editor.note-frame {
-  margin-top: 60px;
+  /* margin-top: 60px; */
 }

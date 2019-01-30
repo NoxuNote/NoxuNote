@@ -493,6 +493,7 @@ $(document).ready(function() {
 	let words = ipcRenderer.sendSync('db_getAssocList').map(element=>element.output)
   editor.summernote({
 		lang: 'fr-FR',
+		focus: true,
 		hint: {
 			words: words,
 			match: /\b(\w{1,})$/,
@@ -515,6 +516,9 @@ $(document).ready(function() {
 		}
 	})
 })
+
+const editableRegion = editor.find('[contenteditable]');
+$('body').click(()=>{editor.summernote('focus'); editableRegion.focus().val(editableRegion.val())})
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/
