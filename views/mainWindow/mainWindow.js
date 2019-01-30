@@ -22,6 +22,7 @@ var title = "not defined";
 var isFileModified = false
 
 let assoc // table des association abbréviation -> mot original
+const editor = $('#summernote')
 
 /***************************************************************************************************
  *                                    DÉCLARATION DES FONCTIONS                                    *
@@ -149,7 +150,7 @@ function dessiner() {
  * Enregistre la note au format NoxuNote
  */
 function save_as_noxunote() {
-	ipc.send('save_as_noxunote', title, getMat());
+	ipc.send('save_as_noxunote', title, getMat(), editor.summernote('code'));
 	setTimeout(() => generateFileList(), 200);
 }
 
@@ -472,12 +473,48 @@ function closeWindow() {
 /***************************************************************************************************
  *                                   				 SUMMERNOTE      			                                 *
  ***************************************************************************************************/
+var MediaButton = function (context) {
+  var ui = $.summernote.ui;
+
+  // create button
+  var button = ui.button({
+    contents: '<i class="fa fa-picture-o"/>',
+    tooltip: 'Image, vidéo, dessin',
+    click: function () {
+      // invoke insertText method with 'hello' on editor module.
+      context.invoke('editor.insertText', 'hello');
+    }
+  });
+
+  return button.render();   // return button as jquery object
+}
+
 $(document).ready(function() {
-  $('#summernote').summernote({
-		placeholder: 'A vos claviers !',
-		lang: 'fr-FR'
-	});
-});
+	let words = ipcRenderer.sendSync('db_getAssocList').map(element=>element.output)
+  editor.summernote({
+		lang: 'fr-FR',
+		hint: {
+			words: words,
+			match: /\b(\w{1,})$/,
+			search: function (keyword, callback) {
+				callback($.grep(this.words, function (item) {
+					return item.indexOf(keyword) === 0;
+				}))
+			}
+		},
+		toolbar: [
+			['magic', ['style']],
+			['fontsize', ['fontname', 'fontsize', 'color']],
+			['style', ['bold', 'italic', 'underline']],
+			['para', ['ul', 'ol', 'paragraph']],
+			['font', ['superscript', 'subscript']],
+			['insert', ['media', 'table']]
+		],
+		buttons: {
+			media: MediaButton
+		}
+	})
+})
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/
@@ -502,3 +539,4 @@ ipcRenderer.on('setNoteMatiere', (event, matiere) => setNoteMatiere(matiere))
 ipcRenderer.on('callSaveAsNoxuNote', (event) => ipc.send('save_as_noxunote', title))
 ipcRenderer.on('resetIsFileModified', (event) => isFileModified = false)
 ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); generateAssocList() })
+ipcRenderer.on('setNoteContent', (event, note) => { editor.summernote('reset') ; editor.summernote('code', note) } )

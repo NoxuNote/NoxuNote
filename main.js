@@ -101,133 +101,11 @@ app.on('window-all-closed', () => {
  *                                       FONCTIONS USUELLES                                        *
  ***************************************************************************************************/
 
-function noteToHtml(texte) {
-	return parser.noteToHtml(texte)
-}
-
-/** 
- * Action qui valide le contenu du formulaire qu'il soit en noxuApp.mode 'new' ou 'edition'
- * @param {number} line Le numéro de la ligne editée (optionnel)
- * @param {string} content le contenu actuel entré par l'utilisateur
- * @param {boolean} ajoutLigne définit si on doit ajouter une ligne sous jacente à la ligne actuelle.
- */
-function entree_texte(line, content, ajoutLigne) {
-	// Si on est en train de dessiner, on cancel la fonction
-	if (noxuApp.mainDrawWindow) { return }
-	
-	if (noxuApp.mode == "new") {
-		noxuApp.mainWindow.webContents.send('changeInput', '')
-		var html = noteToHtml(content)
-		// S'il s'agit d'une image on enregistre non pas la note (img=) mais le produit par la fonction noteToHtml 
-		// afin de satisfaire l'éditeur d'images.
-		if (html.substr(0, 4) == "<img") {
-			// Ajout du contenu traité par noteToHtml en cas d'image
-			noxuApp.note.push(html)
-			// On ajoute un délai pour laisser charger l'image
-			noxuApp.mainWindow.webContents.send('addDiv', noxuApp.note.length-1, html)
-			// setTimeout( ()=>{
-			// 	noxuApp.mainWindow.webContents.send('addDiv', noxuApp.note.length-1, html);
-			// }, 200 )
-		} else {
-			// Ajout de l'extrait dans la note
-			noxuApp.note.push(content)
-			noxuApp.mainWindow.webContents.send('addDiv', noxuApp.note.length-1, html)
-		}
-
-	} else {
-		//noxuApp.mainWindow.webContents.send('setDivContent', line, noteToHtml(content));
-		//noxuApp.note[line] = content;
-		if (ajoutLigne && line+1 <= noxuApp.note.length-1) clickInserter(line+1, content)
-		else {
-			noxuApp.mainWindow.webContents.send('setDivContent', line, noteToHtml(content))
-			noxuApp.note[line] = content
-			noxuApp.mainWindow.webContents.send('restoreMainForm')
-			noxuApp.mode = "new"
-		}
-	}
-	console.log(noxuApp.note);
-}
-ipc.on('entree_texte', (event, line, content, ajoutLigne) => entree_texte(line, content, ajoutLigne))
-
-/**
- * La fonction qui valide l'edition precedente et prepare la nouvelle edition
- * @param {number} line Ligne a editer, 0 pour la derniere ligne
- * @param {string} actualFormContent Contenu du formulaire actuel à valider dans la div précedemment editee
- */
-function edit_div(line, actualFormContent) {
-	// Si on est en train de dessiner, on cancel la fonction
-	if (noxuApp.mainDrawWindow) { return }
-	// On valide le contenu précédent
-	if (noxuApp.mode == "edit") {
-		// On valide le contenu déjà en cours d'édition
-		noxuApp.mainWindow.webContents.send('setDivContent', noxuApp.editedLine, noteToHtml(actualFormContent));
-		noxuApp.note[noxuApp.editedLine] = actualFormContent;
-	} else noxuApp.mode = "edit"
-	// Si on a demande une ligne inexistante alors on restaure le form principal
-	if(line > noxuApp.note.length-1) {
-		noxuApp.mode = "new"
-		noxuApp.mainWindow.webContents.send('restoreMainForm')
-		return
-	}
-	// Utilisé en cas d'appui sur la flèche supérieure notamment
-	if (line == 0 && noxuApp.note.length > 1) noxuApp.editedLine = noxuApp.note.length-1
-	else noxuApp.editedLine = line
-	// Stoquage du contenu edité
-	noxuApp.editedContent = noxuApp.note[noxuApp.editedLine]
-	// S'il s'agit d'une image, on l'édite avec draw
-	let sub
-	try { sub = noxuApp.editedContent.substr(0, 4) } catch (e) {}
-
-	if (sub == "<img") {
-		// Instanciation d'une DrawWindow
-		noxuApp.createMainDrawWindow();
-		// Sélection du src="data"
-		data = /src="[\s\S]*?"/g.exec(noxuApp.editedContent)[0];
-		// Isolement de la source
-		data = data.slice(5, -1);
-		// Quand la fenêtre de dessin est prête, on lui demande de charger l'image
-		noxuApp.mainDrawWindow.browserWindow.webContents.on('did-finish-load', ()=>{
-			noxuApp.mainDrawWindow.browserWindow.webContents.send('setEditState', line)
-			noxuApp.mainDrawWindow.browserWindow.webContents.send('loadImage', data)
-		})
-	} else {			
-		// Déplacement du form avec le contenu édité
-		// Délai placé pour laisser le temps de terminer l'édition de la ligne précédente avant
-		// de demander au formulaire de se déplacer. Dans le cas de la regénération d'un tableau
-		// par exemple.
-		if (noxuApp.editedContent && (actualFormContent.substr(0,1)=="/" || noxuApp.editedContent.substr(0,1)=="/") ) {
-			setTimeout(() => { noxuApp.mainWindow.webContents.send('moveForm', noxuApp.editedLine, noxuApp.editedContent) }, 5)
-			//noxuApp.mainWindow.webContents.send('moveForm', noxuApp.editedLine, noxuApp.editedContent)
-		} else {
-			// QUAND ON DOIT LE FAIRE ???
-			setTimeout(() => { noxuApp.mainWindow.webContents.send('moveForm', noxuApp.editedLine, noxuApp.editedContent) }, 5)
-			//noxuApp.mainWindow.webContents.send('moveForm', noxuApp.editedLine, noxuApp.editedContent)
-		}
-	}
-}
-ipc.on('edit_div', (event, line, actualFormContent) => edit_div(line, actualFormContent))
-
-
-/**
- * Fonction qui supprime une ligne
- * @param {number} line Ligne a supprimer
- */
-function delete_div(line) {
-	// Supprimer la ligne du tableau
-	noxuApp.note.splice(line, 1)
-	reloadContent()
-	// Remettre le noxuApp.mode new
-	noxuApp.mode = "new"
-	noxuApp.mainWindow.webContents.send('restoreMainForm')
-}
-ipc.on('delete_div', (event, line) => { delete_div(line) }) // Handling call
-
-
 /** 
  * Créee un fichier au format NoxuNote (.txt) 
  * @param title le nom du fichier
  */
-function save_as_noxunote(title, matiere) {
+function save_as_noxunote(title, matiere, content) {
 	// On détermine un nom par défaut.
 	var date = new Date()
 	var hour
@@ -238,10 +116,6 @@ function save_as_noxunote(title, matiere) {
 
 	if (title == "not defined") title = "Note " + now
 	var path = homedir + '/NoxuNote/notes/' + title + '.txt';
-	var content = "";
-	for (var j = 0; j < noxuApp.note.length; j++) {
-		content += noxuApp.note[j] + '\n'
-	}
 	try { fs.writeFileSync(path, content) }
 	catch (e) { console.log('Failed to save the file !' + e) }
 	// Ajout de la matière dans la base de données
@@ -249,41 +123,11 @@ function save_as_noxunote(title, matiere) {
 	noxuApp.db.notes.setProperty('lastedit', now, title)
 }
 
-
-/** 
- * Reset le noxuApp.mainWindow content et reconstruit le document, utilisé après grosses modification de tableaux notamment
- */
-function reloadContent() {
-	// Resetting renderThread content
-	noxuApp.mainWindow.webContents.send('clearContent')
-	for (var i = 1; i < noxuApp.note.length; i++) {
-		// Envoi du contenu traité
-		noxuApp.mainWindow.webContents.send('addDiv', i, noteToHtml(noxuApp.note[i]))
-	}
-	noxuApp.mainWindow.webContents.send('restoreMainForm')
-}
-ipc.on('reloadContent', (event) => reloadContent())
-
-/** 
- * Reset le programme et les variables
- */
-function reset() {
-	// Resetting renderThread content
-	noxuApp.mainWindow.webContents.send('clearContent')
-	noxuApp.mainWindow.webContents.send('restoreMainForm')
-	// Resetting all variables
-	noxuApp.note = new Array()
-	noxuApp.note.push("@NOXUNOTE_BEGIN")
-	noxuApp.mode = "new"
-}
-ipc.on('reset', (event) => reset())
-
 /**
  * Loads a noxunote file without prompting for save
  * @param {String} name Le nom du fichier à charger
  */
 function force_load(name) {
-	reset()
 	// Loading file content
 	var fileContent;
 	try {
@@ -292,9 +136,7 @@ function force_load(name) {
 		console.log(e);
 	}
 	// Setting file content to renderThread divs
-	for (var j = 1; j < fileContent.length-1; j++) {
-		entree_texte(0, fileContent[j]);
-	}
+	noxuApp.mainWindow.webContents.send('setNoteContent', fileContent)
 	// Setting file title to renderThread title
 	noxuApp.mainWindow.webContents.send('setNoteTitle', name)
 	noxuApp.mainWindow.webContents.send('setNoteMatiere', noxuApp.db.notes.getDetails(name+'.txt').matiere)
@@ -333,13 +175,6 @@ function load_noxunote(name, isFileModified) {
 }
 ipc.on('load_noxunote', (event, path, isFileModified) => load_noxunote(path, isFileModified));
 
-
-// Permet de régénérer une div
-// utilisé lorsque l'on modifie l'emplacement d'une div pour réattribuer le onClick
-ipc.on('repairDiv', (event, line) => {
-	noxuApp.mainWindow.webContents.send('setDivContent', line, noteToHtml(noxuApp.note[line]));
-})
-
 // Génère une fenêtre de dessin, appelé quand on appuis sur "Dessiner".
 ipc.on('dessiner', (event) => {
 	if ( !noxuApp.mainDrawWindow ) {
@@ -366,18 +201,13 @@ function newEditedDessin(data, line) {
 }
 ipc.on('newEditedDessin', (event, data, line) => newEditedDessin(data, line))
 
-// Utilisé pour supprimer un dessin puis de fermer la fenêtre de dessin.
-ipc.on('deleteDessin', (event, line) => {
-	delete_div(line)
-	noxuApp.mainDrawWindow.browserWindow.close()
-})
 
-ipc.on('save_as_noxunote', (event, title, matiere) => save_as_noxunote(title, matiere));
+
+ipc.on('save_as_noxunote', (event, title, matiere, content) => save_as_noxunote(title, matiere, content));
 
 /***************************************************************************************************
  *                                            PRINTING                                             *
  ***************************************************************************************************/
-
 function openExport() {
 	noxuApp.createPrePrintWindow()
 }
@@ -457,50 +287,6 @@ ipc.on('openExport', (event) => openExport())
 ipc.on('makePreview', (event, format, css) => makePreview(format, css, event.sender))
 ipc.on('makeFile', (event, format) => makeFile(format))
 
-function promptImage(action) {
-	// Prompt the path
-	var path = dialog.showOpenDialog(
-		{
-			title: "Choisissez une image",
-			filters: [
-				{name: 'PNG', extensions: ['png']},
-				{name: 'JPG', extensions: ['jpg']},
-				{name: 'GIF', extensions: ['gif']},
-				{name: 'BITMAP', extensions: ['bmp']}
-			]
-		}
-	)
-	if (path) {
-		// Generating filename
-		var imgFeed = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-		var fileName = homedir+'/NoxuNote/created_images/imported_'+imgFeed+'.png';
-
-		// Copying file from path to /NoxuNote folder
-		fs.createReadStream(path[0]).pipe(fs.createWriteStream(fileName))
-		.on('close', function (err) {
-			if (err) throw Error(err)
-			else action(fileName)
-		});
-	}
-}
-
-ipc.on('insertLocalImage', (event) => {
-	if ( !noxuApp.mainDrawWindow && (noxuApp.mode == "new") ) {
-		promptImage((fileName) => {
-			entree_texte(0, "<img class='schema' src=\""+fileName+"\"></img>")
-		})
-	}
-})
-
-// Évènement appelé par le mainDrawWindow lors de l'appui de l'insertion d'image
-ipc.on('insertLocalImageDrawer', (event)=> {
-	if (noxuApp.mainDrawWindow) {
-		promptImage((fileName)=>{
-			noxuApp.mainDrawWindow.browserWindow.webContents.send('insertLocalImage', fileName)
-		})
-	}
-})
-
 function loadExternalLink(URL) {
 	var browser = new BrowserWindow({
 		width: 1000,
@@ -547,24 +333,6 @@ ipc.on('saveToDoContent', (event, content) => {
 	catch (e) { console.log('Failed to save the file !' + e); }
 })
 
-function clickInserter(line, actualFormContent) {
-	// Si on était en noxuApp.mode édition
-	if (noxuApp.mode=="edit") {
-		// On valide le contenu déjà en cours d'édition
-		noxuApp.mainWindow.webContents.send('setDivContent', noxuApp.editedLine, noteToHtml(actualFormContent));
-		noxuApp.note[noxuApp.editedLine] = actualFormContent;
-	} 
-	noxuApp.mode = "new"
-
-	// On ajoute une ligne dans la note avant la ligne "line", on rafraichit et on l'édite
-	noxuApp.note.splice(line, 0, "")
-	reloadContent()
-	edit_div(line, "")
-	console.log(noxuApp.note);
-}
-
-ipc.on('inserterClicked', (event, line, actualFormContent)=>clickInserter(line, actualFormContent))
-
 ipc.on('minimizeWindow', event => BrowserWindow.fromWebContents(event.sender).minimize())
 
 ipc.on('maximizeWindow', (event)=>{
@@ -591,10 +359,7 @@ ipc.on('db_addAssoc', (event, input, output) => event.returnValue = noxuApp.db.d
 
 
 ipc.on('openSettings', (event, key) => { noxuApp.createSettingsWindow(key) })
-
-
 /***************************************************************************************************
  *                               RÉCUPÉRATION D'INFORMATIONS TIERCES                               *
  ***************************************************************************************************/
-ipc.on('getNoteLength', event => event.returnValue = noxuApp.note.length-1)
 ipc.on('amIMaximized', event => event.returnValue = BrowserWindow.fromWebContents(event.sender).isMaximized())
