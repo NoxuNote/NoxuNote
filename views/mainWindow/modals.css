@@ -1,6 +1,17 @@
-.card-media {
-    width: 15rem;
-    position: inline-block;
-    margin-left:3px;
-    margin-right:3px;
+.media-largebutton {
+    display: inline-block;
+    width: 184px;
+    height: 160px;
+    padding-top: 26px;
+    /* color: white; */
+    background-color: rgb(113, 137, 160);
+    font-size: 2.5em;
+    text-align: center;
+    margin-right: 14px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+.media-largebutton:hover {
+    background-color: rgb(144, 165, 186);
+    transition: background-color 0.2s;
 }
