@@ -65,6 +65,8 @@ body {
 	background-color: #282F37;
 	padding: -20px;
 	color: #DDE0E0;
+}
+#editorRoot {
 	height: 100vh;
 }
 div#windowTitle {

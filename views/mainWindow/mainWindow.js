@@ -17,12 +17,16 @@ const homedir = require('os').homedir()
 const fs = require("fs")
 const math = require("mathjs")
 const parser = require("../../parser.js")
+const ModalManager = require("./ModalManager.js").ModalManager
 
 var title = "not defined";
 var isFileModified = false
 
 let assoc // table des association abbréviation -> mot original
 const editor = $('#summernote')
+
+// Manageur de modales
+const modalManager = new ModalManager()
 
 /***************************************************************************************************
  *                                    DÉCLARATION DES FONCTIONS                                    *
@@ -482,7 +486,7 @@ var MediaButton = function (context) {
   var button = ui.button({
     contents: '<i class="fa fa-picture-o"/>',
     tooltip: 'Image, vidéo, dessin',
-    click: ()=>{mediaModal.modal('show')}
+    click: ()=>{modalManager.openModal("choixMediaModal")}
   });
 
   return button.render();   // return button as jquery object
@@ -516,8 +520,15 @@ $(document).ready(function() {
 	})
 })
 
+function insertImageFromUrl() {
+	const field = document.getElementById("imageByUrlValue");
+	editor.summernote('insertImage', field.value, "")
+	modalManager.closeAllModal()
+	field.value = ""
+}
+
 const editableRegion = editor.find('[contenteditable]');
-$('body').click(()=>{editor.summernote('focus'); editableRegion.focus().val(editableRegion.val())})
+$('#editorRoot').click(()=>{editor.summernote('focus')})
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/

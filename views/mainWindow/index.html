@@ -149,51 +149,80 @@
 			<span id="calcResultDerivative" class="calcText">0</span>
 		</div>
 	</div>
-
-</header>
-<body>
 	
-	<!-- Choix Media Modal -->
-	<div class="modal fade" id="choixMediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Insérer un média</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body" style="text-align: center">
-						<h1>Image</h1>
-						<div class="media-largebutton">
-							<i class="fa fa-link" aria-hidden="true"></i>
-							<br>URL
-						</div>
-						<div class="media-largebutton">
-							<i class="fa fa-file-image-o" aria-hidden="true"></i>
-							<br>Fichier
-						</div>
-						<div class="media-largebutton">
-							<i class="fa fa-pencil" aria-hidden="true"></i>
-							<br>Schéma
-						</div>
-						<br><br>
-						<h1>Vidéo</h1>
-						<div class="media-largebutton">
-							<i class="fa fa-link" aria-hidden="true"></i>
-							<br>URL
-						</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+</header>
+
+<body>
+	<div id="modals">
+		<!-- Choix Media Modal -->
+		<div class="modal fade" id="choixMediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Insérer un média</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" style="text-align: center">
+							<h1>Image</h1>
+							<div class="media-largebutton" onClick="modalManager.openModal('imageByUrlModal')">
+								<i class="fa fa-link" aria-hidden="true"></i>
+								<br>URL
+							</div>
+							<div class="media-largebutton">
+								<i class="fa fa-file-image-o" aria-hidden="true"></i>
+								<br>Fichier
+							</div>
+							<div class="media-largebutton">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<br>Schéma
+							</div>
+							<br><br>
+							<h1>Vidéo</h1>
+							<div class="media-largebutton">
+								<i class="fa fa-link" aria-hidden="true"></i>
+								<br>URL
+							</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+					</div>
 				</div>
 			</div>
 		</div>
+
+		<!-- Insert Image by link modal -->
+		<div class="modal fade" id="imageByUrlModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Insérer une image via URL</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" style="text-align: center">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="inputGroup-sizing-default">URL</span>
+							</div>
+							<input placeholder="http://example.com/image.jpg ..." id="imageByUrlValue" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" onClick="insertImageFromUrl()">Importer</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
-	
-
-	<div id="summernote"></div>
+	<div id="editorRoot">
+		<div id="summernote"></div>
+	</div>
 </body>
 
 <footer>
