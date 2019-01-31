@@ -476,11 +476,13 @@ function closeWindow() {
 var MediaButton = function (context) {
   var ui = $.summernote.ui;
 
+  const mediaModal = $('#choixMediaModal');
+
   // create button
   var button = ui.button({
-    contents: '<i data-toggle="modal" data-target="#choixMediaModal" class="fa fa-picture-o"/>',
+    contents: '<i class="fa fa-picture-o"/>',
     tooltip: 'Image, vidéo, dessin',
-    click: ()=>{}
+    click: ()=>{mediaModal.modal('show')}
   });
 
   return button.render();   // return button as jquery object
