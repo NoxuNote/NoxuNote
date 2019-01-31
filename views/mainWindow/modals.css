@@ -1,13 +1,14 @@
 .media-largebutton {
     display: inline-block;
-    width: 184px;
-    height: 160px;
+    width: 150px;
+    height: 120px;
     padding-top: 26px;
     /* color: white; */
     background-color: rgb(113, 137, 160);
-    font-size: 2.5em;
+    font-size: 2.0em;
     text-align: center;
     margin-right: 14px;
+    margin-bottom: 14px;
     transition: background-color 0.2s;
     cursor: pointer;
 }

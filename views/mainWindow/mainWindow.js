@@ -486,7 +486,7 @@ var MediaButton = function (context) {
   var button = ui.button({
     contents: '<i class="fa fa-picture-o"/>',
     tooltip: 'Image, vidéo, dessin',
-    click: ()=>{modalManager.openModal("choixMediaModal")}
+    click: ()=>{editor.summernote('saveRange'); modalManager.openModal("choixMediaModal")}
   });
 
   return button.render();   // return button as jquery object
@@ -522,7 +522,9 @@ $(document).ready(function() {
 
 function insertImageFromUrl() {
 	const field = document.getElementById("imageByUrlValue");
-	editor.summernote('insertImage', field.value, "")
+	editor.summernote('restoreRange')
+	editor.summernote('focus')
+	editor.summernote('insertImage', field.value, field.value)
 	modalManager.closeAllModal()
 	field.value = ""
 }
