@@ -4,6 +4,7 @@ class ModalManager {
         this.modals = new Object()
         this.modals["choixMediaModal"] = $("#choixMediaModal")
         this.modals["imageByUrlModal"] = $("#imageByUrlModal")
+        this.modals["equationModal"] = $("#equationModal")
     }
 
     closeModal(modalId) {
@@ -29,4 +30,4 @@ class ModalManager {
 
 }
 
-exports.ModalManager = ModalManager
+module.exports = ModalManager

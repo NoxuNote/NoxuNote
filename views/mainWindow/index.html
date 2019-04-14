@@ -218,6 +218,61 @@
 			</div>
 		</div>
 
+		<!-- Insert Equation modal -->
+		<div class="modal fade" id="equationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Insérer une équation</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" style="text-align: center">
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="inputGroup-sizing-default">Preset</span>
+								</div>
+								<select id="equationPreset" class="form-control" onchange="equationManager.chosenModel()">
+									<option value="default" selected="selected">...</option>
+									<optgroup>Analyse</optgroup>
+									<option value="limit">Limite</option>
+									<option value="sum">Somme</option>
+									<option value="integral">Intégrale</option>
+									<optgroup>Matrices</optgroup>
+									<option value="matrix2x2">2x2</option>
+									<option value="matrix3x3">3x3</option>
+									<optgroup>Accolades</optgroup>
+									<option value="system">Système d'équations</option>
+									<option value="accsup">Accolades supérieures</option>
+									<option value="accinf">Accolades inférieures</option>
+								</select>							
+								</div>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="inputGroup-sizing-default">Formule</span>
+								</div>
+								<input placeholder="lim_(x->oo) f'(x) = 0" id="equationValue" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" onkeyup="equationManager.onKeyUp(event)">
+							</div>
+							<div class="mb-3">
+								<h5>Aperçu</h5>
+								<div class="bg-white text-dark mx-auto p-5 w-75 rounded" id="equation¨Preview">
+									<!-- Here goes the MathJax preprocessed result -->
+								</div>
+								<p>Historique</p>
+								<div id="equationHistory">
+									<!-- Here goes the rendered nodes history -->
+								</div>
+							</div>
+						</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" onClick="equationManager.insertEquation()">Importer</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 
 	<div id="editorRoot">
@@ -234,15 +289,15 @@
 		margin: 0px;
 	}	
 	</style>
-	<script src="../../node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
 	<script src="../../node_modules/html5tooltipsjs/html5tooltips.js"></script>
-	<script src="../../node_modules/jquery/dist/jquery.js"></script>
+	<script src="../../node_modules/jquery/dist/jquery.min.js"></script>
 	<script src="../../node_modules/popper.js/dist/umd/popper.min.js"></script>
 	<script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
-	<script src="../../node_modules/summernote/dist/summernote-bs4.js"></script>
+	<script src="../../node_modules/summernote/dist/summernote-bs4.min.js"></script>
 	<script src="../../node_modules/summernote/lang/summernote-fr-FR.js"></script>
-	<script src="draggable.js"></script>
-	<script src="NoxuInput.js"></script>
+	<script src="../../node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
+<script src="draggable.js"></script>
+<script src="NoxuInput.js"></script>
 	<script src="mainWindow.js"></script> <!-- Electron Script -->
 	<script src="osAdaptation.js"></script>
 </footer>

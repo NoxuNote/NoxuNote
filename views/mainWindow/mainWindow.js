@@ -17,16 +17,18 @@ const homedir = require('os').homedir()
 const fs = require("fs")
 const math = require("mathjs")
 const parser = require("../../parser.js")
-const ModalManager = require("./ModalManager.js").ModalManager
-
+const ModalManager = require("./ModalManager.js")
+const EquationManager = require('./EquationManager.js')
 var title = "not defined";
 var isFileModified = false
 
-let assoc // table des association abbréviation -> mot original
+const mediaModal = $('#choixMediaModal');
 const editor = $('#summernote')
+
 
 // Manageur de modales
 const modalManager = new ModalManager()
+const equationManager = new EquationManager(modalManager, editor)
 
 /***************************************************************************************************
  *                                    DÉCLARATION DES FONCTIONS                                    *
@@ -457,13 +459,6 @@ function setNoteMatiere(matiere) {
 	if (!found) document.getElementById('matneutre').checked = true
 }
 
-/**
- * Charge le contenu de la base de données des associations
- */
-function generateAssocList() {
-	assoc = ipcRenderer.sendSync('db_getAssocList')
-}
-
 function maximizeWindow() {
 	ipc.send("maximizeWindow");
 }
@@ -479,14 +474,27 @@ function closeWindow() {
  ***************************************************************************************************/
 var MediaButton = function (context) {
   var ui = $.summernote.ui;
-
-  const mediaModal = $('#choixMediaModal');
-
   // create button
   var button = ui.button({
     contents: '<i class="fa fa-picture-o"/>',
     tooltip: 'Image, vidéo, dessin',
     click: ()=>{editor.summernote('saveRange'); modalManager.openModal("choixMediaModal")}
+  });
+
+  return button.render();   // return button as jquery object
+}
+
+var EquationButton = function (context) {
+  var ui = $.summernote.ui;
+  // create button
+  var button = ui.button({
+    contents: '<i class="fa fa-calculator"/>',
+    tooltip: 'Équation',
+    click: ()=>{
+			editor.summernote('saveRange')
+			modalManager.openModal("equationModal")
+			equationManager.refreshHistory()
+		}
   });
 
   return button.render();   // return button as jquery object
@@ -512,10 +520,11 @@ $(document).ready(function() {
 			['style', ['bold', 'italic', 'underline']],
 			['para', ['ul', 'ol', 'paragraph']],
 			['font', ['superscript', 'subscript']],
-			['insert', ['media', 'table']]
+			['insert', ['media', 'equation', 'table']]
 		],
 		buttons: {
-			media: MediaButton
+			media: MediaButton,
+			equation: EquationButton
 		}
 	})
 })
@@ -528,6 +537,8 @@ function insertImageFromUrl() {
 	modalManager.closeAllModal()
 	field.value = ""
 }
+
+
 
 const editableRegion = editor.find('[contenteditable]');
 $('#editorRoot').click(()=>{editor.summernote('focus')})
@@ -542,9 +553,6 @@ loadTodoFile()
 
 // Enable tab character insertion on default input
 generateMatList()
-
-// Generate association table
-generateAssocList()
 
 
 /***************************************************************************************************
