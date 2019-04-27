@@ -151,7 +151,6 @@ function dessiner() {
 	ipc.send('dessiner');
 }
 
-
 /**
  * Enregistre la note au format NoxuNote
  */
@@ -449,7 +448,7 @@ function openSettings(key) {
 function setNoteMatiere(matiere) {
 	let list = document.getElementById('matieres')
 	let found = false
-	list.childNodes.forEach(e=>{
+	list.childNodes.forEach(e => {
 		if (e.firstChild.value === matiere) {
 			e.firstChild.checked = true
 			found = true
@@ -473,36 +472,48 @@ function closeWindow() {
  *                                   				 SUMMERNOTE      			                                 *
  ***************************************************************************************************/
 var MediaButton = function (context) {
-  var ui = $.summernote.ui;
-  // create button
-  var button = ui.button({
-    contents: '<i class="fa fa-picture-o"/>',
-    tooltip: 'Image, vidéo, dessin',
-    click: ()=>{editor.summernote('saveRange'); modalManager.openModal("choixMediaModal")}
-  });
+	var ui = $.summernote.ui;
+	// create button
+	var button = ui.button({
+		contents: '<i class="fa fa-picture-o"/>',
+		tooltip: 'Image, vidéo, dessin',
+		click: () => { editor.summernote('saveRange'); modalManager.openModal("choixMediaModal") }
+	});
 
-  return button.render();   // return button as jquery object
+	return button.render();   // return button as jquery object
 }
 
 var EquationButton = function (context) {
-  var ui = $.summernote.ui;
-  // create button
-  var button = ui.button({
-    contents: '<i class="fa fa-calculator"/>',
-    tooltip: 'Équation',
-    click: ()=>{
+	var ui = $.summernote.ui;
+	// create button
+	var button = ui.button({
+		contents: '<i class="fa fa-calculator"/>',
+		tooltip: 'Équation',
+		click: () => {
 			editor.summernote('saveRange')
 			modalManager.openModal("equationModal")
 			equationManager.refreshHistory()
 		}
-  });
-
-  return button.render();   // return button as jquery object
+	});
+	return button.render();   // return button as jquery object
 }
 
-$(document).ready(function() {
-	let words = ipcRenderer.sendSync('db_getAssocList').map(element=>element.output)
-  editor.summernote({
+var SchemaButton = function (context) {
+	var ui = $.summernote.ui;
+	// create button
+	var button = ui.button({
+		contents: '<i class="fa fa-pencil"/>',
+		tooltip: 'Créer un dessin/schéma',
+		click: () => {
+			dessiner()
+		}
+	});
+	return button.render();   // return button as jquery object
+}
+
+$(document).ready(function () {
+	let words = ipcRenderer.sendSync('db_getAssocList').map(element => element.output)
+	editor.summernote({
 		lang: 'fr-FR',
 		focus: true,
 		hint: {
@@ -516,6 +527,7 @@ $(document).ready(function() {
 		},
 		toolbar: [
 			['magic', ['style']],
+			['create', ['schema']],
 			['fontsize', ['fontname', 'fontsize', 'color']],
 			['style', ['bold', 'italic', 'underline']],
 			['para', ['ul', 'ol', 'paragraph']],
@@ -524,7 +536,8 @@ $(document).ready(function() {
 		],
 		buttons: {
 			media: MediaButton,
-			equation: EquationButton
+			equation: EquationButton,
+			schema: SchemaButton
 		}
 	})
 })
@@ -541,7 +554,7 @@ function insertImageFromUrl() {
 
 
 const editableRegion = editor.find('[contenteditable]');
-$('#editorRoot').click(()=>{editor.summernote('focus')})
+$('#editorRoot').click(() => { editor.summernote('focus') })
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/
@@ -563,4 +576,4 @@ ipcRenderer.on('setNoteMatiere', (event, matiere) => setNoteMatiere(matiere))
 ipcRenderer.on('callSaveAsNoxuNote', (event) => ipc.send('save_as_noxunote', title))
 ipcRenderer.on('resetIsFileModified', (event) => isFileModified = false)
 ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); generateAssocList() })
-ipcRenderer.on('setNoteContent', (event, note) => { editor.summernote('reset') ; editor.summernote('code', note) } )
+ipcRenderer.on('setNoteContent', (event, note) => { editor.summernote('reset'); editor.summernote('code', note) })
