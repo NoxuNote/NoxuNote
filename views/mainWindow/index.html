@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="../../node_modules/font-awesome/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="../../node_modules/html5tooltipsjs/html5tooltips.css">
 	<link rel="stylesheet" type="text/css" href="../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
+	<link rel="stylesheet" href="./materializecss-custom.css">
 	<link rel="stylesheet" href="./bootstrap-sandstone.min.css">
 	<link rel="stylesheet" href="./customBootstrap.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
@@ -20,29 +21,13 @@
 	<div id="barre_haut">
 		<div id="windowTitle"></div>
 		<div id="windowTitleText">
-			<img src="../../images/noxunote.png" height="12px"/> NoxuNote
+			<img src="../../images/noxunote.png" height="12px"/> NoxuNote - 
+			<div id="TitrePrincipal" onClick='boutonMenuGaucheSauver()'>(Cliquez pour nommer la note)</div>
 		</div>
 		<div id="trayButtons">
 			<i onClick="minimizeWindow()" class="fa fa-window-minimize pointable" style="color: rgb(100, 129, 184); font-size: 1.1em; margin-right: 5px;" aria-hidden="true"></i>
 			<i id="maximizeButton" onClick="maximizeWindow()" class="fa fa-window-maximize pointable" style="color: rgb(184, 150, 100); font-size: 1.1em; margin-right: 5px" aria-hidden="true"></i>
 			<i onClick="closeWindow()" class="fa fa-times pointable" style="color: rgb(169, 71, 71); font-size: 1.3em" aria-hidden="true"></i>
-		</div>
-		<div>
-			<div class="thumb">
-				<button data-tooltip="Nouvelle note" data-tooltip-color="slate" data-tooltip-stickto="right" data-tooltip-animate-function="foldin" class="headerButton" onClick='newFile()'><i class="fa fa-plus" aria-hidden="true"></i></button>
-				<div id="TitrePrincipal" onClick='boutonMenuGaucheSauver()'>(Cliquez pour nommer la note)</div>
-			</div>
-			<div class="listeBoutons">
-				<button data-tooltip="Sauvegarder"class="headerButton" data-tooltip-color="slate" data-tooltip-animate-function="foldin" onClick='boutonMenuGaucheSauver()'><i class="fa fa-save" aria-hidden="true"></i></button>
-				<button data-tooltip="Ouvrir" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='boutonMenuGaucheOuvrir()'><i class="fa fa-folder-open" aria-hidden="true"></i></button>
-				<button data-tooltip="Exporter" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='openExport()'><i class="fa fa-print"></i></button>
-				<button data-tooltip="Aide et tutoriel" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='boutonAide()'><i class="fa fa-info" aria-hidden="true"></i></button>
-				<button data-tooltip="Dessiner" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='dessiner()'><i class="fa fa-pencil" aria-hidden="true"></i></button>
-				<button data-tooltip="Insérer une image" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='insertLocalImage()'><i class="fa fa-link" aria-hidden="true"></i></button>
-				<button data-tooltip="Calculatrice" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='boutonCalculatrice()'><i class="fa fa-calculator" aria-hidden="true"></i></button>
-				<button data-tooltip="Bloc notes" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='toDo()'><i class="fa fa-sticky-note" aria-hidden="true"></i></button>
-				<button data-tooltip="Réglages de l'application" data-tooltip-stickto="left" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="headerButton" onClick='openSettings()'><i class="fa fa-cog" aria-hidden="true"></i></button>
-			</div>
 		</div>
 	</div>
 	<div id="toDoBlock" class="toDoBlock">
@@ -148,6 +133,32 @@
 			<span class="calcText">=</span>
 			<span id="calcResultDerivative" class="calcText">0</span>
 		</div>
+	</div>
+
+	<div class="fixed-action-btn">
+		<a class="btn-floating btn-large red">
+			<i class="fa fa-sliders" aria-hidden="true"></i>
+		</a>
+		<ul>
+			<li><a class="btn-floating red" data-tooltip="Réglages" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+				<i class="fa fa-cog" aria-hidden="true"></i>
+			</a></li>
+			<li><a class="btn-floating yellow darken-1" data-tooltip="Block notes" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+				<i class="fa fa-sticky-note" aria-hidden="true"></i>
+			</a></li>
+			<li><a class="btn-floating yellow-1" data-tooltip="Calculatrice" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+				<i class="fa fa-calculator" aria-hidden="true"></i>
+			</a></li>
+			<li><a class="btn-floating green" data-tooltip="Ouvrir" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+				<i class="fa fa-folder-open" aria-hidden="true"></i>
+			</a></li>
+			<li><a class="btn-floating blue" data-tooltip="Enregistrer" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+				<i class="fa fa-save" aria-hidden="true"></i>
+			</a></li>
+			<li><a class="btn-floating purple" data-tooltip="Nouvelle note" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+				<i class="fa fa-plus" aria-hidden="true"></i>
+			</a></li>
+		</ul>
 	</div>
 	
 </header>
@@ -278,6 +289,7 @@
 	<div id="editorRoot">
 		<div id="summernote"></div>
 	</div>
+
 </body>
 
 <footer>
@@ -291,14 +303,16 @@
 	</style>
 	<script src="../../node_modules/html5tooltipsjs/html5tooltips.js"></script>
 	<script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="../../node_modules/materialize-css/dist/js/materialize.min.js"></script>
 	<script src="../../node_modules/popper.js/dist/umd/popper.min.js"></script>
 	<script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
 	<script src="../../node_modules/summernote/dist/summernote-bs4.min.js"></script>
 	<script src="../../node_modules/summernote/lang/summernote-fr-FR.js"></script>
 	<script src="../../node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
-<script src="draggable.js"></script>
-<script src="NoxuInput.js"></script>
+	<script src="draggable.js"></script>
+	<script src="NoxuInput.js"></script>
 	<script src="mainWindow.js"></script> <!-- Electron Script -->
+	<script src="fab.js"></script>
 	<script src="osAdaptation.js"></script>
 </footer>
 </html>

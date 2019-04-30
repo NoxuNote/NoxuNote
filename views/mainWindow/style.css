@@ -85,20 +85,20 @@ div#windowTitleText {
     width: 100%;
     text-align: center;
     font-family: HandWrite;
-    font-size: 1em;
-    color: #999999;
+    font-size: 1.1em;
+    color: #e0e0e0;
 }
 .pointable {
 	-webkit-app-region: no-drag;
 	cursor: pointer;
 }
 div#barre_haut {
-    animation: apparitionHaut 1.0s forwards;
+    /* animation: apparitionHaut 1.0s forwards; */
     z-index: 10;
     margin-top: -22px;
     margin-right: -8px;
-    padding-top: 25px;
-    min-height: 34px;
+    padding-top: 27px;
+    /* min-height: 37px; */
     min-width: 350px;
     user-select: none;
     width: 100%;
@@ -125,12 +125,10 @@ div#barre_haut {
     overflow: hidden;
 }
 div#TitrePrincipal {
-    text-overflow: ellipsis;
-    float: left;
-    margin-top: 4px;
-    /* white-space: nowrap; */
-    /* overflow: hidden; */
-    font-family: FlatLight;
+	display: inline-block;
+	cursor: pointer;
+	text-overflow: ellipsis;
+	font-family: sans-serif;
 }
 div#TitrePrincipal:hover {
 	color: white;

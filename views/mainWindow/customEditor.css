@@ -13,7 +13,7 @@
   background: #36404c;
   opacity: 0.97;
   position: fixed !important;
-  margin-top: 61px;
+  margin-top: 25px;
   width: 100vw;
   margin-left: auto; margin-right: auto;
 }
@@ -29,4 +29,21 @@
 }
 .note-editor.note-frame {
   /* margin-top: 60px; */
+}
+.btn-sm, .btn-group-sm>.btn {
+  padding: 0.15rem 0.6rem 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 5px;
+  font-size: 1em;
+  height: 29px!important;
+}
+.btn i {
+  font-size: 1.1rem;
+  line-height: inherit;
+}
+/*
+FROM BOOTSTRAP */
+.card {
+  background: transparent;
 }
