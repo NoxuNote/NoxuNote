@@ -392,8 +392,8 @@ function newFile() {
 			return
 		}
 	}
-	ipc.send('reset');
 	setNoteTitle("");
+	editor.summernote('reset')
 	isFileModified = false
 }
 
@@ -505,6 +505,7 @@ var SchemaButton = function (context) {
 		contents: '<i class="fa fa-pencil"/>',
 		tooltip: 'Créer un dessin/schéma',
 		click: () => {
+			editor.summernote('saveRange')
 			dessiner()
 		}
 	});
@@ -538,6 +539,11 @@ $(document).ready(function () {
 			media: MediaButton,
 			equation: EquationButton,
 			schema: SchemaButton
+		},
+		callbacks: {
+			onChange: function(contents, $editable) {
+				isFileModified = true
+			}
 		}
 	})
 })

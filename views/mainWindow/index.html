@@ -137,25 +137,25 @@
 
 	<div class="fixed-action-btn">
 		<a class="btn-floating btn-large red">
-			<i class="fa fa-sliders" aria-hidden="true"></i>
+			<img src="../../images/LOGO_SVG.svg" class="multimenu_logo">
 		</a>
 		<ul>
-			<li><a class="btn-floating red" data-tooltip="Réglages" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="openSettings()"><a class="btn-floating red" data-tooltip="Réglages" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fa fa-cog" aria-hidden="true"></i>
 			</a></li>
-			<li><a class="btn-floating yellow darken-1" data-tooltip="Block notes" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="toDo()"><a class="btn-floating orange darken-1" data-tooltip="Block notes" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fa fa-sticky-note" aria-hidden="true"></i>
 			</a></li>
-			<li><a class="btn-floating yellow-1" data-tooltip="Calculatrice" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="boutonCalculatrice()"><a class="btn-floating yellow-1" data-tooltip="Calculatrice" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fa fa-calculator" aria-hidden="true"></i>
 			</a></li>
-			<li><a class="btn-floating green" data-tooltip="Ouvrir" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="boutonMenuGaucheOuvrir()"><a class="btn-floating green" data-tooltip="Ouvrir" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fa fa-folder-open" aria-hidden="true"></i>
 			</a></li>
-			<li><a class="btn-floating blue" data-tooltip="Enregistrer" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="boutonMenuGaucheSauver()"><a class="btn-floating blue" data-tooltip="Enregistrer" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fa fa-save" aria-hidden="true"></i>
 			</a></li>
-			<li><a class="btn-floating purple" data-tooltip="Nouvelle note" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="newFile()"><a class="btn-floating purple" data-tooltip="Nouvelle note" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fa fa-plus" aria-hidden="true"></i>
 			</a></li>
 		</ul>

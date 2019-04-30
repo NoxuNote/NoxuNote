@@ -27,8 +27,16 @@
 .note-editor.note-frame {
   border: none;
 }
-.note-editor.note-frame {
-  /* margin-top: 60px; */
+.note-editor .note-dropzone {
+  z-index: 10;
+}
+/*
+FROM BOOTSTRAP */
+.card {
+  background: transparent;
+}
+.btn {
+  box-shadow: none;
 }
 .btn-sm, .btn-group-sm>.btn {
   padding: 0.15rem 0.6rem 0.25rem 0.5rem;
@@ -41,9 +49,4 @@
 .btn i {
   font-size: 1.1rem;
   line-height: inherit;
-}
-/*
-FROM BOOTSTRAP */
-.card {
-  background: transparent;
 }
