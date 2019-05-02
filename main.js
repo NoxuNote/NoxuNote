@@ -176,32 +176,30 @@ function load_noxunote(name, isFileModified) {
 ipc.on('load_noxunote', (event, path, isFileModified) => load_noxunote(path, isFileModified));
 
 // Génère une fenêtre de dessin, appelé quand on appuis sur "Dessiner".
-ipc.on('dessiner', (event) => {
-	if ( !noxuApp.mainDrawWindow ) {
-		noxuApp.createMainDrawWindow(noxuApp.mode!="new" ? noxuApp.editedLine : undefined)
-	}
+ipc.on('dessiner', (event, url) => {
+	if (!noxuApp.mainDrawWindow) noxuApp.createMainDrawWindow(url)
 })
 
 // Utilisé quand un nouveau dessin est reçu par le mainDrawWindow. au format brut.
 ipc.on('newDessin', (event, data) => {
-	if (noxuApp.mainDrawWindow.inserterPosition == undefined) {
-		noxuApp.mainDrawWindow.browserWindow.close()
-		// entree_texte(0, '<img class="schema negative" src="' + data + '"></img>')
-		noxuApp.mainWindow.browserWindow.webContents.send('insertDrawing', data)
-	} else newEditedDessin(data, noxuApp.mainDrawWindow.inserterPosition)
+	noxuApp.mainDrawWindow.browserWindow.close()
+	noxuApp.mainWindow.browserWindow.webContents.send('insertDrawing', data)
+})
+ipc.on('refreshImg', (event, filename) => {
+	noxuApp.mainDrawWindow.browserWindow.close()
+	noxuApp.mainWindow.browserWindow.webContents.send('refreshImg', filename)
 })
 
 // Appelé par draw.html lorsque l'on clique sur sauver en noxuApp.mode edition.
-function newEditedDessin(data) {
-	// new Date().getTime() indique à chromium que l'image à été modifiée en changeant son URL.
-	noxuApp.mainDrawWindow.browserWindow.close()
-	// On redéfinit le noxuApp.mode edit car le close met en noxuApp.mode new
-	noxuApp.mode = "edit"
-	// entree_texte(line, '<img class="schema negative" src="' + data + '?' + new Date().getTime() + '"></img>')
-	console.log('<img class="schema negative" src="' + data + '?' + new Date().getTime() + '"></img>')
-}
-ipc.on('newEditedDessin', (event, data, line) => newEditedDessin(data))
-
+// function newEditedDessin(data) {
+// 	// new Date().getTime() indique à chromium que l'image à été modifiée en changeant son URL.
+// 	noxuApp.mainDrawWindow.browserWindow.close()
+// 	// On redéfinit le noxuApp.mode edit car le close met en noxuApp.mode new
+// 	noxuApp.mode = "edit"
+// 	// entree_texte(line, '<img class="schema negative" src="' + data + '?' + new Date().getTime() + '"></img>')
+// 	console.log('<img class="schema negative" src="' + data + '?' + new Date().getTime() + '"></img>')
+// }
+// ipc.on('newEditedDessin', (event, data, line) => newEditedDessin(data))
 
 
 ipc.on('save_as_noxunote', (event, title, matiere, content) => save_as_noxunote(title, matiere, content));

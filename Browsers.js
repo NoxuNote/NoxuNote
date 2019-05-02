@@ -66,7 +66,7 @@ class MainWindow {
 }
 
 class MainDrawWindow {
-    constructor(inserterPosition) {
+    constructor(url) {
         this.browserWindow = new BrowserWindow({
             width: 950,
             height: 600,
@@ -80,12 +80,14 @@ class MainDrawWindow {
             resizable: false,
             autoHideMenuBar: true,
         })
-
-        // (optionnel) la ligne ou insérer le prochain dessin, utilisé lors de l'insertion 
-        this.inserterPosition = inserterPosition
-
         this.browserWindow.loadURL(`file://${__dirname}/views/mainDrawWindow/draw.html`) // Loads the renderer process
+        if (url) this.browserWindow.webContents.once('dom-ready', () => this.load(url));
     }
+
+    load(url) {
+        this.browserWindow.webContents.send('loadImage', url)
+    }
+
 }
 
 class MainOutputWindow {
@@ -193,12 +195,12 @@ class NoxuNoteApp {
     }
     /**
      * Instancie la fenêtre de dessin
-     * @param {number} line (optionnel) la ligne ou insérer le prochain dessin, utilisé lors de l'insertion 
+     * @param {number} url (optionnel) url de l'image a editer
      * d'une ligne au milieu de la note. Si pas de valeur, inséré à la fin.
      */
-    createMainDrawWindow(line) {
+    createMainDrawWindow(url) {
         if (!this.mainDrawWindow) {
-            this.mainDrawWindow = new MainDrawWindow(line)
+            this.mainDrawWindow = new MainDrawWindow(url)
             this.mainDrawWindow.browserWindow.on('closed', () => {
                 this.mainDrawWindow = null;
                 this.mode = "new"

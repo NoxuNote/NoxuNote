@@ -22,9 +22,8 @@ const EquationManager = require('./EquationManager.js')
 var title = "not defined";
 var isFileModified = false
 
-const mediaModal = $('#choixMediaModal');
+const mediaModal = $('#choixMediaModal')
 const editor = $('#summernote')
-
 
 // Manageur de modales
 const modalManager = new ModalManager()
@@ -145,10 +144,11 @@ function toDo() {
 
 
 /**
-* Ouvre une fenêtre de dessin
-*/
-function dessiner() {
-	ipc.send('dessiner');
+ * Ouvre une fenêtre de dessin
+ * url - optionnel, permet d'éditer l'image donnée par l'url
+ */
+function dessiner(url) {
+	ipc.send('dessiner', url);
 }
 
 /**
@@ -526,11 +526,14 @@ var SchemaEditionButton = function (context) {
 	// create button
 	var button = ui.button({
 		contents: '<i class="fa fa-pencil"/>',
-		tooltip: 'Créer un dessin/schéma',
+		tooltip: 'Modifier l\'image',
 		click: () => {
 			editor.summernote('saveRange')
-			editor.summernote('')
-			dessiner()
+			const selection = editor.summernote('createRange').sc
+			const img = selection.querySelector('img')
+			const url = img.src.toString().replace("file:///", "/")
+			console.log('edition du fichier : ', extractUrlFromSrc(url))
+			dessiner(extractUrlFromSrc(url))
 		}
 	});
 	return button.render();   // return button as jquery object
@@ -590,6 +593,26 @@ function insertImageFromUrl() {
 	field.value = ""
 }
 
+function extractUrlFromSrc(src) {
+	if (src.includes("?")) {
+		return /^[\s\S]*\?/.exec(src)[0].replace('?', '')
+	} else {
+		return src
+	}
+}
+
+/**
+ * Cherche l'image donnée par l'url et la rafarichit
+ * @param {String} url 
+ */ 
+function refreshImg(url) {
+	$images = document.getElementsByClassName('note-editing-area')[0].querySelectorAll("img")
+	$images.forEach((i)=>{
+		i.src = extractUrlFromSrc(i.src) + "?" + new Date().getTime();
+	})
+	console.log($images)
+}
+
 
 
 const editableRegion = editor.find('[contenteditable]');
@@ -617,3 +640,4 @@ ipcRenderer.on('resetIsFileModified', (event) => isFileModified = false)
 ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); generateAssocList() })
 ipcRenderer.on('setNoteContent', (event, note) => { editor.summernote('reset'); editor.summernote('code', note) })
 ipcRenderer.on('insertDrawing', (event, url) => insertDrawing(url))
+ipcRenderer.on('refreshImg', (event, url) => refreshImg(url))
