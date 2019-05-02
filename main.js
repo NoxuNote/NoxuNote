@@ -186,20 +186,21 @@ ipc.on('dessiner', (event) => {
 ipc.on('newDessin', (event, data) => {
 	if (noxuApp.mainDrawWindow.inserterPosition == undefined) {
 		noxuApp.mainDrawWindow.browserWindow.close()
-		entree_texte(0, '<img class="schema negative" src="' + data + '"></img>')
+		// entree_texte(0, '<img class="schema negative" src="' + data + '"></img>')
+		noxuApp.mainWindow.browserWindow.webContents.send('insertDrawing', data)
 	} else newEditedDessin(data, noxuApp.mainDrawWindow.inserterPosition)
 })
 
 // Appelé par draw.html lorsque l'on clique sur sauver en noxuApp.mode edition.
-function newEditedDessin(data, line) {
+function newEditedDessin(data) {
 	// new Date().getTime() indique à chromium que l'image à été modifiée en changeant son URL.
 	noxuApp.mainDrawWindow.browserWindow.close()
 	// On redéfinit le noxuApp.mode edit car le close met en noxuApp.mode new
 	noxuApp.mode = "edit"
-	entree_texte(line, '<img class="schema negative" src="' + data + '?' + new Date().getTime() + '"></img>')
+	// entree_texte(line, '<img class="schema negative" src="' + data + '?' + new Date().getTime() + '"></img>')
 	console.log('<img class="schema negative" src="' + data + '?' + new Date().getTime() + '"></img>')
 }
-ipc.on('newEditedDessin', (event, data, line) => newEditedDessin(data, line))
+ipc.on('newEditedDessin', (event, data, line) => newEditedDessin(data))
 
 
 

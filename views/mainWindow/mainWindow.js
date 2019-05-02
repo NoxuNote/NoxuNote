@@ -458,6 +458,15 @@ function setNoteMatiere(matiere) {
 	if (!found) document.getElementById('matneutre').checked = true
 }
 
+/**
+ * 
+ */
+function insertDrawing(url) {
+	editor.summernote('restoreRange')
+	editor.summernote('focus')
+	editor.summernote('insertImage', url, url)
+}
+
 function maximizeWindow() {
 	ipc.send("maximizeWindow");
 }
@@ -498,7 +507,7 @@ var EquationButton = function (context) {
 	return button.render();   // return button as jquery object
 }
 
-var SchemaButton = function (context) {
+var SchemaCreationButton = function (context) {
 	var ui = $.summernote.ui;
 	// create button
 	var button = ui.button({
@@ -506,6 +515,21 @@ var SchemaButton = function (context) {
 		tooltip: 'Créer un dessin/schéma',
 		click: () => {
 			editor.summernote('saveRange')
+			dessiner()
+		}
+	});
+	return button.render();   // return button as jquery object
+}
+
+var SchemaEditionButton = function (context) {
+	var ui = $.summernote.ui;
+	// create button
+	var button = ui.button({
+		contents: '<i class="fa fa-pencil"/>',
+		tooltip: 'Créer un dessin/schéma',
+		click: () => {
+			editor.summernote('saveRange')
+			editor.summernote('')
 			dessiner()
 		}
 	});
@@ -527,18 +551,27 @@ $(document).ready(function () {
 			}
 		},
 		toolbar: [
-			['magic', ['style']],
-			['create', ['schema']],
+			['magic', ['style', 'specialChar']],
+			['create', ['schemaCreation']],
 			['fontsize', ['fontname', 'fontsize', 'color']],
 			['style', ['bold', 'italic', 'underline']],
 			['para', ['ul', 'ol', 'paragraph']],
 			['font', ['superscript', 'subscript']],
 			['insert', ['media', 'equation', 'table']]
 		],
+		popover: {
+      image: [
+        ['custom', ['schemaEdition']],
+        ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+        ['float', ['floatLeft', 'floatRight', 'floatNone']],
+        ['remove', ['removeMedia']]
+      ]
+    },
 		buttons: {
 			media: MediaButton,
 			equation: EquationButton,
-			schema: SchemaButton
+			schemaCreation: SchemaCreationButton,
+			schemaEdition: SchemaEditionButton
 		},
 		callbacks: {
 			onChange: function(contents, $editable) {
@@ -583,3 +616,4 @@ ipcRenderer.on('callSaveAsNoxuNote', (event) => ipc.send('save_as_noxunote', tit
 ipcRenderer.on('resetIsFileModified', (event) => isFileModified = false)
 ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); generateAssocList() })
 ipcRenderer.on('setNoteContent', (event, note) => { editor.summernote('reset'); editor.summernote('code', note) })
+ipcRenderer.on('insertDrawing', (event, url) => insertDrawing(url))
