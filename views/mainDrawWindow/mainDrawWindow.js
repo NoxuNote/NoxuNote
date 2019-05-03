@@ -435,16 +435,6 @@ function save() {
     }
 }
 
-// Ferme la fenêtre et dit de supprimer le dessin.
-function supprimerDessin() {
-    // Si on est en mode édition
-    if (edit != -1) {
-        ipc.send('deleteDessin', edit);
-    } else {
-        window.close();
-    }
-}
-
 /** Charge une image de données "url" sur le canvas
  * @param url le contenu URL de l'image
  * @param pattern true si la fonction est appelée pour invoquer un pattern, false dans les autres cas

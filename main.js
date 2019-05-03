@@ -131,7 +131,7 @@ function force_load(name) {
 	// Loading file content
 	var fileContent;
 	try {
-		fileContent = fs.readFileSync(homedir + "/NoxuNote/notes/" + name + ".txt").toString().split("\n");
+		fileContent = fs.readFileSync(homedir + "/NoxuNote/notes/" + name + ".txt").toString();
 	} catch (e) {
 		console.log(e);
 	}

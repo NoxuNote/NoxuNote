@@ -19,6 +19,7 @@ const math = require("mathjs")
 const parser = require("../../parser.js")
 const ModalManager = require("./ModalManager.js")
 const EquationManager = require('./EquationManager.js')
+const toNewFormat = require("./migration")
 var title = "not defined";
 var isFileModified = false
 
@@ -528,10 +529,9 @@ var SchemaEditionButton = function (context) {
 		contents: '<i class="fa fa-pencil"/>',
 		tooltip: 'Modifier l\'image',
 		click: () => {
-			editor.summernote('saveRange')
-			const selection = editor.summernote('createRange').sc
-			const img = selection.querySelector('img')
-			const url = img.src.toString().replace("file:///", "/")
+			// Get highlighted image
+			clickedImg = context.layoutInfo.editable.data('target')
+			const url = clickedImg.src.toString().replace("file:///", "/")
 			console.log('edition du fichier : ', extractUrlFromSrc(url))
 			dessiner(extractUrlFromSrc(url))
 		}
@@ -613,6 +613,21 @@ function refreshImg(url) {
 	console.log($images)
 }
 
+/**
+ * Définit le contenu complet de l'éditeur selon le code "content"
+ * @param {String} content Contenu de la note à charger (code html)
+ */
+function setNoteContent(content) {
+	// Conversion des anciens formats de noxunote en HTML (ne gère pas les tableaux)
+	if (content.includes("@NOXUNOTE_BEGIN")) {
+		console.log("Ancien format détecté, formattage ...")
+		content = toNewFormat(content)
+	} 
+	editor.summernote('reset')
+	editor.summernote('code', content)
+	const editorContent = document.getElementsByClassName("note-editable")[0]
+	MathJax.Hub.Queue(["Typeset", MathJax.Hub, editorContent]);
+}
 
 
 const editableRegion = editor.find('[contenteditable]');
@@ -638,6 +653,6 @@ ipcRenderer.on('setNoteMatiere', (event, matiere) => setNoteMatiere(matiere))
 ipcRenderer.on('callSaveAsNoxuNote', (event) => ipc.send('save_as_noxunote', title))
 ipcRenderer.on('resetIsFileModified', (event) => isFileModified = false)
 ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); generateAssocList() })
-ipcRenderer.on('setNoteContent', (event, note) => { editor.summernote('reset'); editor.summernote('code', note) })
+ipcRenderer.on('setNoteContent', (event, note) => setNoteContent(note))
 ipcRenderer.on('insertDrawing', (event, url) => insertDrawing(url))
 ipcRenderer.on('refreshImg', (event, url) => refreshImg(url))
