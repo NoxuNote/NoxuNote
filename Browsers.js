@@ -83,11 +83,11 @@ class MainDrawWindow {
         this.browserWindow.loadURL(`file://${__dirname}/views/mainDrawWindow/draw.html`) // Loads the renderer process
         if (url) this.browserWindow.webContents.once('dom-ready', () => this.load(url));
     }
-
+    
     load(url) {
         this.browserWindow.webContents.send('loadImage', url)
     }
-
+    
 }
 
 class MainOutputWindow {
@@ -134,7 +134,7 @@ class SettingsWindow {
 }
 
 class PrePrintWindow {
-    constructor(key) {
+    constructor(content) {
         this.browserWindow = new BrowserWindow({
             width: 1200,
             height: 720,
@@ -146,6 +146,7 @@ class PrePrintWindow {
             autoHideMenuBar: true
         })
         this.browserWindow.loadURL(`file://${__dirname}/views/prePrintWindow/preprint.html`)
+        if (content) this.browserWindow.webContents.once('dom-ready', () => this.setNote(content));
     }
     setNote(note) {
         this.browserWindow.send('setNote', note)
@@ -154,11 +155,6 @@ class PrePrintWindow {
 
 class NoxuNoteApp {
     constructor() {
-        this.note = new Array() // Stoque le contenu brut de la note
-        this.note.push('@NOXUNOTE_BEGIN')
-        this.mode = "new" // Stoque le mode d'édition en cours, vaut "new" ou "edit"
-        this.editedContent = "" // Stoque le contenu de la div précedemment editée
-        this.editedLine = 0 // Contient le numéro de ligne précedemment editée
         this.createLicence()
         this.createDb()
         this.createMainWindow()
@@ -230,11 +226,8 @@ class NoxuNoteApp {
             })
         }   
     }
-    createPrePrintWindow() {
-        this.prePrintWindow = new PrePrintWindow()
-        this.prePrintWindow.browserWindow.webContents.on('did-finish-load', ()=>{
-            this.prePrintWindow.setNote(this.note)
-        })
+    createPrePrintWindow(content) {
+        this.prePrintWindow = new PrePrintWindow(content)
         this.prePrintWindow.browserWindow.on('closed', () => {
             this.mainOutputWindow = null;
         })

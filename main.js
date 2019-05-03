@@ -190,34 +190,20 @@ ipc.on('refreshImg', (event, filename) => {
 	noxuApp.mainWindow.browserWindow.webContents.send('refreshImg', filename)
 })
 
-// Appelé par draw.html lorsque l'on clique sur sauver en noxuApp.mode edition.
-// function newEditedDessin(data) {
-// 	// new Date().getTime() indique à chromium que l'image à été modifiée en changeant son URL.
-// 	noxuApp.mainDrawWindow.browserWindow.close()
-// 	// On redéfinit le noxuApp.mode edit car le close met en noxuApp.mode new
-// 	noxuApp.mode = "edit"
-// 	// entree_texte(line, '<img class="schema negative" src="' + data + '?' + new Date().getTime() + '"></img>')
-// 	console.log('<img class="schema negative" src="' + data + '?' + new Date().getTime() + '"></img>')
-// }
-// ipc.on('newEditedDessin', (event, data, line) => newEditedDessin(data))
-
-
 ipc.on('save_as_noxunote', (event, title, matiere, content) => save_as_noxunote(title, matiere, content));
 
 /***************************************************************************************************
  *                                            PRINTING                                             *
  ***************************************************************************************************/
-function openExport() {
-	noxuApp.createPrePrintWindow()
+function openExport(content) {
+	noxuApp.createPrePrintWindow(content)
 }
 // caller : the browser webcontent instance that calls the function
-function makePreview(format, css, caller) {
+function makePreview(format, css, content, caller) {
 	console.log('making preview..')
 	noxuApp.createMainOutputWindow(caller)
 	noxuApp.mainOutputWindow.browserWindow.webContents.on('did-finish-load', () => {
-		for (var i = 1; i < noxuApp.note.length; i++) {
-			noxuApp.mainOutputWindow.browserWindow.webContents.send('addDiv', noteToHtml(noxuApp.note[i]), i)
-		}
+		noxuApp.mainOutputWindow.browserWindow.webContents.send('setContent', content)
 		noxuApp.mainOutputWindow.browserWindow.webContents.send('setFormat', format)
 		noxuApp.mainOutputWindow.browserWindow.webContents.send('setCSS', css)
 		// On informe le outputWindow que tous les éléments lui ont été envoyés
@@ -282,8 +268,8 @@ function makeFile(format) {
 	}, 1);
 }
 
-ipc.on('openExport', (event) => openExport())
-ipc.on('makePreview', (event, format, css) => makePreview(format, css, event.sender))
+ipc.on('openExport', (event, content) => openExport(content))
+ipc.on('makePreview', (event, format, css, content) => makePreview(format, css, content, event.sender))
 ipc.on('makeFile', (event, format) => makeFile(format))
 
 function loadExternalLink(URL) {

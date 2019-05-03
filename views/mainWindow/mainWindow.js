@@ -371,9 +371,8 @@ function getMat() {
  * Appelle le module d'exportation html
  */
 function openExport() {
-	ipc.send('openExport');
+	ipc.send('openExport', editor.summernote('code'));
 }
-
 
 /**
  * Commande de création d'une nouvelle note
