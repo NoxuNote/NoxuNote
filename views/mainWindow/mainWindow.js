@@ -368,7 +368,7 @@ function getMat() {
 }
 
 /**
- * Appelle le module d'exportation html
+ * Appelle le module d'exportation html avec le code actuel de la summernote
  */
 function openExport() {
 	ipc.send('openExport', editor.summernote('code'));
@@ -419,7 +419,7 @@ function showTutorial() {
 }
 
 /**
- * Fonction qui enregistre le contenu de la todo list lors de l'appui
+ * Enregistre le contenu de la todo list lors de l'appui
  * sur la touche espace.
  */
 function toDoKeyPressed(event) {
@@ -427,6 +427,9 @@ function toDoKeyPressed(event) {
 	ipc.send('saveToDoContent', content)
 }
 
+/**
+ * Met à jour le contenu du bloc notes avec le contenu du fichier
+ */
 function loadTodoFile() {
 	var fileContent = ""
 	try {
@@ -459,9 +462,9 @@ function setNoteMatiere(matiere) {
 }
 
 /**
- * 
+ * Insère l'image donnée par l'url
  */
-function insertDrawing(url) {
+function insertImg(url) {
 	editor.summernote('restoreRange')
 	editor.summernote('focus')
 	editor.summernote('insertImage', url, url)
@@ -478,7 +481,7 @@ function closeWindow() {
 }
 
 /***************************************************************************************************
- *                                   				 SUMMERNOTE      			                                 *
+ *										SUMMERNOTE      			               			       *
  ***************************************************************************************************/
 var MediaButton = function (context) {
 	var ui = $.summernote.ui;
@@ -543,6 +546,9 @@ $(document).ready(function () {
 	editor.summernote({
 		lang: 'fr-FR',
 		focus: true,
+		/**
+		 * Suggestion automatique de mots
+		 */
 		hint: {
 			words: words,
 			match: /\b(\w{1,})$/,
@@ -552,46 +558,127 @@ $(document).ready(function () {
 				}))
 			}
 		},
+		/**
+		 * Boutons proposés dans la toolbar en haut de l'éditeur
+		 */
 		toolbar: [
 			['magic', ['style', 'specialChar']],
 			['create', ['schemaCreation']],
 			['fontsize', ['fontname', 'fontsize', 'color']],
 			['style', ['bold', 'italic', 'underline']],
 			['para', ['ul', 'ol', 'paragraph']],
-			['font', ['superscript', 'subscript']],
+			['font', ['superscript', 'subscript', 'codeview']],
 			['insert', ['media', 'equation', 'table']]
 		],
+		/**
+		 * Boutons proposés lors du clic sur une image
+		 */
 		popover: {
-      image: [
-        ['custom', ['schemaEdition']],
-        ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
-        ['float', ['floatLeft', 'floatRight', 'floatNone']],
-        ['remove', ['removeMedia']]
-      ]
-    },
+			image: [
+				['custom', ['schemaEdition']],
+				['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+				['float', ['floatLeft', 'floatRight', 'floatNone']],
+				['remove', ['removeMedia']]
+			]
+		},
+		/**
+		 * Enregistrement des boutons personnalisés
+		 */
 		buttons: {
 			media: MediaButton,
 			equation: EquationButton,
 			schemaCreation: SchemaCreationButton,
 			schemaEdition: SchemaEditionButton
 		},
+		/**
+		 * Evenements de sortie de summernote
+		 */
 		callbacks: {
-			onChange: function(contents, $editable) {
+			onChange: function (contents, $editable) {
 				isFileModified = true
+			},
+			onKeydown: function (e) {
+				/**
+				 * Lors d'un appui sur entrée, on vérifie si la ligne débute par un marqueur NoxuNote
+				 * Par exemple ##Titre doit transformer la ligne en un titre de niveau 2.
+				 */
+				if (e.keyCode === 13) {
+					const selection = window.getSelection()
+					const data = selection.getRangeAt(0).commonAncestorContainer.data // Stocke le contenu de la ligne entrée
+					if (data) {
+						const line = data.toString()
+						if (line.substr(0, 3) === "###") {
+							// Changement du format de la ligne
+							editor.summernote("formatH1")
+							// Suppression des caractères ### avec éventuels espaces au début
+							selection.anchorNode.parentNode.innerText = selection.anchorNode.parentNode.innerText.toString().replace(/^[#\s]*/g, "")
+							// Déplacement du curseur à la fin de la ligne
+							setCursorAfterElement(selection.anchorNode.parentNode, e)
+						}
+						else if (line.substr(0, 2) === "##") {
+							editor.summernote("formatH2")
+							selection.anchorNode.parentNode.innerText = selection.anchorNode.parentNode.innerText.toString().replace(/^[#\s]*/g, "")
+							setCursorAfterElement(selection.anchorNode.parentNode, e)
+						}
+						else if (line.substr(0, 1) === "#") {
+							editor.summernote("formatH3")
+							selection.anchorNode.parentNode.innerText = selection.anchorNode.parentNode.innerText.toString().replace(/^[#\s]*/g, "")
+							setCursorAfterElement(selection.anchorNode.parentNode, e)
+						}
+					}
+				}
 			}
 		}
 	})
 })
 
+/**
+ * Place le curseur après l'élément voulu en utilisant une méthode d'insertion
+ * de balise, de déplacement de curseur, et de suppression de la balise.
+ * @param {*} ele Element après lequel le curseur doit être inseré
+ * @param {*} e Evenement type clavier
+ */
+function setCursorAfterElement(ele, e) {
+	var dummyElement; // Élement fictif crée après ele
+	if (!ele.nextElementSibling) { // Si il n'éxiste pas déjà un élément suivant, on le crée
+		dummyElement = document.createElement('p')
+		dummyElement.appendChild(document.createTextNode('\u00A0'))
+		ele.parentNode.appendChild(dummyElement)
+	}
+	var nextElement = ele.nextElementSibling // Élement suivant
+	//nextElement.tabIndex = 0
+
+	// Déplacement du curseur
+	nextElement.focus()
+	var r = document.createRange();
+	r.setStart(nextElement.childNodes[0], 0);
+	r.setEnd(nextElement.childNodes[0], 0);
+	var s = window.getSelection();
+	s.removeAllRanges();
+	s.addRange(r);
+
+	if (dummyElement) {
+		dummyElement.remove() // Si on a crée un élément, on le supprime
+	} else {
+		e.preventDefault() // Sinon on annule l'insertion d'une entrée
+	}
+}
+
+/**
+ * Récupère l'URL entrée dans le champ de la modal d'insertion et
+ * l'insère dans l'éditeur summernote. Ferme aussi la modal
+ */
 function insertImageFromUrl() {
 	const field = document.getElementById("imageByUrlValue");
-	editor.summernote('restoreRange')
-	editor.summernote('focus')
-	editor.summernote('insertImage', field.value, field.value)
+	insertImg(field.value)
 	modalManager.closeAllModal()
 	field.value = ""
 }
 
+/**
+ * Extrait l'url de l'image en ignorant les métadonnées type abc.jpg?<metadonnées>
+ * @param {String} src HTMLImageElement.src - Source de l'image
+ */
 function extractUrlFromSrc(src) {
 	if (src.includes("?")) {
 		return /^[\s\S]*\?/.exec(src)[0].replace('?', '')
@@ -601,12 +688,13 @@ function extractUrlFromSrc(src) {
 }
 
 /**
- * Cherche l'image donnée par l'url et la rafarichit
+ * Cherche dans l'éditeur summernote l'image donnée par l'url et la rafarichit en mettant
+ * a jour les métadonnées de la source (image.jpg?<metadonnées>)
  * @param {String} url 
- */ 
+ */
 function refreshImg(url) {
 	$images = document.getElementsByClassName('note-editing-area')[0].querySelectorAll("img")
-	$images.forEach((i)=>{
+	$images.forEach((i) => {
 		i.src = extractUrlFromSrc(i.src) + "?" + new Date().getTime();
 	})
 	console.log($images)
@@ -621,7 +709,7 @@ function setNoteContent(content) {
 	if (content.includes("@NOXUNOTE_BEGIN")) {
 		console.log("Ancien format détecté, formattage ...")
 		content = toNewFormat(content)
-	} 
+	}
 	editor.summernote('reset')
 	editor.summernote('code', content)
 	const editorContent = document.getElementsByClassName("note-editable")[0]
@@ -653,5 +741,5 @@ ipcRenderer.on('callSaveAsNoxuNote', (event) => ipc.send('save_as_noxunote', tit
 ipcRenderer.on('resetIsFileModified', (event) => isFileModified = false)
 ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); generateAssocList() })
 ipcRenderer.on('setNoteContent', (event, note) => setNoteContent(note))
-ipcRenderer.on('insertDrawing', (event, url) => insertDrawing(url))
+ipcRenderer.on('insertDrawing', (event, url) => insertImg(url))
 ipcRenderer.on('refreshImg', (event, url) => refreshImg(url))
