@@ -16,14 +16,12 @@ const { dialog } = require('electron').remote
 const homedir = require('os').homedir()
 const fs = require("fs")
 const math = require("mathjs")
-const parser = require("../../parser.js")
 const ModalManager = require("./ModalManager.js")
 const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
 var title = "not defined";
 var isFileModified = false
 
-const mediaModal = $('#choixMediaModal')
 const editor = $('#summernote')
 
 // Manageur de modales
@@ -33,18 +31,6 @@ const equationManager = new EquationManager(modalManager, editor)
 /***************************************************************************************************
  *                                    DÉCLARATION DES FONCTIONS                                    *
  ***************************************************************************************************/
-
-/**
-* @param line la ligne sur laquelle le formulaire de modification est envoyée
-* Fonction exécutée lors de l'appui sur le bouton Supprimer après edition d'une case
-*/
-function clicBoutonSupprimer(line) {
-	ipc.send('delete_div', line);
-}
-
-function clicBoutonModifier(line) {
-	ipc.send('entree_texte', line, getFormValue())
-}
 
 /**
 * Affiche/Masque le volet Menu Gauche Sauver
@@ -676,6 +662,22 @@ function insertImageFromUrl() {
 }
 
 /**
+ * Récupère l'URL entrée dans le champ de la modal d'insertion et
+ * l'insère dans l'éditeur summernote. Ferme aussi la modal
+ */
+function insertImageFromFile() {
+	const field = document.getElementById("imageByFileValue")
+	const files = field.files;
+	Array.from(files).forEach(f=>{
+		// Copie de l'image dans le répertoire de travail
+		const copiedImagePath = ipc.sendSync('copyFileToWorkingFolder', f.path)
+		insertImg(copiedImagePath)
+	})
+	modalManager.closeAllModal()
+	field.value = ""
+}
+
+/**
  * Extrait l'url de l'image en ignorant les métadonnées type abc.jpg?<metadonnées>
  * @param {String} src HTMLImageElement.src - Source de l'image
  */
@@ -695,6 +697,7 @@ function extractUrlFromSrc(src) {
 function refreshImg(url) {
 	$images = document.getElementsByClassName('note-editing-area')[0].querySelectorAll("img")
 	$images.forEach((i) => {
+		// Pour l'instant, applique la MAJ sur toutes les images (pour simplifier le code)
 		i.src = extractUrlFromSrc(i.src) + "?" + new Date().getTime();
 	})
 	console.log($images)
@@ -716,8 +719,6 @@ function setNoteContent(content) {
 	MathJax.Hub.Queue(["Typeset", MathJax.Hub, editorContent]);
 }
 
-
-const editableRegion = editor.find('[contenteditable]');
 $('#editorRoot').click(() => { editor.summernote('focus') })
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *

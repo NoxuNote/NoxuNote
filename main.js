@@ -327,6 +327,37 @@ ipc.on('maximizeWindow', (event)=>{
 })
 
 /***************************************************************************************************
+ *                                        COPIE DE FICHIER                                         *
+ ***************************************************************************************************/
+
+/**
+ * Copie un fichier "abc.png" dans le répertoire de travail de NoxuNote
+ * en modifiant son nom par "import_7676821.png" par exemple.
+ * @param {String} filePath URL du fichier à copier
+ * @returns {String} URL du fichier copié
+ */
+function copyFileToWorkingFolder(filePath) {
+	let fileExt = ""
+	try {
+		fileExt = /\.[0-9a-z]+$/i.exec(filePath)[0]
+	} catch {
+		console.warn("Extension de fichier non reconnue " + filePath)
+	}
+	const fileSeed = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5); // 11'881'376 possibilités
+	const newFilePath = homedir + '/NoxuNote/created_images/import_file_' + fileSeed + fileExt;
+	try {
+		fs.copyFileSync(filePath, newFilePath);
+	} catch {
+		console.error("Erreur lors de la copie du fichier " + filePath)
+	}
+	return newFilePath
+}
+// Réception d'une demande de copie de fichier, aucune réponse n'est renvoyée de manière synchrone
+ipc.on('copyFileToWorkingFolder', (event, filePath) => event.returnValue = copyFileToWorkingFolder(filePath))
+
+
+
+/***************************************************************************************************
  *                                            DATABASE                                             *
  ***************************************************************************************************/
 
@@ -341,7 +372,6 @@ ipc.on('db_deleteNote', (event, name) => event.returnValue = noxuApp.db.notes.de
 ipc.on('db_getAssocList', (event) => event.returnValue = noxuApp.db.dactylo.assocList)
 ipc.on('db_removeAssoc', (event, input) => event.returnValue = noxuApp.db.dactylo.removeAssoc(input))
 ipc.on('db_addAssoc', (event, input, output) => event.returnValue = noxuApp.db.dactylo.addAssoc(input, output))
-
 
 ipc.on('openSettings', (event, key) => { noxuApp.createSettingsWindow(key) })
 /***************************************************************************************************

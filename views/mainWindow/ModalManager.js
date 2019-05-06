@@ -4,6 +4,7 @@ class ModalManager {
         this.modals = new Object()
         this.modals["choixMediaModal"] = $("#choixMediaModal")
         this.modals["imageByUrlModal"] = $("#imageByUrlModal")
+        this.modals["imageByFileModal"] = $("#imageByFileModal")
         this.modals["equationModal"] = $("#equationModal")
     }
 

@@ -184,7 +184,7 @@
 								<i class="fas fa-link"></i>
 								<br>URL
 							</div>
-							<div class="media-largebutton">
+							<div class="media-largebutton" onClick="modalManager.openModal('imageByFileModal')">
 								<i class="far fa-file-image"></i>
 								<br>Fichier
 							</div>
@@ -226,6 +226,32 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary" onClick="insertImageFromUrl()">Importer</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Insert Image by file modal -->
+		<div class="modal fade" id="imageByFileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Insérer une image via des fichiers</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span>&times;</span>
+						</button>
+					</div>
+					<div class="modal-body" style="text-align: center">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="inputGroup-sizing-default">Fichier(s)</span>
+							</div>
+							<input id="imageByFileValue" type="file" multiple="multiple" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" onClick="insertImageFromFile()">Importer</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
 					</div>
 				</div>
@@ -313,7 +339,6 @@
 	<script src="../../node_modules/summernote/lang/summernote-fr-FR.js"></script>
 	<script src="../../node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
 	<script src="draggable.js"></script>
-	<script src="NoxuInput.js"></script>
 	<script src="mainWindow.js"></script> <!-- Electron Script -->
 	<script src="fab.js"></script>
 	<script src="osAdaptation.js"></script>
