@@ -13,11 +13,11 @@
   "author": "Léo Rolland",
   "license": "GPL-3.0",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.1",
     "ContentTools": "^1.6.10",
     "bootstrap": "^4.2.1",
     "code-prettify": "^0.1.0",
     "electron-prompt": "^1.1.0",
-    "font-awesome": "^4.7.0",
     "font-list": "^1.1.0",
     "fs": "^0.0.2",
     "html5tooltipsjs": "^1.7.3",

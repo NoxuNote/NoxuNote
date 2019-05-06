@@ -5,7 +5,7 @@
         Réglages
     </title>
     <link rel="stylesheet" type="text/css" href="settings.css">
-	<link rel="stylesheet" type="text/css" href="../../node_modules/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
 </head>
 
 <body>
@@ -53,7 +53,7 @@
             </table>
             <br>
             <button class="btn alignRight" onClick="ajouterMatiere()">Ajouter
-                <i class="fa fa-plus"></i>
+                <i class="fas fa-plus"></i>
             </button>
         </div>
         <div id="Notes">
@@ -83,7 +83,7 @@
             </table>
             <br>
             <button class="btn alignRight" onClick="ajouterAssoc()">Ajouter
-                <i class="fa fa-plus"></i>
+                <i class="fas fa-plus"></i>
             </button>
         </div>
     </div>
@@ -199,7 +199,7 @@
 
                 var innerTD2 = document.createElement('td')
                 innerTD2.className = "clicable large"
-                innerTD2.innerHTML = "<i class='fa fa-paint-brush' style='color: " + db[i].couleur + "'></i>"
+                innerTD2.innerHTML = "<i class='fas fa-paint-brush' style='color: " + db[i].couleur + "'></i>"
                 innerTD2.id = i
                 innerTD2.addEventListener("click", function (e) {
                     if (e.target.nodeName != 'COLOR-PICKER') {
@@ -210,7 +210,7 @@
 
                 var innerTD3 = document.createElement('td')
                 innerTD3.className = "editable large"
-                innerTD3.innerHTML = "<center><i id='" + i + "' class='fa fa-trash red clicable'></i></center>"
+                innerTD3.innerHTML = "<center><i id='" + i + "' class='fas fa-trash red clicable'></i></center>"
                 innerTD3.id = i
                 innerTD3.addEventListener("click", function (e) {
                     deleteMat(e.target.id)
@@ -297,7 +297,7 @@
                 innerTD3.innerHTML = notes[i].lastedit
                 innerTD4.innerHTML = notes[i].isfavorite
                 innerTD5.className = "editable large"
-                innerTD5.innerHTML = "<center><i id='" + i + "' class='fa fa-trash red clicable'></i></center>"
+                innerTD5.innerHTML = "<center><i id='" + i + "' class='fas fa-trash red clicable'></i></center>"
                 innerTD5.id = i
                 innerTD5.addEventListener("click", function (e) {
                     deleteNote(e.target.id)
@@ -374,7 +374,7 @@
                 innerTD1.innerHTML = assoc[i].input
                 innerTD2.innerHTML = assoc[i].output
                 innerTD3.className = "editable large"
-                innerTD3.innerHTML = "<center><i id='" + i + "' class='fa fa-trash red clicable'></i></center>"
+                innerTD3.innerHTML = "<center><i id='" + i + "' class='fas fa-trash red clicable'></i></center>"
                 innerTD3.id = i
                 innerTD3.addEventListener("click", function (e) {
                     deleteAssoc(e.target.id)

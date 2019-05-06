@@ -294,7 +294,7 @@ function generateFileList() {
 				animateFunction: "spin",
 				color: "slate",
 				stickDistance: 20,
-				contentText: '<i class="fa fa-clock-o" aria-hidden="true"></i> Dernière modif : ' + f.lastedit,
+				contentText: '<i class="fas fa-clock-o"></i> Dernière modif : ' + f.lastedit,
 				stickTo: "right",
 				target: innerDiv
 			});
@@ -487,7 +487,7 @@ var MediaButton = function (context) {
 	var ui = $.summernote.ui;
 	// create button
 	var button = ui.button({
-		contents: '<i class="fa fa-picture-o"/>',
+		contents: '<i class="fas fa-image"></i>',
 		tooltip: 'Image, vidéo, dessin',
 		click: () => { editor.summernote('saveRange'); modalManager.openModal("choixMediaModal") }
 	});
@@ -499,7 +499,7 @@ var EquationButton = function (context) {
 	var ui = $.summernote.ui;
 	// create button
 	var button = ui.button({
-		contents: '<i class="fa fa-calculator"/>',
+		contents: '<i class="fas fa-calculator"/>',
 		tooltip: 'Équation',
 		click: () => {
 			editor.summernote('saveRange')
@@ -514,7 +514,7 @@ var SchemaCreationButton = function (context) {
 	var ui = $.summernote.ui;
 	// create button
 	var button = ui.button({
-		contents: '<i class="fa fa-pencil"/>',
+		contents: '<i class="fas fa-pencil-ruler"></i>',
 		tooltip: 'Créer un dessin/schéma',
 		click: () => {
 			editor.summernote('saveRange')
@@ -528,7 +528,7 @@ var SchemaEditionButton = function (context) {
 	var ui = $.summernote.ui;
 	// create button
 	var button = ui.button({
-		contents: '<i class="fa fa-pencil"/>',
+		contents: '<i class="fas fa-pencil-ruler"></i>',
 		tooltip: 'Modifier l\'image',
 		click: () => {
 			// Get highlighted image

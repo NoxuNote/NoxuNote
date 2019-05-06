@@ -3,7 +3,7 @@
 <head>
 	<title>NoxuNote</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="../../node_modules/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
 	<link rel="stylesheet" type="text/css" href="../../node_modules/html5tooltipsjs/html5tooltips.css">
 	<link rel="stylesheet" type="text/css" href="../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
 	<link rel="stylesheet" href="./materializecss-custom.css">
@@ -25,23 +25,23 @@
 			<div id="TitrePrincipal" onClick='boutonMenuGaucheSauver()'>(Cliquez pour nommer la note)</div>
 		</div>
 		<div id="trayButtons">
-			<i onClick="minimizeWindow()" class="fa fa-window-minimize pointable" style="color: rgb(100, 129, 184); font-size: 1.1em; margin-right: 5px;" aria-hidden="true"></i>
-			<i id="maximizeButton" onClick="maximizeWindow()" class="fa fa-window-maximize pointable" style="color: rgb(184, 150, 100); font-size: 1.1em; margin-right: 5px" aria-hidden="true"></i>
-			<i onClick="closeWindow()" class="fa fa-times pointable" style="color: rgb(169, 71, 71); font-size: 1.3em" aria-hidden="true"></i>
+			<i onClick="minimizeWindow()" class="fas fa-window-minimize pointable" style="color: rgb(100, 129, 184); font-size: 1.1em; margin-right: 5px;"></i>
+			<i id="maximizeButton" onClick="maximizeWindow()" class="fas fa-window-maximize pointable" style="color: rgb(184, 150, 100); font-size: 1.1em; margin-right: 5px"></i>
+			<i onClick="closeWindow()" class="fas fa-times pointable" style="color: rgb(169, 71, 71); font-size: 1.3em"></i>
 		</div>
 	</div>
 	<div id="toDoBlock" class="toDoBlock">
-		<i class="fa fa-times leftPannelClose" style="top: 5px" aria-hidden="true" onClick="toDo()"></i>
+		<i class="fas fa-times leftPannelClose" style="top: 5px" onClick="toDo()"></i>
 		<div id="toDoBlockheader" class="toDoTitle">À faire</div>
 		<textarea name="toDoContent" id="toDoContent" onKeyUp="toDoKeyPressed(event)" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
 	</div>
 
 	<div id="menuGaucheSauver" class="mlateral mlateral-gauche">
-		<i class="fa fa-times leftPannelClose" aria-hidden="true" onClick="boutonMenuGaucheSauver()"></i>
+		<i class="fas fa-times leftPannelClose" onClick="boutonMenuGaucheSauver()"></i>
 		<div id="menuNote">
 			<div class="formSave">
 				<span style="font-size: 1.2em;">
-					<i class="fa fa-pencil" aria-hidden="true"></i> 
+					<i class="fas fa-pencil-ruler"></i>
 				</span>
 				<input id="menuGaucheSauverInput" type="text" name="nom" placeholder="Ma note" onKeyDown="onTypeOnTitle();"></p>
 				<input style="margin-top: -30px;" id="terminee" type="checkbox">
@@ -49,25 +49,25 @@
 				<div class="savebutton" onClick="save_as_noxunote()">Sauvegarder</div>
 			</div>
 		</div>
-		<div style="font-size: 2.5em; text-align: center; margin: 5px"><i class="fa fa-arrow-down" aria-hidden="true"></i></div>
+		<div style="font-size: 2.5em; text-align: center; margin: 5px"><i class="fas fa-arrow-down"></i></div>
 		<form>
 			<div id="matiere" style="background: #FFFFFF;"><input id="matneutre" type="radio" name="mat" value="">Non triée</div>
 			<div id="matieres">
 			<!---<div id="matiere" style="background-color: #D8DBDB">(A trier)</i></div>-->
 			</div>
 		</form>
-		<div id="matiere" onClick="openSettings('Matières')"><i class="fa fa-plus-circle" aria-hidden="true"></i></div>
+		<div id="matiere" onClick="openSettings('Matières')"><i class="fas fa-plus-circle"></i></div>
 	</div>
 
 	<div id="menuGaucheOuvrir" class="mlateral mlateral-gauche">
-		<i class="fa fa-times leftPannelClose" aria-hidden="true" onClick='boutonMenuGaucheOuvrir()'></i>
+		<i class="fas fa-times leftPannelClose" onClick='boutonMenuGaucheOuvrir()'></i>
 		<h2 style="margin-top: 5px; margin-bottom: 5px; font-size: 1.8em;">Ouvrir</h2>
 		<div id="listFiles"></div>
 		<div class="savebutton" onclick="openSettings('Notes')">Gérer les notes</div>
 	</div>
 
-	<div id="menuDroitAide" class="mlateral mlateral-droit" style="color: #FFFFFF;">
-		<i class="fa fa-times rightPannelClose" aria-hidden="true" onClick="boutonAide()"></i>
+	<!-- <div id="menuDroitAide" class="mlateral mlateral-droit" style="color: #FFFFFF;">
+		<i class="fas fa-times rightPannelClose" onClick="boutonAide()"></i>
 		<div class="savebutton" onclick="showTutorial()">Afficher le tutoriel</div>
 		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Mise en page</h2>
 		### <span style="color:rgb(180, 180, 180);">Titre principal</span><br>
@@ -118,7 +118,7 @@
 		<span style="color:rgb(180, 180, 180);">Pour fusionner des cellules,<br> mettre plusieurs /</span><br><br>
 		/<span style="color:rgb(180, 180, 180);"> C1 C2 </span>//<span style="color:rgb(180, 180, 180);"> C3 </span>/<br>
 
-	</div>
+	</div> -->
 
 	<div id="menuBasCalc">
 		<div style="float: left; margin-top: 1px;  margin-bottom: 1px;">
@@ -141,25 +141,25 @@
 		</a>
 		<ul>
 			<li class="multimenu_btn" onclick="openSettings()"><a class="btn-floating red" data-tooltip="Réglages" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
-				<i class="fa fa-cog" aria-hidden="true"></i>
+				<i class="fas fa-cog"></i>
 			</a></li>
 			<li class="multimenu_btn" onclick="toDo()"><a class="btn-floating orange darken-1" data-tooltip="Block notes" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
-				<i class="fa fa-sticky-note" aria-hidden="true"></i>
+				<i class="fas fa-sticky-note"></i>
 			</a></li>
 			<li class="multimenu_btn" onclick="boutonCalculatrice()"><a class="btn-floating yellow darken-1" data-tooltip="Calculatrice" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
-				<i class="fa fa-calculator" aria-hidden="true"></i>
+				<i class="fas fa-calculator"></i>
 			</a></li>
 			<li class="multimenu_btn" onclick="openExport()"><a class="btn-floating green" data-tooltip="Exporter la note" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
-				<i class="fa fa-external-link" aria-hidden="true"></i>
+				<i class="fas fa-file-export"></i>
 			</a></li>
 			<li class="multimenu_btn" onclick="boutonMenuGaucheOuvrir()"><a class="btn-floating blue" data-tooltip="Ouvrir" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
-				<i class="fa fa-folder-open" aria-hidden="true"></i>
+				<i class="fas fa-folder-open"></i>
 			</a></li>
 			<li class="multimenu_btn" onclick="boutonMenuGaucheSauver()"><a class="btn-floating indigo" data-tooltip="Enregistrer" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
-				<i class="fa fa-save" aria-hidden="true"></i>
+				<i class="fas fa-save"></i>
 			</a></li>
 			<li class="multimenu_btn" onclick="newFile()"><a class="btn-floating purple" data-tooltip="Nouvelle note" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
-				<i class="fa fa-plus" aria-hidden="true"></i>
+				<i class="fas fa-plus"></i>
 			</a></li>
 		</ul>
 	</div>
@@ -169,33 +169,33 @@
 <body>
 	<div id="modals">
 		<!-- Choix Media Modal -->
-		<div class="modal fade" id="choixMediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal fade" id="choixMediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">Insérer un média</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+							<span>&times;</span>
 						</button>
 					</div>
 					<div class="modal-body" style="text-align: center">
 							<h1>Image</h1>
 							<div class="media-largebutton" onClick="modalManager.openModal('imageByUrlModal')">
-								<i class="fa fa-link" aria-hidden="true"></i>
+								<i class="fas fa-link"></i>
 								<br>URL
 							</div>
 							<div class="media-largebutton">
-								<i class="fa fa-file-image-o" aria-hidden="true"></i>
+								<i class="far fa-file-image"></i>
 								<br>Fichier
 							</div>
-							<div class="media-largebutton">
-								<i class="fa fa-pencil" aria-hidden="true"></i>
+							<div class="media-largebutton" onClick="modalManager.closeAllModal(); dessiner()">
+								<i class="fas fa-pencil-ruler"></i>
 								<br>Schéma
 							</div>
 							<br><br>
 							<h1>Vidéo</h1>
 							<div class="media-largebutton">
-								<i class="fa fa-link" aria-hidden="true"></i>
+								<i class="fas fa-link"></i>
 								<br>URL
 							</div>
 					</div>
@@ -207,13 +207,13 @@
 		</div>
 
 		<!-- Insert Image by link modal -->
-		<div class="modal fade" id="imageByUrlModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal fade" id="imageByUrlModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">Insérer une image via URL</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+							<span>&times;</span>
 						</button>
 					</div>
 					<div class="modal-body" style="text-align: center">
@@ -233,13 +233,13 @@
 		</div>
 
 		<!-- Insert Equation modal -->
-		<div class="modal fade" id="equationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal fade" id="equationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">Insérer une équation</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+							<span>&times;</span>
 						</button>
 					</div>
 					<div class="modal-body" style="text-align: center">

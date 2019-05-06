@@ -122,7 +122,7 @@ class EquationManager {
       // Création du bouton suppression historique
       var del = document.createElement('div')
       del.classList.add('historyDeleteButton')
-      del.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>'
+      del.innerHTML = '<i class="fas fa-times"></i>'
       del.addEventListener('click', (($event)=>{
         $event.stopPropagation()
         // Delete element from list

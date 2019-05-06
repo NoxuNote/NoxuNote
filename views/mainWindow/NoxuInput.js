@@ -9,25 +9,25 @@ class NoxuInput extends HTMLElement {
         // Adding Image button to menuBoutons
         this.boldButton = document.createElement('div')
         this.boldButton.className = "imageButton"
-        this.boldButton.innerHTML = '<i class="fa fa-bold" aria-hidden="true"></i>'
+        this.boldButton.innerHTML = '<i class="fas fa-bold"></i>'
         this.boldButton.onclick = (event) => { NoxuInput.surroundSelection('**') }
         this.menuBoutons.appendChild(this.boldButton)
         // Adding draw button to menuBoutons
         this.underlineButton = document.createElement('div')
         this.underlineButton.className = "imageButton"
-        this.underlineButton.innerHTML = '<i class="fa fa-underline" aria-hidden="true"></i>'
+        this.underlineButton.innerHTML = '<i class="fas fa-underline"></i>'
         this.underlineButton.onclick = (event) => { NoxuInput.surroundSelection('__') }
         this.menuBoutons.appendChild(this.underlineButton)
         // Adding italic button
         this.italicButton = document.createElement('div')
         this.italicButton.className = "imageButton"
-        this.italicButton.innerHTML = '<i class="fa fa-italic" aria-hidden="true"></i>'
+        this.italicButton.innerHTML = '<i class="fas fa-italic"></i>'
         this.italicButton.onclick = (event) => { NoxuInput.surroundSelection('::') }
         this.menuBoutons.appendChild(this.italicButton)
         // Adding math button
         this.mathButton = document.createElement('div')
         this.mathButton.className = "imageButton"
-        this.mathButton.innerHTML = '<i class="fa fa-calculator" aria-hidden="true"></i>'
+        this.mathButton.innerHTML = '<i class="fas fa-calculator"></i>'
         this.mathButton.onclick = (event) => { NoxuInput.surroundSelection('$$') }
         this.menuBoutons.appendChild(this.mathButton)
         // Separator
@@ -39,55 +39,55 @@ class NoxuInput extends HTMLElement {
         // Adding title button
         this.titleButton = document.createElement('div')
         this.titleButton.className = "imageButton"
-        this.titleButton.innerHTML = '<i class="fa fa-slack" aria-hidden="true"></i>1'
+        this.titleButton.innerHTML = '<i class="fas fa-slack"></i>1'
         this.titleButton.onclick = (event) => { NoxuInput.setPrefix('#') }
         this.menuBoutons.appendChild(this.titleButton)
         // Adding title button
         this.titleButton2 = document.createElement('div')
         this.titleButton2.className = "imageButton"
-        this.titleButton2.innerHTML = '<i class="fa fa-slack" aria-hidden="true"></i>2'
+        this.titleButton2.innerHTML = '<i class="fas fa-slack"></i>2'
         this.titleButton2.onclick = (event) => { NoxuInput.setPrefix('##') }
         this.menuBoutons.appendChild(this.titleButton2)
         // Adding title button
         this.titleButton3 = document.createElement('div')
         this.titleButton3.className = "imageButton"
-        this.titleButton3.innerHTML = '<i class="fa fa-slack" aria-hidden="true"></i>3'
+        this.titleButton3.innerHTML = '<i class="fas fa-slack"></i>3'
         this.titleButton3.onclick = (event) => { NoxuInput.setPrefix('###') }
         this.menuBoutons.appendChild(this.titleButton3)
         // Adding encadré button
         this.encadreButton = document.createElement('div')
         this.encadreButton.className = "imageButton"
-        this.encadreButton.innerHTML = '<i class="fa fa-square-o" aria-hidden="true"></i>'
+        this.encadreButton.innerHTML = '<i class="fas fa-square-o"></i>'
         this.encadreButton.onclick = (event) => { NoxuInput.setPrefix('[') }
         this.menuBoutons.appendChild(this.encadreButton)
         // Adding warn button
         this.warnButton = document.createElement('div')
         this.warnButton.className = "imageButton"
-        this.warnButton.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>'
+        this.warnButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i>'
         this.warnButton.onclick = (event) => { NoxuInput.setPrefix('!') }
         this.menuBoutons.appendChild(this.warnButton)
         // Adding marginal button
         this.marginalButton = document.createElement('div')
         this.marginalButton.className = "imageButton"
-        this.marginalButton.innerHTML = '<i class="fa fa-comment" aria-hidden="true"></i>'
+        this.marginalButton.innerHTML = '<i class="fas fa-comment"></i>'
         this.marginalButton.onclick = (event) => { NoxuInput.setPrefix('(') }
         this.menuBoutons.appendChild(this.marginalButton)
         // Adding code button
         this.codeButton = document.createElement('div')
         this.codeButton.className = "imageButton"
-        this.codeButton.innerHTML = '<i class="fa fa-code" aria-hidden="true"></i>'
+        this.codeButton.innerHTML = '<i class="fas fa-code"></i>'
         this.codeButton.onclick = (event) => { NoxuInput.setPrefix('>') }
         this.menuBoutons.appendChild(this.codeButton)
         // Adding link button
         this.linkButton = document.createElement('div')
         this.linkButton.className = "imageButton"
-        this.linkButton.innerHTML = '<i class="fa fa-link" aria-hidden="true"></i>'
+        this.linkButton.innerHTML = '<i class="fas fa-link"></i>'
         this.linkButton.onclick = (event) => { NoxuInput.setPrefix('img =') }
         this.menuBoutons.appendChild(this.linkButton)
         // Adding cross button
         this.crossButton = document.createElement('div')
         this.crossButton.className = "imageButton"
-        this.crossButton.innerHTML = '<i class="fa fa-times-circle" aria-hidden="true"></i>'
+        this.crossButton.innerHTML = '<i class="fas fa-times-circle"></i>'
         this.crossButton.onclick = (event) => { NoxuInput.setPrefix('') }
         this.menuBoutons.appendChild(this.crossButton)
         // Setting up textarea
