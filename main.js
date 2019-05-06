@@ -111,9 +111,9 @@ function save_as_noxunote(title, matiere, content) {
 	var hour
 	if (date.getMinutes() < 10) hour = date.getHours() + "h0" + date.getMinutes()
 	else hour = date.getHours() + "h" + date.getMinutes()
+	const mois = new Intl.DateTimeFormat('fr-FR', { month: 'long'}).format(date)
 
-	let now = hour + " le " + date.getDate() + "-" + date.getMonth()
-
+	let now = hour + " le " + date.getDate() + " " + mois + " " + date.getFullYear()
 	if (title == "not defined") title = "Note " + now
 	var path = homedir + '/NoxuNote/notes/' + title + '.txt';
 	try { fs.writeFileSync(path, content) }
@@ -143,37 +143,7 @@ function force_load(name) {
 	noxuApp.mainWindow.webContents.send('resetIsFileModified')
 }
 
-/** 
- * Prompt user save and load noxunote given file
- * @param name {string} title le nom du fichier
- * @param isFileModified {boolean} la note précedemment ouverte a été modifiée
- */
-function load_noxunote(name, isFileModified) {
-	let saveFile = false
-	if (isFileModified) {
-		var answer = dialog.showMessageBox({
-			type: "question", 
-			buttons: ['Oui', 'Non', 'Annuler'],
-			detail: "Le contenu ajouté risque d'être perdu si vous quittez sans enregistrer.",
-			title: "Avertissement",
-			message: "Enregistrer les modifications ?"
-		})
-		if (answer == 0) {
-			noxuApp.mainWindow.webContents.send('callSaveAsNoxuNote')
-			saveFile = true
-		} else if (answer == 2) {
-			return
-		}
-	}
-	if(saveFile) {
-		setTimeout(()=>{
-			force_load(name)
-		}, 500)
-	} else {
-		force_load(name)
-	}
-}
-ipc.on('load_noxunote', (event, path, isFileModified) => load_noxunote(path, isFileModified));
+ipc.on('load_noxunote', (event, name) => event.returnValue = force_load(name));
 
 // Génère une fenêtre de dessin, appelé quand on appuis sur "Dessiner".
 ipc.on('dessiner', (event, url) => {
@@ -190,7 +160,7 @@ ipc.on('refreshImg', (event, filename) => {
 	noxuApp.mainWindow.browserWindow.webContents.send('refreshImg', filename)
 })
 
-ipc.on('save_as_noxunote', (event, title, matiere, content) => save_as_noxunote(title, matiere, content));
+ipc.on('save_as_noxunote', (event, title, matiere, content) => event.returnValue=save_as_noxunote(title, matiere, content));
 
 /***************************************************************************************************
  *                                            PRINTING                                             *

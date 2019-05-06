@@ -15,6 +15,7 @@ const { ipcRenderer } = require('electron')
 const { dialog } = require('electron').remote
 const homedir = require('os').homedir()
 const fs = require("fs")
+const os = require("os")
 const math = require("mathjs")
 const ModalManager = require("./ModalManager.js")
 const EquationManager = require('./EquationManager.js')
@@ -23,6 +24,12 @@ var title = "not defined";
 var isFileModified = false
 
 const editor = $('#summernote')
+
+/**
+ * Action à effectuer lorsque l'utilisateur choisit une option
+ * dans la modale de confirmation de sauvegarde
+ */
+let saveConfirmationModalAction = function () {}
 
 // Manageur de modales
 const modalManager = new ModalManager()
@@ -142,8 +149,9 @@ function dessiner(url) {
  * Enregistre la note au format NoxuNote
  */
 function save_as_noxunote() {
-	ipc.send('save_as_noxunote', title, getMat(), editor.summernote('code'));
-	setTimeout(() => generateFileList(), 200);
+	ipc.sendSync('save_as_noxunote', title, getMat(), editor.summernote('code'));
+	isFileModified = false
+	generateFileList()
 }
 
 
@@ -179,7 +187,7 @@ function clearContent() {
  * @param path path to file
  */
 function load_noxunote(name) {
-	ipc.send('load_noxunote', name, isFileModified)
+	ipc.sendSync('load_noxunote', name)
 }
 
 
@@ -274,8 +282,9 @@ function generateFileList() {
 		innerDiv.style.display = "inline"
 		innerDiv.id = "file"
 		// Ajout du tooltip
+		let tooltip
 		if (f.lastedit) {
-			let tooltip = new HTML5TooltipUIComponent;
+			tooltip = new HTML5TooltipUIComponent;
 			tooltip.set({
 				animateFunction: "spin",
 				color: "slate",
@@ -286,10 +295,23 @@ function generateFileList() {
 			});
 			innerDiv.addEventListener('mouseenter', () => tooltip.show());
 			innerDiv.addEventListener('mouseleave', () => tooltip.hide());
+			innerDiv.addEventListener('click', () => tooltip.hide());
 			tooltip.mount();
 		}
-		innerDiv.innerHTML = f.nom.replace(".txt", "")
-		innerDiv.onclick = () => load_noxunote(f.nom.replace(".txt", ""))
+		const nomNote = f.nom.replace(".txt", "")
+		innerDiv.innerHTML = nomNote
+		
+		innerDiv.onclick = () => {
+			// Lors d'un clic, définit l'action de la modale de confirmation
+			// sur le chargement de la nouvelle note
+			if (isFileModified) {
+				saveConfirmationModalAction = ()=>load_noxunote(nomNote) // On définit l'action de confirmation
+				modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
+			} else { // Si aucune modification actuellement, on charge directement la note
+				load_noxunote(nomNote)
+			}
+		}
+
 		listFilesDiv.appendChild(innerDiv);
 
 		// Ajout d'un br et inscription dans la liste des éléments affichés
@@ -364,23 +386,17 @@ function openExport() {
  * Commande de création d'une nouvelle note
  */
 function newFile() {
-	if (isFileModified) {
-		var answer = dialog.showMessageBox({
-			type: "question",
-			buttons: ['Oui', 'Non', 'Annuler'],
-			detail: "Si vous quittez sans enregistrer, le contenu ajouté risque d'être perdu.",
-			title: "Avertissement",
-			message: "Enregistrer les modifications ?"
-		})
-		if (answer == 0) {
-			save_as_noxunote();
-		} else if (answer == 2) {
-			return
-		}
+	const resetFunc = ()=>{
+		setNoteTitle("");
+		editor.summernote('reset')
+		isFileModified = false
 	}
-	setNoteTitle("");
-	editor.summernote('reset')
-	isFileModified = false
+	if (isFileModified) {
+		saveConfirmationModalAction = resetFunc // On définit l'action de confirmation
+		modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
+	} else { // Si aucune modification actuellement, on charge directement la note
+		resetFunc.call()
+	}	
 }
 
 /**
@@ -463,7 +479,12 @@ function minimizeWindow() {
 	ipc.send("minimizeWindow");
 }
 function closeWindow() {
-	window.close()
+	if (isFileModified) {
+		modalManager.openModal('saveConfirmationModal') // Ouvre une modale de confirmation de sauvegarde
+		saveConfirmationModalAction = ()=>window.close() // Modifie l'action si confirmation de l'utilisateur
+	} else {
+		window.close()
+	}
 }
 
 /***************************************************************************************************
@@ -519,7 +540,9 @@ var SchemaEditionButton = function (context) {
 		click: () => {
 			// Get highlighted image
 			clickedImg = context.layoutInfo.editable.data('target')
-			const url = clickedImg.src.toString().replace("file:///", "/")
+			let url = ""
+			if (os.type() == "Windows_NT") url = clickedImg.src.toString().replace("file:///", "") // Pas de slash au début des path windows
+			else url = clickedImg.src.toString().replace("file:///", "/") // Slash au début des paths (chemins absolus) sous unix
 			console.log('edition du fichier : ', extractUrlFromSrc(url))
 			dessiner(extractUrlFromSrc(url))
 		}
@@ -700,7 +723,7 @@ function refreshImg(url) {
 		// Pour l'instant, applique la MAJ sur toutes les images (pour simplifier le code)
 		i.src = extractUrlFromSrc(i.src) + "?" + new Date().getTime();
 	})
-	console.log($images)
+	isFileModified = true
 }
 
 /**
@@ -738,7 +761,7 @@ generateMatList()
  ***************************************************************************************************/
 ipcRenderer.on('setNoteTitle', (event, title) => setNoteTitle(title))
 ipcRenderer.on('setNoteMatiere', (event, matiere) => setNoteMatiere(matiere))
-ipcRenderer.on('callSaveAsNoxuNote', (event) => ipc.send('save_as_noxunote', title))
+ipcRenderer.on('callSaveAsNoxuNote', (event) => save_as_noxunote())
 ipcRenderer.on('resetIsFileModified', (event) => isFileModified = false)
 ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); generateAssocList() })
 ipcRenderer.on('setNoteContent', (event, note) => setNoteContent(note))

@@ -45,20 +45,6 @@ class MainWindow {
         // Shortcut to webContents (retrocompatibility)
         this.webContents = this.browserWindow.webContents;
         this.browserWindow.loadURL(`file://${__dirname}/views/mainWindow/index.html`); // Loads the renderer processs
-        this.browserWindow.on('close', (e) => {
-            var answer = dialog.showMessageBox({
-                type: "question",
-                buttons: ['Oui', 'Non', 'Annuler'],
-                detail: "Si vous quittez sans enregistrer, le contenu présent risque d'être perdu.",
-                title: "Avertissement",
-                message: "Enregistrer la note ?"
-            })
-            if (answer == 0) {
-                this.browserWindow.webContents.send('callSaveAsNoxuNote')
-            } else if (answer == 2) {
-                e.preventDefault()
-            }
-        })
         // Creating NoxuNote working directories if not exists
         mkdirSync(homedir + '/NoxuNote');
         mkdirSync(homedir + '/NoxuNote/notes');

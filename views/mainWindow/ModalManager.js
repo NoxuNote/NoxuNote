@@ -6,6 +6,7 @@ class ModalManager {
         this.modals["imageByUrlModal"] = $("#imageByUrlModal")
         this.modals["imageByFileModal"] = $("#imageByFileModal")
         this.modals["equationModal"] = $("#equationModal")
+        this.modals["saveConfirmationModal"] = $("#saveConfirmationModal")
     }
 
     closeModal(modalId) {

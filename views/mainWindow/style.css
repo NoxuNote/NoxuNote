@@ -574,8 +574,11 @@ div.pastille {
 	transform: scale(1.4) rotate(180deg);
 }
 
-.multimenu_btn {
-}
 .multimenu_btn:hover {
 	transform: scale(1.2);
+}
+#catCollapse {
+	margin-left: auto;
+	margin-right: auto;
+	width: 318px;
 }
