@@ -481,9 +481,9 @@ function minimizeWindow() {
 function closeWindow() {
 	if (isFileModified) {
 		modalManager.openModal('saveConfirmationModal') // Ouvre une modale de confirmation de sauvegarde
-		saveConfirmationModalAction = ()=>window.close() // Modifie l'action si confirmation de l'utilisateur
+		saveConfirmationModalAction = ()=>ipc.send('quit') // Modifie l'action si confirmation de l'utilisateur
 	} else {
-		window.close()
+		ipc.send('quit')
 	}
 }
 
@@ -767,3 +767,4 @@ ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); g
 ipcRenderer.on('setNoteContent', (event, note) => setNoteContent(note))
 ipcRenderer.on('insertDrawing', (event, url) => insertImg(url))
 ipcRenderer.on('refreshImg', (event, url) => refreshImg(url))
+ipcRenderer.on('electron_request_close', (event) => closeWindow()) // Permet de gérer graphiquement l'alerte de sauvegarde

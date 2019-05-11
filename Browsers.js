@@ -28,6 +28,7 @@ function mkdirSync(dirPath) {
 
 class MainWindow {
     constructor() {
+        this.allowClose = false
         this.browserWindow = new BrowserWindow({
             width: 950,
             height: 600,
@@ -48,6 +49,12 @@ class MainWindow {
         // Creating NoxuNote working directories if not exists
         mkdirSync(homedir + '/NoxuNote');
         mkdirSync(homedir + '/NoxuNote/notes');
+        this.browserWindow.on('close', (e) => {
+            if (!this.allowClose) {
+                e.preventDefault()
+                this.browserWindow.webContents.send('electron_request_close')
+            }
+        })
     }
 }
 
@@ -145,6 +152,15 @@ class NoxuNoteApp {
         this.createDb()
         this.createMainWindow()
     }
+    quit() {
+        this.mainWindow.allowClose = true
+        this.mainWindow.browserWindow.close()
+        if (this.mainDrawWindow) this.mainDrawWindow.browserWindow.close()
+        if (this.mainOutputWindow) this.mainOutputWindow.browserWindow.close()
+        if (this.settingsWindow) this.settingsWindow.browserWindow.close()
+        if (this.prePrintWindow) this.prePrintWindow.browserWindow.close()
+        process.exit(1)
+    }
     createLicence() {
         // Instanciation de l'objet licence, le constructeur de Licence possède un callback qui
         // renvoie l'objet lui même garantit que toutes les informations ont bien été téléchargées 
@@ -183,11 +199,6 @@ class NoxuNoteApp {
     createMainDrawWindow(url) {
         if (!this.mainDrawWindow) {
             this.mainDrawWindow = new MainDrawWindow(url)
-            this.mainDrawWindow.browserWindow.on('closed', () => {
-                this.mainDrawWindow = null;
-                this.mode = "new"
-                this.mainWindow.browserWindow.webContents.send('restoreMainForm')
-            })
         }
     }
     createMainOutputWindow(caller) {
