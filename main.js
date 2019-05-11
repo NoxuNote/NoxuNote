@@ -325,9 +325,7 @@ function copyFileToWorkingFolder(filePath) {
 // Réception d'une demande de copie de fichier, aucune réponse n'est renvoyée de manière synchrone
 ipc.on('copyFileToWorkingFolder', (event, filePath) => event.returnValue = copyFileToWorkingFolder(filePath))
 
-ipc.on('quit', (event)=> {
-	noxuApp.quit()
-} )
+ipc.on('quit', (event) => noxuApp.quit())
 
 
 /***************************************************************************************************
