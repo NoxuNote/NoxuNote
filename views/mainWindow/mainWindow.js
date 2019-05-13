@@ -555,6 +555,7 @@ $(document).ready(function () {
 	editor.summernote({
 		lang: 'fr-FR',
 		focus: true,
+    blockquoteBreakingLevel: 1,
 		/**
 		 * Suggestion automatique de mots
 		 */
@@ -588,7 +589,14 @@ $(document).ready(function () {
 				['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
 				['float', ['floatLeft', 'floatRight', 'floatNone']],
 				['remove', ['removeMedia']]
-			]
+			],
+      link: [
+        ['link', ['linkDialogShow', 'unlink']],
+      ],
+      table: [
+        ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
+        ['delete', ['deleteRow', 'deleteCol', 'deleteTable']],
+      ]
 		},
 		/**
 		 * Enregistrement des boutons personnalisés
