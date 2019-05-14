@@ -20,7 +20,6 @@ const app 			= electron.app
 const ipc 			= electron.ipcMain // Handles asynchronous and synchronous messages sent from a renderer process (web page).
 const BrowserWindow = electron.BrowserWindow
 // Importing NoxuNote librairies
-const licenceAPI 	= require('./licenceAPI.js')
 const parser 		= require("./parser.js")
 const database		= require("./DataBase.js")
 const browsers		= require("./Browsers.js")
@@ -103,6 +102,8 @@ app.on('window-all-closed', () => {
 /***************************************************************************************************
  *                                       FONCTIONS USUELLES                                        *
  ***************************************************************************************************/
+
+ipc.on('getVersion', (event)=>event.returnValue = noxuApp.licence.getVersion())
 
 /** 
  * Créee un fichier au format NoxuNote (.txt) 

@@ -165,21 +165,19 @@ class NoxuNoteApp {
         // Instanciation de l'objet licence, le constructeur de Licence possède un callback qui
         // renvoie l'objet lui même garantit que toutes les informations ont bien été téléchargées 
         // (ChangeLog etc.)
-        setTimeout(() => {
-            this.licence = new licenceAPI.Licence((l) => {
-                if (l.actualVersion != l.lastVersion) {
-                    var answer = dialog.showMessageBox({
-                        type: "question",
-                        buttons: ['Télécharger', 'Plus tard'],
-                        detail: "Nouveautés (version " + l.lastVersion + ") : \n" + l.changeLog,
-                        message: "Mise à jour disponible !"
-                    })
-                    if (answer == 0) {
-                        shell.openExternal('http://noxunote.fr/prototype/#download')
-                    }
+        this.licence = new licenceAPI.Licence((l) => {
+            if (l.actualVersion != l.lastVersion) {
+                var answer = dialog.showMessageBox({
+                    type: "question",
+                    buttons: ['Télécharger', 'Plus tard'],
+                    detail: "Nouveautés (version " + l.lastVersion + ") : \n" + l.changeLog,
+                    message: "Mise à jour disponible !"
+                })
+                if (answer == 0) {
+                    shell.openExternal('http://noxunote.fr/prototype/#download')
                 }
-            })
-        }, 1000)
+            }
+        })
     }
     createDb() {
         this.db = new database.DataBase()

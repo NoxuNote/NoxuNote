@@ -776,7 +776,7 @@ loadTodoFile()
 // Enable tab character insertion on default input
 generateMatList()
 
-notificationService.showNotification("Bienvenue !", "N'hésitez pas à nous suivre sur Facebook :) !", 4000)
+notificationService.showNotification("Bienvenue dans NoxuNote", `version ${ipcRenderer.sendSync('getVersion')}`, 4000)
 
 /***************************************************************************************************
  *      ASSOCIATION DES ÉVÈNEMENTS DE L'IPC AUX FONCTIONS DU PROCESSUS GRAPHIQUE (AU DESSUS).      *

@@ -17,6 +17,10 @@ class Licence {
         })
     }
 
+    getVersion() {
+        return this.actualVersion
+    }
+
     getChangelogJSON(callback) {
         var url = 'http://noxunote.fr/prototype/version.json';
         http.get(url, function (res) {
