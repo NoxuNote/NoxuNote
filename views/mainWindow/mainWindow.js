@@ -18,6 +18,7 @@ const fs = require("fs")
 const os = require("os")
 const math = require("mathjs")
 const ModalManager = require("./ModalManager.js")
+const NotificationService = require("./NotificationService.js")
 const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
 var title = "not defined";
@@ -44,6 +45,7 @@ let saveConfirmationModalAction = function () {}
 
 // Manageur de modales
 const modalManager = new ModalManager()
+const notificationService = new NotificationService()
 const equationManager = new EquationManager(modalManager, editor)
 
 /***************************************************************************************************
@@ -774,6 +776,7 @@ loadTodoFile()
 // Enable tab character insertion on default input
 generateMatList()
 
+notificationService.showNotification("Bienvenue !", "N'hésitez pas à nous suivre sur Facebook :) !", 4000)
 
 /***************************************************************************************************
  *      ASSOCIATION DES ÉVÈNEMENTS DE L'IPC AUX FONCTIONS DU PROCESSUS GRAPHIQUE (AU DESSUS).      *

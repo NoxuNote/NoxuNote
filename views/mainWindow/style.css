@@ -584,15 +584,17 @@ div.pastille {
 	width: 318px;
 }
 #notification {
-	position: absolute;
+	position: fixed;
 	z-index: 15;
 	background-color: #44546c;
 	bottom: 10px;
 	left: -500px;
 	/* right: auto; */
+	transition: left 0.5s;
 }
 #notification.displayed {
 	left: 10px;
+	transition: left 0.5s;
 }
 #isModified {
 	transform: translateY(-25px);
@@ -609,4 +611,11 @@ div.pastille {
 #isModified.displayed:hover {
 	transform: scale(1.2);
 	transition: transform 0.3s;
+}
+.notification-footer {
+	display: flex;
+	justify-content: flex-end;
+}
+.notification-footer>button {
+	margin-left: 5px
 }

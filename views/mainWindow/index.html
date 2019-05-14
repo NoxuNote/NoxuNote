@@ -23,7 +23,7 @@
 		<div id="windowTitleText">
 			<img src="../../images/noxunote.png" height="12px"/> NoxuNote - 
 			<div id="TitrePrincipal" onClick='boutonMenuGaucheSauver()'>(Cliquez pour nommer la note)</div>
-			<i id="isModified" class="fas fa-save" data-tooltip="Enregistrer les modifications" data-tooltip-stickto="right" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin" onclick="
+			<i id="isModified" class="fas fa-save" data-tooltip="Enregistrer (Ctrl/CMD + S)" data-tooltip-stickto="right" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin" onclick="
 			save_as_noxunote()"></i>
 		</div>
 		<div id="trayButtons">
@@ -164,6 +164,18 @@
 				<i class="fas fa-plus"></i>
 			</a></li>
 		</ul>
+	</div>
+	
+	<div id="notification" class="card" style="width: 18rem;">
+		<div class="card-body">
+			<h5 id="notification-title" class="card-title"></h5>
+			<p id="notification-content" class="card-text"></p>
+			<div class="notification-footer">
+				<button id="notification-b1" type="button" class="btn btn-primary"></button>
+				<button id="notification-b2" type="button" class="btn btn-secondary"></button>
+				<button type="button" class="btn btn-secondary" onclick="notificationService.hideNotification()">Fermer</button>
+			</div>
+		</div>
 	</div>
 	
 </header>
@@ -314,7 +326,7 @@
 									<option value="accsup">Accolades supérieures</option>
 									<option value="accinf">Accolades inférieures</option>
 								</select>							
-								</div>
+							</div>
 							<div class="input-group mb-3">
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="inputGroup-sizing-default">Formule</span>
@@ -339,17 +351,6 @@
 				</div>
 			</div>
 		</div>
-
-		<div id="notification" class="card" style="width: 18rem;">
-				<div class="card-body">
-					<h5 class="card-title">Card title</h5>
-					<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-					<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.
-					</p>
-					<a href="#" class="card-link">Card link</a>
-					<a href="#" class="card-link">Another link</a>
-				</div>
-			</div>
 
 	</div>
 
