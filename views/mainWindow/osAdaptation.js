@@ -25,9 +25,9 @@ if (platform !== 'darwin') {
         let button = document.getElementById('maximizeButton');
         // On modifie la classe du bouton selon l'etat
         if (maximized) {
-            button.className = "fa fa-window-restore pointable"
+            button.className = "fas fa-window-restore pointable"
         } else {
-            button.className = "fa fa-window-maximize pointable"
+            button.className = "fas fa-window-maximize pointable"
         }
     })
     

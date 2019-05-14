@@ -5,7 +5,7 @@ var os = require("os")
 class Licence {
 
     constructor(callback) {
-        this.actualVersion = "0.5.2"
+        this.actualVersion = "1.0.0"
         this.lastVersion = null
         this.changeLog = null
         this.id = Math.floor(Math.random() * Math.floor(99999))
@@ -17,6 +17,10 @@ class Licence {
         })
     }
 
+    getVersion() {
+        return this.actualVersion
+    }
+
     getChangelogJSON(callback) {
         var url = 'http://noxunote.fr/prototype/version.json';
         http.get(url, function (res) {
@@ -25,12 +29,16 @@ class Licence {
                 body += chunk;
             });
             res.on('end', () => {
-                var response = JSON.parse(body);
+                try {
+                    var response = JSON.parse(body);
+                    callback(response)
+                } catch(e) {
+                    console.error('Réponse de l\'API incorrecte')
+                }
                 // On définit les attributs de la licence
-                callback(response)
             });
         }).on('error', function (e) {
-            console.log("Erreur de récupération du changelog.");
+            console.error("Erreur de récupération du changelog.");
         });
     }
 

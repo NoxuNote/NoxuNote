@@ -4,8 +4,9 @@
 <head>
     <meta charset="utf-8">
     <title>Aperçu de l'exportation</title>
-    <link rel="stylesheet" type="text/css" href="../../node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../../node_modules/materialize-css/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="../../node_modules/summernote/dist/summernote.css">
     <link rel="stylesheet" type="text/css" href="preprint.css">
 </head>
 
@@ -26,7 +27,7 @@
         <ul class="collapsible">
             <li>
                 <div class="collapsible-header">
-                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Fichier</div>
+                    <i class="fas fa-save"></i> Fichier</div>
                 <div class="collapsible-body">
                     <h2 class="form">Format du fichier</h2>
                     <p>Le format du fichier dans lequel sera formatté le document.</p>
@@ -41,7 +42,7 @@
             </li>
             <li>
                 <div class="collapsible-header">
-                    <i class="fa fa-file-text" aria-hidden="true"></i> Page</div>
+                    <i class="fas fa-sticky-note"></i> Page</div>
                 <div class="collapsible-body">
                     <p>Marge en haut</p>
                     <form action="#">
@@ -65,7 +66,7 @@
             </li>
             <li>
                 <div class="collapsible-header">
-                    <i class="fa fa-flag" aria-hidden="true"></i> Titres</div>
+                    <i class="fas fa-flag"></i> Titres</div>
                 <div class="collapsible-body">
 
                     <div>
@@ -211,7 +212,7 @@
             </li>
             <li>
                 <div class="collapsible-header">
-                    <i class="fa fa-paragraph" aria-hidden="true"></i> Corps</div>
+                    <i class="fas fa-paragraph"></i> Corps</div>
                 <div class="collapsible-body">
                     <span class="leftT2">Lignes de texte</span>
                     <p>Police de caractère</p>
@@ -259,7 +260,7 @@
             </li>
             <li>
                 <div class="collapsible-header">
-                    <i class="fa fa-table" aria-hidden="true"></i> Tableaux</div>
+                    <i class="fas fa-table"></i> Tableaux</div>
                 <div class="collapsible-body">
                     <span class="leftT2">Cellules</span>
                     <p>Police de caractère</p>
@@ -343,9 +344,9 @@
 <footer>
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
     <script src="../../node_modules/code-prettify/loader/run_prettify.js?skin=default"></script>
-    <script src="../../node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
     <script src="../../node_modules/jquery/dist/jquery.min.js" onload=""></script>
     <script src="../../node_modules/materialize-css/dist/js/materialize.min.js" onload=""></script>
+    <script src="../../node_modules/summernote/dist/summernote.min.js"></script>
     <script> M.AutoInit() </script>
     <script src="preprint.js"></script>
 </footer>

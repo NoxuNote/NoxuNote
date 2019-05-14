@@ -410,12 +410,13 @@ function restoreCanvas() {
 }
 
 function save() {
+    var editedImage = oldFileName && oldFileName.length>0
     var imgFeed, fileName;
     // On créee le répertoire s'il n'existe pas
     mkdirSync(homedir + '/NoxuNote');
     mkdirSync(homedir + '/NoxuNote/created_images/');
     // Si on est en mode édition on garde l'ancien nom de fichier
-    if (edit != -1) {
+    if (editedImage) {
         fileName = oldFileName.split("?")[0];
     } else {
         imgFeed = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
@@ -427,33 +428,23 @@ function save() {
     try { fs.writeFileSync(fileName, buf); }
     catch (e) { alert('Failed to save the file !' + e); }
     // Si on est en mode édition
-    if (edit != -1) {
-        ipc.send('newEditedDessin', fileName, edit)
+    if (editedImage) {
+        ipc.send('refreshImg', fileName)
     } else {
         ipc.send('newDessin', fileName);
     }
 }
 
-// Ferme la fenêtre et dit de supprimer le dessin.
-function supprimerDessin() {
-    // Si on est en mode édition
-    if (edit != -1) {
-        ipc.send('deleteDessin', edit);
-    } else {
-        window.close();
-    }
-}
-
-/** Charge une image de données "content" sur le canvas
- * @param content le contenu URL de l'image
+/** Charge une image de données "url" sur le canvas
+ * @param url le contenu URL de l'image
  * @param pattern true si la fonction est appelée pour invoquer un pattern, false dans les autres cas
  */
-function load(content, pattern) {
-    console.log("chargement de l'image : " + content);
+function load(url, pattern) {
+    console.log("chargement de l'image : " + url);
     var img = new Image();
-    img.src = content;
+    img.src = url;
     if (!pattern) {
-        oldFileName = content;
+        oldFileName = url;
     }
     img.onload = () => {
         // Get resize dimensions to fit a larger image than canvas size

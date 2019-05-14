@@ -2,7 +2,7 @@
     <header>
         <title>NoxuNote - Dessin</title> 
         <link rel="stylesheet" type="text/css" href="draw.css">
-        <link rel="stylesheet" type="text/css" href="../../node_modules/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="../../node_modules/html5tooltipsjs/html5tooltips.css">
         <link rel="stylesheet" type="text/css" href="../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
     </header>
@@ -28,60 +28,57 @@
             </div>
 
             <div data-tooltip-delay=50 data-tooltip="Texte" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="text()">
-                <i class="fa fa-font" aria-hidden="true"></i>
+                <i class="fas fa-font"></i>
             </div>
             <div data-tooltip-delay=50 data-tooltip="Image" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="insertImg()">
-                <i class="fa fa-image" aria-hidden="true"></i>
+                <i class="fas fa-image"></i>
             </div>
             <div data-tooltip-delay=50 data-tooltip="Gomme" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="gomme()">
-                <i class="fa fa-eraser" aria-hidden="true"></i>
+                <i class="fas fa-eraser"></i>
             </div>
             <div data-tooltip-delay=50 data-tooltip="Annuler l'action" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="restoreCanvas()">
-                <i class="fa fa-undo" aria-hidden="true"></i>
-            </div>
-            <div data-tooltip-delay=50 data-tooltip="Supprimer cette image" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="#282F37" onclick="supprimerDessin()">
-                <span style="color: #FC6961;"><i class="fa fa-times" aria-hidden="true"></i></span>
+                <i class="fas fa-undo"></i>
             </div>
             <div data-tooltip-delay=50 data-tooltip="Sauver" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="#282F37" onclick="save()">
-                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                <i class="fas fa-save"></i>
             </div>
             <div data-tooltip-delay=50 data-tooltip="Réinitialiser l'image" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="#282F37" onclick="clearDraw()">
-                <i class="fa fa-trash" aria-hidden="true"></i>
+                <i class="fas fa-trash"></i>
             </div>
             <div class="dropdown">
                 <button class="dropbtn">Générateur 
-                    <i class="fa fa-caret-down"></i>
+                    <i class="fas fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
                     <div class="boutonDrop" id="#282F37" onclick="loadPattern(0)">
-                        <i class="fa fa-th-large" aria-hidden="true"></i> Petite Grille
+                        <i class="fas fa-th-large"></i> Petite Grille
                     </div>
                     <div class="boutonDrop" id="#282F37" onclick="loadPattern(4)">
-                        <i class="fa fa-th-large" aria-hidden="true"></i> Grande Grille
+                        <i class="fas fa-th-large"></i> Grande Grille
                     </div>
                     <div class="boutonDrop" id="#282F37" onclick="loadPattern(2)">
-                        <i class="fa fa-line-chart" aria-hidden="true"></i> Repère
+                        <i class="fas fa-chart-line"></i> Repère
                     </div>
                     <div class="boutonDrop" id="#282F37" onclick="loadPattern(1)">
-                        <i class="fa fa-line-chart" aria-hidden="true"></i> Repère Positif
+                        <i class="fas fa-chart-line"></i> Repère Positif
                     </div>
                     <div class="boutonDrop" id="#282F37" onclick="drawFunction(1)">
-                        <i class="fa fa-circle-thin" aria-hidden="true"></i> Sinusoïde
+                        <i class="fas fa-circle"></i> Sinusoïde
                     </div>
                     <div class="boutonDrop" id="#282F37" onclick="drawFunction(2)">
-                        <i class="fa fa-circle-o-notch" aria-hidden="true"></i> Cosinus
+                        <i class="fas fa-circle-notch"></i> Cosinus
                     </div>
                     <div class="boutonDrop" id="#282F37" onclick="drawFunction(3)">
-                        <i class="fa fa-square-o" aria-hidden="true"></i> Carré
+                        <i class="fas fa-square"></i> Carré
                     </div>
                     <div class="boutonDrop" id="#282F37" onclick="mathFunction()">
-                        <i class="fa fa-calculator" aria-hidden="true"></i> Expression
+                        <i class="fas fa-calculator"></i> Expression
                     </div>
                 </div>
             </div>
             <div class="dropdown">
                 <button class="dropbtn">Modèles 
-                    <i class="fa fa-caret-down"></i>
+                    <i class="fas fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
                     <h3>Divers</h3>
@@ -142,7 +139,7 @@
             </div>
             <div class="dropdown">
                 <button class="dropbtn">Aide 
-                    <i class="fa fa-caret-down"></i>
+                    <i class="fas fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
                     <div style="margin: 6px">

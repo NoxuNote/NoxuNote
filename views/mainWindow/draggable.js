@@ -52,7 +52,7 @@ dragElement(document.getElementById(("toDoBlock")));
 // Resetting element position on window resize
 window.addEventListener('resize', function(event, elmnt){
     var elmnt = document.getElementById("toDoBlock");
-    elmnt.style.top = "75px";
+    elmnt.style.top = "130px";
     elmnt.style.left = null;
     elmnt.style.right = "50px";
 });

@@ -28,6 +28,7 @@ function mkdirSync(dirPath) {
 
 class MainWindow {
     constructor() {
+        this.allowClose = false
         this.browserWindow = new BrowserWindow({
             width: 950,
             height: 600,
@@ -45,28 +46,20 @@ class MainWindow {
         // Shortcut to webContents (retrocompatibility)
         this.webContents = this.browserWindow.webContents;
         this.browserWindow.loadURL(`file://${__dirname}/views/mainWindow/index.html`); // Loads the renderer processs
-        this.browserWindow.on('close', (e) => {
-            var answer = dialog.showMessageBox({
-                type: "question",
-                buttons: ['Oui', 'Non', 'Annuler'],
-                detail: "Si vous quittez sans enregistrer, le contenu présent risque d'être perdu.",
-                title: "Avertissement",
-                message: "Enregistrer la note ?"
-            })
-            if (answer == 0) {
-                this.browserWindow.webContents.send('callSaveAsNoxuNote')
-            } else if (answer == 2) {
-                e.preventDefault()
-            }
-        })
         // Creating NoxuNote working directories if not exists
         mkdirSync(homedir + '/NoxuNote');
         mkdirSync(homedir + '/NoxuNote/notes');
+        this.browserWindow.on('close', (e) => {
+            if (!this.allowClose) {
+                e.preventDefault()
+                this.browserWindow.webContents.send('electron_request_close')
+            }
+        })
     }
 }
 
 class MainDrawWindow {
-    constructor(inserterPosition) {
+    constructor(url) {
         this.browserWindow = new BrowserWindow({
             width: 950,
             height: 600,
@@ -80,12 +73,14 @@ class MainDrawWindow {
             resizable: false,
             autoHideMenuBar: true,
         })
-
-        // (optionnel) la ligne ou insérer le prochain dessin, utilisé lors de l'insertion 
-        this.inserterPosition = inserterPosition
-
         this.browserWindow.loadURL(`file://${__dirname}/views/mainDrawWindow/draw.html`) // Loads the renderer process
+        if (url) this.browserWindow.webContents.once('dom-ready', () => this.load(url));
     }
+    
+    load(url) {
+        this.browserWindow.webContents.send('loadImage', url)
+    }
+    
 }
 
 class MainOutputWindow {
@@ -132,7 +127,7 @@ class SettingsWindow {
 }
 
 class PrePrintWindow {
-    constructor(key) {
+    constructor(content) {
         this.browserWindow = new BrowserWindow({
             width: 1200,
             height: 720,
@@ -144,6 +139,7 @@ class PrePrintWindow {
             autoHideMenuBar: true
         })
         this.browserWindow.loadURL(`file://${__dirname}/views/prePrintWindow/preprint.html`)
+        if (content) this.browserWindow.webContents.once('dom-ready', () => this.setNote(content));
     }
     setNote(note) {
         this.browserWindow.send('setNote', note)
@@ -152,34 +148,36 @@ class PrePrintWindow {
 
 class NoxuNoteApp {
     constructor() {
-        this.note = new Array() // Stoque le contenu brut de la note
-        this.note.push('@NOXUNOTE_BEGIN')
-        this.mode = "new" // Stoque le mode d'édition en cours, vaut "new" ou "edit"
-        this.editedContent = "" // Stoque le contenu de la div précedemment editée
-        this.editedLine = 0 // Contient le numéro de ligne précedemment editée
         this.createLicence()
         this.createDb()
         this.createMainWindow()
+    }
+    quit() {
+        this.mainWindow.allowClose = true
+        this.mainWindow.browserWindow.close()
+        // if (this.mainDrawWindow) this.mainDrawWindow.browserWindow.close()
+        // if (this.mainOutputWindow) this.mainOutputWindow.browserWindow.close()
+        // if (this.settingsWindow) this.settingsWindow.browserWindow.close()
+        // if (this.prePrintWindow) this.prePrintWindow.browserWindow.close()
+        process.exit(1)
     }
     createLicence() {
         // Instanciation de l'objet licence, le constructeur de Licence possède un callback qui
         // renvoie l'objet lui même garantit que toutes les informations ont bien été téléchargées 
         // (ChangeLog etc.)
-        setTimeout(() => {
-            this.licence = new licenceAPI.Licence((l) => {
-                if (l.actualVersion != l.lastVersion) {
-                    var answer = dialog.showMessageBox({
-                        type: "question",
-                        buttons: ['Télécharger', 'Plus tard'],
-                        detail: "Nouveautés (version " + l.lastVersion + ") : \n" + l.changeLog,
-                        message: "Mise à jour disponible !"
-                    })
-                    if (answer == 0) {
-                        shell.openExternal('http://noxunote.fr/prototype/#download')
-                    }
+        this.licence = new licenceAPI.Licence((l) => {
+            if (l.actualVersion != l.lastVersion) {
+                var answer = dialog.showMessageBox({
+                    type: "question",
+                    buttons: ['Télécharger', 'Plus tard'],
+                    detail: "Nouveautés (version " + l.lastVersion + ") : \n" + l.changeLog,
+                    message: "Mise à jour disponible !"
+                })
+                if (answer == 0) {
+                    shell.openExternal('http://noxunote.fr/prototype/#download')
                 }
-            })
-        }, 1000)
+            }
+        })
     }
     createDb() {
         this.db = new database.DataBase()
@@ -193,17 +191,12 @@ class NoxuNoteApp {
     }
     /**
      * Instancie la fenêtre de dessin
-     * @param {number} line (optionnel) la ligne ou insérer le prochain dessin, utilisé lors de l'insertion 
+     * @param {number} url (optionnel) url de l'image a editer
      * d'une ligne au milieu de la note. Si pas de valeur, inséré à la fin.
      */
-    createMainDrawWindow(line) {
+    createMainDrawWindow(url) {
         if (!this.mainDrawWindow) {
-            this.mainDrawWindow = new MainDrawWindow(line)
-            this.mainDrawWindow.browserWindow.on('closed', () => {
-                this.mainDrawWindow = null;
-                this.mode = "new"
-                this.mainWindow.browserWindow.webContents.send('restoreMainForm')
-            })
+            this.mainDrawWindow = new MainDrawWindow(url)
         }
     }
     createMainOutputWindow(caller) {
@@ -228,11 +221,8 @@ class NoxuNoteApp {
             })
         }   
     }
-    createPrePrintWindow() {
-        this.prePrintWindow = new PrePrintWindow()
-        this.prePrintWindow.browserWindow.webContents.on('did-finish-load', ()=>{
-            this.prePrintWindow.setNote(this.note)
-        })
+    createPrePrintWindow(content) {
+        this.prePrintWindow = new PrePrintWindow(content)
         this.prePrintWindow.browserWindow.on('closed', () => {
             this.mainOutputWindow = null;
         })

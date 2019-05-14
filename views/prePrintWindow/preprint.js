@@ -8,8 +8,10 @@ const parser = require("../../parser.js")
 const { StylePreset } = require('./StylePreset.js')
 const fontList = require('font-list')
 
+const content = document.getElementById("content")
+
 function makeExport() {
-    ipcRenderer.send("makePreview", customStyle.preset.format, customStyle.generateCss())
+    ipcRenderer.send("makePreview", customStyle.preset.format, customStyle.generateCss(), content.innerHTML)
     document.getElementById("exportButton").className = "waves-effect waves-light btn disabled"
 }
 
@@ -33,101 +35,23 @@ window.addEventListener('resize', () => updateDim())
 updateDim()
 
 
-/***************************************************************************************************
- *                                      CHARGEMENT DE LA NOTE                                      *
- ***************************************************************************************************/
-
-/**
-* @param content le contenu de la div
-* Ajoute une balise de contenu content à la fin des div child de "content"
-*/
-function addDiv(content, index) {
-    // Si on reçoit un tableau
-    if (content.substr(0, 1) == "/") {
-
-        // On le divise en 2 arrays, l'un contenant le textes des cellules(groupes), l'autre le colspan des cellules
-        // On a un texte de la forme
-        //     / texte / texte /
-        //     / texte //
-        // Effacement de la première slash
-        content = content.substr(1)
-        // Division du texte en groupes de forme [ 'a /', 'b c //', 'd /', 'e ///', 'f /' ]
-        var groups = content.match(/[\s\S]*?\/{1,}/g)
-        // Compteur de / pour chaque groupe
-        var groupsColSpan = new Array(groups.length)
-        // Comptage des / et suppression
-        for (var i = 0; i < groups.length; i++) {
-            groupsColSpan[i] = /(\/){1,}/g.exec(groups[i])[0].length
-            groups[i] = groups[i].replace(/\//g, "").trim()
-        }
-
-        // On construit le <tr>
-        var innerTR = document.createElement("tr")
-        innerTR.id = index
-        //innerTR.onclick = function () { ipc.send('edit_div', index, document.getElementById('form').value) }
-
-        // Pour chaque cellule/groupe, on insère un TD de taille correspondante
-        for (var i = 0; i < groups.length; i++) {
-            var cell = innerTR.insertCell(-1)
-            cell.colSpan = groupsColSpan[i]
-            cell.innerHTML = groups[i]
-        }
-
-        // Si l'élément précédent est une <tr></tr> alors on ajoute le innerTR à cette table précédente
-        try {
-            if (document.getElementById(index - 1).nodeName == "TR") {
-                document.getElementById(index - 1).parentElement.appendChild(innerTR)
-            } else {
-                // Sinon on créee une table
-                var innerTable = document.createElement('table')
-                document.getElementById('content').appendChild(innerTable)
-                innerTable.appendChild(innerTR)
-            }
-        }
-        // Dans le cas contraire, on créee une table
-        catch (e) {
-            var innerTable = document.createElement('table')
-            document.getElementById('content').appendChild(innerTable)
-            innerTable.appendChild(innerTR)
-        }
-
-    } else {
-        // Création et indexation de la nouvelle div
-        var innerDiv = document.createElement('div')
-        innerDiv.id = index
-        innerDiv.className = "line"
-        document.getElementById("content").appendChild(innerDiv)
-        // Remplissage de la div
-        innerDiv.innerHTML = content
-    }
-
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub, content])
-    PR.prettyPrint()
-}
-
 // Quand le main.js à envoyé tous les éléments de la note, on attend que MathJax ait fini le rendu et on
 // Envoie l'ordre d'imprimer
 function onUploadedContent() {
-    MathJax.Hub.Register.StartupHook("End", function () {
-        var images = document.querySelectorAll('img')
-        Array.from(images).forEach((image) => {
-            if (image.className != "schema") {
-                effecteur.whiteTransformation(image)
-                    .then((result) => {
-                        image.src = result
-                    })
-            }
+    var images = document.querySelectorAll('img')
+    Array.from(images).forEach((image) => {
+        if (image.className != "schema") {
+            effecteur.whiteTransformation(image)
+                .then((result) => {
+                    image.src = result
+                })
+        }
 
-        })
-        // Méthode à modifier ! : On laisse 200ms au programme pour modifier toutes les images
-        //setTimeout(()=>ipc.send('outputReady'), 1000)
     })
 }
 
 ipcRenderer.on('setNote', (event, note) => {
-    for (var i = 1; i < note.length; i++) {
-        addDiv(parser.noteToHtml(note[i]), i)
-    }
+    content.innerHTML = note
     onUploadedContent()
 })
 
@@ -303,7 +227,7 @@ function applyFonts() {
     const selectorIds = ['#policeTitre3', '#policeTitre2', '#policeTitre1', '#policeCorps', '#policeTableau']
     const selectors = selectorIds.map(id => $(id))
     fonts.forEach(font => {
-        selectors.forEach(s=>{
+        selectors.forEach(s => {
             let $newOpt = $(`<option style='font-family: ${font}; color: black'>`).attr("value", font).text(font.replace(/"/g, ''))
             s.append($newOpt)
             s.formSelect();
