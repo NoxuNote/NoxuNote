@@ -25,12 +25,16 @@ class Licence {
                 body += chunk;
             });
             res.on('end', () => {
-                var response = JSON.parse(body);
+                try {
+                    var response = JSON.parse(body);
+                    callback(response)
+                } catch(e) {
+                    console.error('Réponse de l\'API incorrecte')
+                }
                 // On définit les attributs de la licence
-                callback(response)
             });
         }).on('error', function (e) {
-            console.log("Erreur de récupération du changelog.");
+            console.error("Erreur de récupération du changelog.");
         });
     }
 
