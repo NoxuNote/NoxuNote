@@ -21,7 +21,18 @@ const ModalManager = require("./ModalManager.js")
 const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
 var title = "not defined";
+
 var isFileModified = false
+function setIsFileModified(b) {
+	if (isFileModified != b) {
+		if (b) {
+			document.getElementById('isModified').classList.add('displayed')
+		} else {
+			document.getElementById('isModified').classList.remove('displayed')
+		}
+	}
+	isFileModified = b
+}
 
 const editor = $('#summernote')
 
@@ -150,7 +161,7 @@ function dessiner(url) {
  */
 function save_as_noxunote() {
 	ipc.sendSync('save_as_noxunote', title, getMat(), editor.summernote('code'));
-	isFileModified = false
+	setIsFileModified(false)
 	generateFileList()
 }
 
@@ -389,7 +400,7 @@ function newFile() {
 	const resetFunc = ()=>{
 		setNoteTitle("");
 		editor.summernote('reset')
-		isFileModified = false
+		setIsFileModified(false)
 	}
 	if (isFileModified) {
 		saveConfirmationModalAction = resetFunc // On définit l'action de confirmation
@@ -612,7 +623,7 @@ $(document).ready(function () {
 		 */
 		callbacks: {
 			onChange: function (contents, $editable) {
-				isFileModified = true
+				setIsFileModified(true)
 			},
 			onKeydown: function (e) {
 				/**
@@ -731,7 +742,7 @@ function refreshImg(url) {
 		// Pour l'instant, applique la MAJ sur toutes les images (pour simplifier le code)
 		i.src = extractUrlFromSrc(i.src) + "?" + new Date().getTime();
 	})
-	isFileModified = true
+	setIsFileModified(true)
 }
 
 /**
@@ -770,7 +781,7 @@ generateMatList()
 ipcRenderer.on('setNoteTitle', (event, title) => setNoteTitle(title))
 ipcRenderer.on('setNoteMatiere', (event, matiere) => setNoteMatiere(matiere))
 ipcRenderer.on('callSaveAsNoxuNote', (event) => save_as_noxunote())
-ipcRenderer.on('resetIsFileModified', (event) => isFileModified = false)
+ipcRenderer.on('resetIsFileModified', (event) => setIsFileModified(false))
 ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); generateAssocList() })
 ipcRenderer.on('setNoteContent', (event, note) => setNoteContent(note))
 ipcRenderer.on('insertDrawing', (event, url) => insertImg(url))

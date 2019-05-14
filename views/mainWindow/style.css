@@ -583,3 +583,30 @@ div.pastille {
 	margin-right: auto;
 	width: 318px;
 }
+#notification {
+	position: absolute;
+	z-index: 15;
+	background-color: #44546c;
+	bottom: 10px;
+	left: -500px;
+	/* right: auto; */
+}
+#notification.displayed {
+	left: 10px;
+}
+#isModified {
+	transform: translateY(-25px);
+	transition: transform 0.3s;
+	margin-left: 2px;
+	color: #c6a3e0;
+	-webkit-app-region: no-drag;
+	cursor: pointer;
+}
+#isModified.displayed {
+	transform: translateY(0px) scale(1);
+	transition: transform 0.3s;
+}
+#isModified.displayed:hover {
+	transform: scale(1.2);
+	transition: transform 0.3s;
+}

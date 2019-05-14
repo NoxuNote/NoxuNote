@@ -9,7 +9,7 @@
  */
 
 // Verbose
-const DEBUG = false
+const DEBUG = true
 
 // Importing electron library
 const electron 		= require('electron')
@@ -74,12 +74,11 @@ app.on('ready', () => {
 			{ label: "Page Facebook", click: ()=> loadExternalLink('https://www.facebook.com/NoxuNote/') }
 		]}
 	];
-	if(!DEBUG) {
-		Menu.setApplicationMenu(Menu.buildFromTemplate(template))
-	} else {
+	if(DEBUG) {
 		noxuApp.mainWindow.browserWindow.openDevTools()
 		noxuApp.mainWindow.browserWindow.maximize()
 	}
+	Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 });
 
 /* Handles the activate state, used on macOS when launching the application for 
