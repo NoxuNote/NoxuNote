@@ -12,21 +12,16 @@
 const DEBUG = true
 
 // Importing electron library
-const electron 		= require('electron')
-const {dialog} 		= require('electron')
-const {shell} 		= require('electron')
-const {Menu}		= require('electron')
+const electron	= require('electron')
+const Menu 			= electron.Menu
+const dialog 		= electron.dialog
 const app 			= electron.app
 const ipc 			= electron.ipcMain // Handles asynchronous and synchronous messages sent from a renderer process (web page).
-const BrowserWindow = electron.BrowserWindow
 // Importing NoxuNote librairies
-const parser 		= require("./parser.js")
-const database		= require("./DataBase.js")
-const browsers		= require("./Browsers.js")
+const browsers	= require("./Browsers.js")
 // Importing external modules
-const fs 			= require('fs')
-const homedir 		= require('os').homedir()
-const path 			= require('path')
+const fs				= require('fs')
+const homedir		= require('os').homedir()
 
 let noxuApp
 

@@ -155,10 +155,10 @@ class NoxuNoteApp {
     quit() {
         this.mainWindow.allowClose = true
         this.mainWindow.browserWindow.close()
-        if (this.mainDrawWindow) this.mainDrawWindow.browserWindow.close()
-        if (this.mainOutputWindow) this.mainOutputWindow.browserWindow.close()
-        if (this.settingsWindow) this.settingsWindow.browserWindow.close()
-        if (this.prePrintWindow) this.prePrintWindow.browserWindow.close()
+        // if (this.mainDrawWindow) this.mainDrawWindow.browserWindow.close()
+        // if (this.mainOutputWindow) this.mainOutputWindow.browserWindow.close()
+        // if (this.settingsWindow) this.settingsWindow.browserWindow.close()
+        // if (this.prePrintWindow) this.prePrintWindow.browserWindow.close()
         process.exit(1)
     }
     createLicence() {
