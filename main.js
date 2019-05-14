@@ -9,7 +9,7 @@
  */
 
 // Verbose
-const DEBUG = true
+const DEBUG = false
 
 // Importing electron library
 const electron 		= require('electron')
@@ -50,6 +50,10 @@ app.on('ready', () => {
             { label: "A propos", selector: "orderFrontStandardAboutPanel:" },
             { type: "separator" },
             { label: "Quitter", accelerator: "Command+Q", click: function() { app.quit(); }}
+        ]},{
+        label: "Fichier",
+        submenu: [
+            { label: "Enregistrer", accelerator: "CmdOrCtrl+S", click: function() { noxuApp.mainWindow.browserWindow.webContents.send('callSaveAsNoxuNote') } },
         ]}, {
         label: "Editer",
         submenu: [
@@ -63,11 +67,11 @@ app.on('ready', () => {
 		]}, {
 		label: "Accès rapide",
 		submenu: [
-            { label: "Accéder au site", click: ()=> loadExternalLink('http://noxunote.fr/') },
+      { label: "Accéder au site", click: ()=> loadExternalLink('http://noxunote.fr/') },
 			{ label: "Faire un don", click: ()=> loadExternalLink('http://noxunote.fr/don/') },
 			{ label: "Signaler un bogue", click: ()=> loadExternalLink('http://noxunote.fr/bug/') },
 			{ label: "Donner une idée", click: ()=> loadExternalLink('http://noxunote.fr/idea/') },
-            { label: "Page Facebook", click: ()=> loadExternalLink('https://www.facebook.com/NoxuNote/') }
+			{ label: "Page Facebook", click: ()=> loadExternalLink('https://www.facebook.com/NoxuNote/') }
 		]}
 	];
 	if(!DEBUG) {
