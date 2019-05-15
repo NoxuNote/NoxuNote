@@ -83,9 +83,10 @@ class EquationManager {
     // Création de l'élément HTML
     var node = document.createElement('span')
     node.style.display = 'inline'
-    node.contentEditable = false
+    node.contentEditable = true
     node.innerHTML = "`" + field.value + "`"
     this.editor.summernote('insertNode', node);
+    this.editor.summernote('editor.pasteHTML', '&zwnj;')
     // Add equation to history
     if (this.history.filter(h=>h.code == field.value).length == 0) {
       if (this.history.length > 10) this.history.shift()
@@ -101,6 +102,7 @@ class EquationManager {
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, node])
     // Clean the preview window
     this.equationPreviewNode.innerHTML = ""
+    this.editor.summernote('focus')
   }
   
   /**

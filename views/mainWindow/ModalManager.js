@@ -7,6 +7,14 @@ class ModalManager {
         this.modals["imageByFileModal"] = $("#imageByFileModal")
         this.modals["equationModal"] = $("#equationModal")
         this.modals["saveConfirmationModal"] = $("#saveConfirmationModal")
+
+        // Focus on field if modal opened
+        this.modals["equationModal"].on('shown.bs.modal', function() {
+            $('#equationValue').focus();
+        })
+        this.modals["imageByUrlModal"].on('shown.bs.modal', function() {
+            $('#imageByUrlValue').focus();
+        })
     }
 
     closeModal(modalId) {

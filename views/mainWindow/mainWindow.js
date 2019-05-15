@@ -23,6 +23,9 @@ const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
 var title = "not defined";
 
+// CTRL on windows, CMD on mac
+const metaKey = os.type()=="Darwin"?"Cmd":"Ctrl"
+
 var isFileModified = false
 function setIsFileModified(b) {
 	if (isFileModified != b) {
@@ -520,7 +523,7 @@ var EquationButton = function (context) {
 	// create button
 	var button = ui.button({
 		contents: '<i class="fas fa-calculator"/>',
-		tooltip: 'Équation',
+		tooltip: `Équation (${metaKey}+e)`,
 		click: () => {
 			editor.summernote('saveRange')
 			modalManager.openModal("equationModal")
