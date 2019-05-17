@@ -16,6 +16,7 @@ const electron	= require('electron')
 const Menu 			= electron.Menu
 const dialog 		= electron.dialog
 const app 			= electron.app
+const BrowserWindow = electron.BrowserWindow
 const ipc 			= electron.ipcMain // Handles asynchronous and synchronous messages sent from a renderer process (web page).
 // Importing NoxuNote librairies
 const browsers	= require("./Browsers.js")
@@ -35,7 +36,7 @@ app.on('ready', () => {
 		if (noxuApp.mainDrawWindow) noxuApp.mainDrawWindow.browserWindow.webContents.send('undo')
 	}
 	// Création de la fenêtre principale
-	noxuApp = new browsers.NoxuNoteApp()
+	noxuApp = new browsers.NoxuNoteApp(DEBUG)
 
 	// Create the Application's main menu
     var template = [{

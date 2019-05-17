@@ -1,20 +1,28 @@
 const http = require('http')
+const https = require('https')
 var querystring = require('querystring')
 var os = require("os")
 
 class Licence {
 
-    constructor(callback) {
+    /**
+     * Instancie les connexions à l'API NoxuNote
+     * @param {function} callback 
+     * @param {boolean} DEBUG NoxuNote en mode debug ou non
+     */
+    constructor(callback, DEBUG) {
         this.actualVersion = "1.0.0"
         this.lastVersion = null
         this.changeLog = null
         this.id = Math.floor(Math.random() * Math.floor(99999))
-        this.getChangelogJSON((response) => {
-            this.lastVersion = response.lastVersion
-            this.changeLog = response.changeLog
-            this.sendActivityPacket(false)
-            callback(this)
-        })
+        if (!DEBUG) {
+            this.getChangelogJSON((response) => {
+                this.lastVersion = response.lastVersion
+                this.changeLog = response.changeLog
+                this.sendActivityPacket(false)
+                callback(this)
+            })
+        }
     }
 
     getVersion() {
@@ -22,8 +30,8 @@ class Licence {
     }
 
     getChangelogJSON(callback) {
-        var url = 'http://noxunote.fr/prototype/version.json';
-        http.get(url, function (res) {
+        var url = 'https://noxunote.fr/prototype/version.json';
+        https.get(url, function (res) {
             var body = '';
             res.on('data', function (chunk) {
                 body += chunk;

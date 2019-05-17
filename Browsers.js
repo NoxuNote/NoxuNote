@@ -147,21 +147,21 @@ class PrePrintWindow {
 }
 
 class NoxuNoteApp {
-    constructor() {
-        this.createLicence()
+    /**
+     * Instancie l'application, la fenêtre principale, les BDD.
+     * @param {boolean} DEBUG mode débogage
+     */
+    constructor(DEBUG) {
+        this.createLicence(DEBUG)
         this.createDb()
         this.createMainWindow()
     }
     quit() {
         this.mainWindow.allowClose = true
         this.mainWindow.browserWindow.close()
-        // if (this.mainDrawWindow) this.mainDrawWindow.browserWindow.close()
-        // if (this.mainOutputWindow) this.mainOutputWindow.browserWindow.close()
-        // if (this.settingsWindow) this.settingsWindow.browserWindow.close()
-        // if (this.prePrintWindow) this.prePrintWindow.browserWindow.close()
         process.exit(1)
     }
-    createLicence() {
+    createLicence(DEBUG) {
         // Instanciation de l'objet licence, le constructeur de Licence possède un callback qui
         // renvoie l'objet lui même garantit que toutes les informations ont bien été téléchargées 
         // (ChangeLog etc.)
@@ -177,7 +177,7 @@ class NoxuNoteApp {
                     shell.openExternal('http://noxunote.fr/prototype/#download')
                 }
             }
-        })
+        }, DEBUG)
     }
     createDb() {
         this.db = new database.DataBase()
@@ -197,6 +197,9 @@ class NoxuNoteApp {
     createMainDrawWindow(url) {
         if (!this.mainDrawWindow) {
             this.mainDrawWindow = new MainDrawWindow(url)
+            this.mainDrawWindow.browserWindow.on('closed', () => {
+                this.mainDrawWindow = null;
+            })
         }
     }
     createMainOutputWindow(caller) {
@@ -216,6 +219,7 @@ class NoxuNoteApp {
                 this.settingsWindow.switch(key)
             })
             this.settingsWindow.browserWindow.on('closed', () => {
+                this.db.saveAllJson()
                 this.settingsWindow = null
                 this.mainWindow.browserWindow.send('updateDb')
             })
