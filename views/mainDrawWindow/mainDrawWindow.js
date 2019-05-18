@@ -377,8 +377,8 @@ function generateGraph(x, expr, agrandissement) {
 }
 
 function insertImg() {
-    ipc.send("insertLocalImageDrawer")
     // Prompt une image à l'utilisateur, renvoie un évènement 
+    setImportedImage(ipc.sendSync("insertLocalImageDrawer"))
 }
 
 
@@ -548,4 +548,3 @@ initDrawer()
 ipcRenderer.on('loadImage', (event, content) => load(content, false))
 ipcRenderer.on('setEditState', (event, line) => { edit = line })
 ipcRenderer.on('undo', (event) => restoreCanvas())
-ipcRenderer.on('insertLocalImage', (event, src) => setImportedImage(src))

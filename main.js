@@ -72,8 +72,7 @@ app.on('ready', () => {
 	if(DEBUG) {
 		noxuApp.mainWindow.browserWindow.openDevTools()
 		noxuApp.mainWindow.browserWindow.maximize()
-	}
-	Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+	} else Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 });
 
 /* Handles the activate state, used on macOS when launching the application for 
@@ -294,6 +293,36 @@ ipc.on('maximizeWindow', (event)=>{
 	let window = BrowserWindow.fromWebContents(event.sender)
 	if (window.isMaximized()) window.unmaximize()	
 	else window.maximize()
+})
+
+
+/***************************************************************************************************
+ *                                        IMAGE IMPORTATION                                        *
+ ***************************************************************************************************/
+
+ /**
+	* Lit un fichier image et le copie dans le répertoire de travail
+	* @returns l'url du nouveau fichier copié
+	*/
+function promptImage() {
+	// Prompt the path
+	var path = dialog.showOpenDialog(
+		{
+			title: "Choisissez une image",
+			filters: [
+				{name: 'PNG', extensions: ['png']},
+				{name: 'JPG', extensions: ['jpg']},
+				{name: 'GIF', extensions: ['gif']},
+				{name: 'BITMAP', extensions: ['bmp']}
+			]
+		}
+	)
+	if (path && path.length==1) return copyFileToWorkingFolder(path[0])
+	else return null
+}
+
+ipc.on('insertLocalImageDrawer', (event) => {
+	event.returnValue = promptImage()
 })
 
 /***************************************************************************************************
