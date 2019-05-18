@@ -371,7 +371,9 @@
                 var innerTD2 = document.createElement('td')
                 var innerTD3 = document.createElement('td')
 
-                innerTD1.innerHTML = assoc[i].input
+                // Plus besoin de raccourci depuis la maj summernote
+                // innerTD1.innerHTML = assoc[i].input
+                innerTD1.innerHTML = "(Aucun)"
                 innerTD2.innerHTML = assoc[i].output
                 innerTD3.className = "editable large"
                 innerTD3.innerHTML = "<center><i id='" + i + "' class='fas fa-trash red clicable'></i></center>"
@@ -389,15 +391,19 @@
         }
 
         function ajouterAssoc() {
-            prompt({
-                title: 'Ajouter une abbréviation',
-                label: 'Abbréviation :',
-                value: '',
-                inputAttrs: { // attrs to be set if using 'input'
-                    type: 'text'
-                },
-            })
-                .then((r1) => {
+
+            // Plus besoin de prompt r1 depuis la maj summernote
+            const r1 = "(Aucun)"
+
+            // prompt({
+            //     title: 'Ajouter une abbréviation',
+            //     label: 'Abbréviation :',
+            //     value: '',
+            //     inputAttrs: { // attrs to be set if using 'input'
+            //         type: 'text'
+            //     },
+            // })
+            //     .then((r1) => {
                     if (r1 && r1.trim().length) {
                         prompt({
                             title: 'Ajouter une abbréviation',
@@ -414,7 +420,7 @@
                                 }
                             })
                     }
-                })
+            // })
         }
 
     </script>
