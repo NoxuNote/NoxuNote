@@ -10,6 +10,54 @@ const mkdirSync = function (dirPath) {
 }
 
 /***************************************************************************************************
+ *                                          AppSettings                                            *
+ ***************************************************************************************************/
+class AppSettings {
+    constructor() {
+        this.path = homedir + "/NoxuNote/settings.json"
+        this.createFile()
+        this.loadJson()
+    }
+    /**
+     * Créee le fichier stoquant les données s'il n'existe pas
+     */
+    createFile() {
+        var djson = [
+            {
+                key: "enableDragNDrop",
+                value: false
+            },
+            {
+                key: "enableDevMode",
+                value: false
+            }
+        ]
+        if (!fs.existsSync(this.path)) {
+            fs.writeFileSync(this.path, JSON.stringify(djson), 'utf8')
+        }
+    }
+    /**
+     * Lit le fichier et stoque les données dans l'objet
+     */
+    loadJson() {
+        this.rawJson = JSON.parse(fs.readFileSync(this.path))
+    }
+    /**
+     * Ecrit les données de l'objet dans le fichier
+     */
+    saveJson() {
+        fs.writeFileSync(this.path, JSON.stringify(this.rawJson), 'utf8')
+    }
+    setValue(key, value) {
+        this.assocList.find(assoc=>assoc.keyVal==key).value = value
+        this.saveJson()
+    }
+    get assocList() { 
+        return this.rawJson
+    }
+}
+
+/***************************************************************************************************
  *                                       TABLE DES MATIÈRES                                        *
  ***************************************************************************************************/
 /**
