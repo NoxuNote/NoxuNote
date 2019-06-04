@@ -566,8 +566,10 @@ var SchemaEditionButton = function (context) {
 	return button.render();   // return button as jquery object
 }
 
-$(document).ready(function () {
-	let words = ipcRenderer.sendSync('db_getAssocList').map(element => element.output)
+$(document).ready(initializeSummernote())
+
+function initializeSummernote() {
+	const wordsDictionnary = ipcRenderer.sendSync('db_getAssocList').map(element => element.output)
 	editor.summernote({
 		lang: 'fr-FR',
 		focus: true,
@@ -576,7 +578,7 @@ $(document).ready(function () {
 		 * Suggestion automatique de mots
 		 */
 		hint: {
-			words: words,
+			words: wordsDictionnary,
 			match: /\b(\w{1,})$/,
 			search: function (keyword, callback) {
 				callback($.grep(this.words, function (item) {
@@ -663,7 +665,7 @@ $(document).ready(function () {
 			}
 		}
 	})
-})
+}
 
 /**
  * Place le curseur après l'élément voulu en utilisant une méthode d'insertion
@@ -767,6 +769,13 @@ function setNoteContent(content) {
 }
 
 $('#editorRoot').click(() => { editor.summernote('focus') })
+
+/**
+ * Met à jour le dictionnaire de mots suggerés par summernote en fonction de la BDD.
+ */
+function refreshDictionnary() {
+	// TODO
+}
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/
@@ -788,7 +797,7 @@ ipcRenderer.on('setNoteTitle', (event, title) => setNoteTitle(title))
 ipcRenderer.on('setNoteMatiere', (event, matiere) => setNoteMatiere(matiere))
 ipcRenderer.on('callSaveAsNoxuNote', (event) => save_as_noxunote())
 ipcRenderer.on('resetIsFileModified', (event) => setIsFileModified(false))
-ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); generateAssocList() })
+ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); refreshDictionnary() })
 ipcRenderer.on('setNoteContent', (event, note) => setNoteContent(note))
 ipcRenderer.on('insertDrawing', (event, url) => insertImg(url))
 ipcRenderer.on('refreshImg', (event, url) => refreshImg(url))
