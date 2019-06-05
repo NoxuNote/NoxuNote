@@ -7,7 +7,7 @@
 
 /***************************************************************************************************
  *                                           CONSTANTES                                            *
- ***************************************************************************************************/
+ ****************************************************************************************************/
 
 // Importing and creating electron aliases
 const ipc = require('electron').ipcRenderer
@@ -632,7 +632,7 @@ function initializeSummernote() {
 			onInit: function () {
 				setTimeout(()=> {
 					$("#fullscreenLoader").addClass('disabled')
-				}, 500e4)
+				}, 1000)
 			},
 			onChange: function (contents, $editable) {
 				setIsFileModified(true)
