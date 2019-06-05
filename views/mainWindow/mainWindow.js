@@ -12,6 +12,7 @@
 // Importing and creating electron aliases
 const ipc = require('electron').ipcRenderer
 const { ipcRenderer } = require('electron')
+const shell = require('electron').shell
 const { dialog } = require('electron').remote
 const homedir = require('os').homedir()
 const fs = require("fs")
@@ -807,3 +808,18 @@ ipcRenderer.on('setNoteContent', (event, note) => setNoteContent(note))
 ipcRenderer.on('insertDrawing', (event, url) => insertImg(url))
 ipcRenderer.on('refreshImg', (event, url) => refreshImg(url))
 ipcRenderer.on('electron_request_close', (event) => closeWindow()) // Permet de gérer graphiquement l'alerte de sauvegarde
+ipcRenderer.on('showNotification', (event, notification)=>{
+	// On reçoit un objet Notification serialisé, il faut le transformer en objet
+	const notifArgs = JSON.parse(notification)
+	if (notifArgs.b1Action) notifArgs.b1Action = eval(notifArgs.b1Action) // On déserialise les fonctions
+	if (notifArgs.b2Action) notifArgs.b2Action = eval(notifArgs.b2Action)
+	notificationService.showNotification(
+		notifArgs.title,
+		notifArgs.content,
+		notifArgs.timeout,
+		notifArgs.b1Text,
+		notifArgs.b1Action,
+		notifArgs.b2Text,
+		notifArgs.b2Action
+	)
+})

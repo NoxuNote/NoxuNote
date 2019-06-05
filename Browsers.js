@@ -7,7 +7,7 @@ const app = electron.app;
 const ipc = electron.ipcMain; // Handles asynchronous and synchronous messages sent from a renderer process (web page).
 const BrowserWindow = electron.BrowserWindow;
 
-const licenceAPI = require('./licenceAPI.js')
+const Licence = require('./licenceAPI.js').Licence
 const parser = require("./parser.js")
 const database = require("./DataBase.js")
 
@@ -152,35 +152,14 @@ class NoxuNoteApp {
      * @param {boolean} DEBUG mode débogage
      */
     constructor(DEBUG) {
-        this.createLicence(DEBUG)
         this.createDb()
         this.createMainWindow()
+        this.licence = new Licence(this, DEBUG)
     }
     quit() {
         this.mainWindow.allowClose = true
         this.mainWindow.browserWindow.close()
         process.exit(1)
-    }
-    createLicence(DEBUG) {
-        // Instanciation de l'objet licence, le constructeur de Licence possède un callback qui
-        // renvoie l'objet lui même garantit que toutes les informations ont bien été téléchargées 
-        // (ChangeLog etc.)
-        this.licence = new licenceAPI.Licence((l) => {
-            if (l.actualVersion != l.lastVersion) {
-                // Si NoxuNote n'est pas à jour on informe l'utilisateur 4 secondes après l'ouverture
-                setTimeout(()=>{
-                var answer = dialog.showMessageBox({
-                    type: "question",
-                    buttons: ['Télécharger', 'Plus tard'],
-                    detail: "Nouveautés (version " + l.lastVersion + ") : \n" + l.changeLog,
-                    message: "Mise à jour disponible !"
-                })
-                if (answer == 0) {
-                    shell.openExternal('http://noxunote.fr/prototype/#download')
-                }
-                }, 4000)
-            }
-        }, DEBUG)
     }
     createDb() {
         this.db = new database.DataBase()

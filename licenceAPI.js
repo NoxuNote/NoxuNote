@@ -7,10 +7,10 @@ class Licence {
 
     /**
      * Instancie les connexions à l'API NoxuNote
-     * @param {function} callback 
+     * @param {Object} noxuNoteAppInstance NoxuApp instance
      * @param {boolean} DEBUG NoxuNote en mode debug ou non
      */
-    constructor(callback, DEBUG) {
+    constructor(noxuNoteAppInstance, DEBUG) {
         this.actualVersion = "1.0.0"
         this.lastVersion = null
         this.changeLog = null
@@ -20,7 +20,32 @@ class Licence {
                 this.lastVersion = response.lastVersion
                 this.changeLog = response.changeLog
                 this.sendActivityPacket(false)
-                callback(this)
+                //type: "question",
+                // buttons: ['Télécharger', 'Plus tard'],
+                // detail: "Nouveautés (version " + l.lastVersion + ") : \n" + l.changeLog,
+                // message: "Mise à jour disponible !"
+                if (this.actualVersion != this.lastVersion) {
+                    // Si NoxuNote n'est pas à jour on informe l'utilisateur 4 secondes après l'ouverture
+                    setTimeout(()=>{
+                        // Crée un objet de notification
+                        const notification = {
+                            "title": "Mise à jour disponible !", 
+                            "content": response.changeLog, 
+                            "timeout": 12000, 
+                            "b1Text": "Télécharger",
+                            "b1Action": ()=>{shell.openExternal("https://noxunote.fr/prototype/#download")}
+                        }
+                        // On transforme la notif en texte/JSON pour l'envoyer à travers l'IPC
+                        const notificationSerialized = JSON.stringify(notification, (key, val) => {
+                                // On sérialise aussi les fonctions
+                                if (typeof val === 'function') return val.toString(); // implicitly `toString` it
+                                return val;
+                            }
+                        )
+                        // On envoie la notification sérialisée à la fenêtre principal
+                        noxuNoteAppInstance.mainWindow.browserWindow.webContents.send("showNotification", notificationSerialized)
+                    }, 4000)
+                }
             })
         }
     }
