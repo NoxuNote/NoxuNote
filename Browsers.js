@@ -167,6 +167,8 @@ class NoxuNoteApp {
         // (ChangeLog etc.)
         this.licence = new licenceAPI.Licence((l) => {
             if (l.actualVersion != l.lastVersion) {
+                // Si NoxuNote n'est pas à jour on informe l'utilisateur 4 secondes après l'ouverture
+                setTimeout(()=>{
                 var answer = dialog.showMessageBox({
                     type: "question",
                     buttons: ['Télécharger', 'Plus tard'],
@@ -176,6 +178,7 @@ class NoxuNoteApp {
                 if (answer == 0) {
                     shell.openExternal('http://noxunote.fr/prototype/#download')
                 }
+                }, 4000)
             }
         }, DEBUG)
     }

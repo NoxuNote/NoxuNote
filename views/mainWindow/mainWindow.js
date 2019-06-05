@@ -629,6 +629,11 @@ function initializeSummernote() {
 		 * Evenements de sortie de summernote
 		 */
 		callbacks: {
+			onInit: function () {
+				setTimeout(()=> {
+					$("#fullscreenLoader").addClass('disabled')
+				}, 500e4)
+			},
 			onChange: function (contents, $editable) {
 				setIsFileModified(true)
 			},
