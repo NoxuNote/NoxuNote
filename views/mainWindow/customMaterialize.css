@@ -1,0 +1,5 @@
+div.fixed-action-btn>ul {
+    width: 300px;
+    transform: translate(-123px, 100px);
+    padding: 100px 0px 100px 0px;
+}

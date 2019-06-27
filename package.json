@@ -8,7 +8,7 @@
   },
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "node_modules/.bin/electron ."
   },
   "author": "Léo Rolland",
   "license": "GPL-3.0",
