@@ -210,7 +210,7 @@ function force_load(name) {
 	noxuApp.mainWindow.webContents.send('setNoteContent', fileContent)
 	// Setting file title to renderThread title
 	noxuApp.mainWindow.webContents.send('setNoteTitle', name)
-	noxuApp.mainWindow.webContents.send('setNoteMatiere', noxuApp.db.notes.getDetails(name+'.txt').matiere)
+	noxuApp.mainWindow.webContents.send('setNoteMatiere', noxuApp.db.notes.getNoteMetadata(name+'.txt').matiere)
 	noxuApp.mainWindow.webContents.send('resetIsFileModified')
 }
 

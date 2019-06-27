@@ -1,5 +1,5 @@
 const homedir = require('os').homedir()
-const fs = require('fs')
+const fs = require('fs-extra')
 
 const mkdirSync = function (dirPath) {
     try {
@@ -22,7 +22,7 @@ class AppSettings {
      * Créee le fichier stoquant les données s'il n'existe pas
      */
     createFile() {
-        var djson = [
+        const djson = [
             {
                 key: "enableDragNDrop",
                 value: false
@@ -32,21 +32,19 @@ class AppSettings {
                 value: false
             }
         ]
-        if (!fs.existsSync(this.path)) {
-            fs.writeFileSync(this.path, JSON.stringify(djson), 'utf8')
-        }
+        if (!fs.existsSync(this.path)) fs.writeJSONSync(this.path, djson)
     }
     /**
      * Lit le fichier et stoque les données dans l'objet
      */
     loadJson() {
-        this.rawJson = JSON.parse(fs.readFileSync(this.path))
+        this.rawJson = fs.readJSONSync(this.path)
     }
     /**
      * Ecrit les données de l'objet dans le fichier
      */
     saveJson() {
-        fs.writeFileSync(this.path, JSON.stringify(this.rawJson), 'utf8')
+        fs.writeJSONSync(this.path, this.rawJson)
     }
     setValue(key, value) {
         this.assocList.find(assoc=>assoc.keyVal==key).value = value
@@ -75,10 +73,8 @@ class Matieres {
      * Créee le fichier stoquant les données s'il n'existe pas
      */
     createFile() {
-        var djson = { "matieres": [{ "nom": "Ma catégorie", "couleur": "#FC8F73" }] }
-        if (!fs.existsSync(this.path)) {
-            fs.writeFileSync(this.path, JSON.stringify(djson), 'utf8')
-        }
+        const djson = { "matieres": [{ "nom": "Ma catégorie", "couleur": "#FC8F73" }] }
+        if (!fs.existsSync(this.path)) fs.writeJSONSync(this.path, djson)
     }
     /**
      * Lit le fichier et stoque les données dans l'objet
@@ -90,7 +86,7 @@ class Matieres {
      * Ecrit les données de l'objet dans le fichier
      */
     saveJson() {
-        fs.writeFileSync(this.path, JSON.stringify(this.rawJson), 'utf8')
+        fs.writeJSONSync(this.path, this.rawJson)
     }
     /**
      * Ajoute une matière à la liste
@@ -174,9 +170,9 @@ class Notes {
      * Créee le fichier stoquant les données s'il n'existe pas
      */
     createFile() {
-        var djson = JSON.parse('[]')
+        const djson = JSON.parse('[]')
         if (!fs.existsSync(this.path)) {
-            fs.writeFileSync(this.path, JSON.stringify(djson), 'utf8')
+            fs.writeJSONSync(this.path, djson)
         }
     }
     /**
@@ -189,7 +185,7 @@ class Notes {
      * Ecrit les données de l'objet dans le fichier
      */
     saveJson() {
-        fs.writeFileSync(this.path, JSON.stringify(this.rawJson), 'utf8')
+        fs.writeJSONSync(this.path, this.rawJson)
     }
     /**
      * Ajoute une matière à la liste
@@ -217,7 +213,7 @@ class Notes {
      */
     setProperty(property, value, name) {
         if (value == "") value = undefined
-        var item = this.getDetails(this.dotTxt(name))
+        var item = this.getNoteMetadata(this.dotTxt(name))
         if (item.filename != undefined) item[property] = value
         else {
             this.addNote(this.dotTxt(name), '')
@@ -226,11 +222,11 @@ class Notes {
         return this.notesList
     }
     deleteNote(name) {
-        delete this.getDetails(name)
+        delete this.getNoteMetadata(name)
         fs.unlinkSync(homedir + '/NoxuNote/notes/' + this.dotTxt(name))
         return this.notesList
     }
-    getDetails(name) {
+    getNoteMetadata(name) {
         let query = this.notesList.find(e => e['filename'] == this.dotTxt(name))
         if (query) return query
         else return { "filename": undefined, "matiere": undefined, "lastedit": undefined, "isfavorite": undefined }
@@ -253,13 +249,13 @@ class Colors {
      * Créee le fichier stoquant les données s'il n'existe pas
      */
     createFile() {
-        var djson = [
+        const djson = [
             "#ed8484", "#f7ded4", "#eda884", "#edc884", "#ede984",
             "#d1ed84", "#a1ed84", "#84edd4", "#75d5dd", "#84aaed",
             "#9a84ed", "#cb84ed", "#ed84e2", "#ed8493", "#adadad"
         ]
         if (!fs.existsSync(this.path)) {
-            fs.writeFileSync(this.path, JSON.stringify(djson), 'utf8')
+            fs.writeJSONSync(this.path, djson)
         }
     }
     /**
@@ -272,7 +268,7 @@ class Colors {
      * Ecrit les données de l'objet dans le fichier
      */
     saveJson() {
-        fs.writeFileSync(this.path, JSON.stringify(this.rawJson), 'utf8')
+        fs.writeJSONSync(this.path, this.rawJson)
     }
     get colorsList() {
         return this.rawJson
@@ -292,7 +288,7 @@ class Dactylo {
      * Créee le fichier stoquant les données s'il n'existe pas
      */
     createFile() {
-        var djson = [
+        const djson = [
             {
                 input: "pos",
                 output: "position"
@@ -307,7 +303,7 @@ class Dactylo {
             }
         ]
         if (!fs.existsSync(this.path)) {
-            fs.writeFileSync(this.path, JSON.stringify(djson), 'utf8')
+            fs.writeJSONSync(this.path, djson)
         }
     }
     /**
@@ -320,7 +316,7 @@ class Dactylo {
      * Ecrit les données de l'objet dans le fichier
      */
     saveJson() {
-        fs.writeFileSync(this.path, JSON.stringify(this.rawJson), 'utf8')
+        fs.writeJSONSync(this.path, this.rawJson)
     }
     /**
      * Ajoute une association dans la table dactylo
@@ -390,7 +386,7 @@ class DataBase {
             // S'il ne commence pas par un point
             if (files[i].substring(0, 1) != ".") {
                 // Récupération des données associées à chaque fichier
-                var details = this.notes.getDetails(files[i])
+                var details = this.notes.getNoteMetadata(files[i])
                 if (details) {
                     json.push({
                         "nom": files[i].replace(/\.txt/g, ''),
