@@ -9,7 +9,7 @@
  */
 
 // Verbose
-const DEBUG = true
+const DEBUG = false
 
 // Importing electron library
 const electron	= require('electron')
