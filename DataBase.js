@@ -15,13 +15,13 @@ const mkdirSync = function (dirPath) {
 class AppSettings {
     constructor() {
         this.path = homedir + "/NoxuNote/settings.json"
-        this.createFile()
+        this.createFileDB()
         this.loadJson()
     }
     /**
      * Créee le fichier stoquant les données s'il n'existe pas
      */
-    createFile() {
+    createFileDB() {
         const djson = [
             {
                 key: "enableDragNDrop",
@@ -66,13 +66,13 @@ class AppSettings {
 class Matieres {
     constructor() {
         this.path = homedir + "/NoxuNote/user_matieres.json"
-        this.createFile()
+        this.createFileDB()
         this.loadJson()
     }
     /**
      * Créee le fichier stoquant les données s'il n'existe pas
      */
-    createFile() {
+    createFileDB() {
         const djson = { "matieres": [{ "nom": "Ma catégorie", "couleur": "#FC8F73" }] }
         if (!fs.existsSync(this.path)) fs.writeJSONSync(this.path, djson)
     }
@@ -159,7 +159,7 @@ class Matieres {
 class Notes {
     constructor() {
         this.path = homedir + "/NoxuNote/user_notes.json"
-        this.createFile()
+        this.createFileDB()
         this.loadJson()
     }
     dotTxt(name) {
@@ -169,7 +169,7 @@ class Notes {
     /**
      * Créee le fichier stoquant les données s'il n'existe pas
      */
-    createFile() {
+    createFileDB() {
         const djson = JSON.parse('[]')
         if (!fs.existsSync(this.path)) {
             fs.writeJSONSync(this.path, djson)
@@ -242,13 +242,13 @@ class Notes {
 class Colors {
     constructor() {
         this.path = homedir + "/NoxuNote/colors.json"
-        this.createFile()
+        this.createFileDB()
         this.loadJson()
     }
     /**
      * Créee le fichier stoquant les données s'il n'existe pas
      */
-    createFile() {
+    createFileDB() {
         const djson = [
             "#ed8484", "#f7ded4", "#eda884", "#edc884", "#ede984",
             "#d1ed84", "#a1ed84", "#84edd4", "#75d5dd", "#84aaed",
@@ -281,13 +281,13 @@ class Colors {
 class Dactylo {
     constructor() {
         this.path = homedir + "/NoxuNote/dactylo.json"
-        this.createFile()
+        this.createFileDB()
         this.loadJson()
     }
     /**
      * Créee le fichier stoquant les données s'il n'existe pas
      */
-    createFile() {
+    createFileDB() {
         const djson = [
             {
                 input: "pos",
