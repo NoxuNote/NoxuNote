@@ -46,7 +46,7 @@ class Notes {
      * Lit le fichier et stoque les données dans l'objet
      */
     loadJson() {
-        this.rawJson = JSON.parse(fs.readFileSync(this.path));
+        this.rawJson = fs.readJSONSync(this.path);
     }
     /**
      * Ecrit les données de l'objet dans le fichier
