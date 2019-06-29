@@ -8,7 +8,9 @@
   },
   "main": "main.js",
   "scripts": {
-    "start": "node_modules/.bin/electron ."
+    "electron:run": "./node_modules/.bin/electron ./dist/main.js",
+    "start": "tsc & npm run buildassets & npm run electron:run",
+    "buildassets": "copyfiles -u 1 app/**/* dist/"
   },
   "author": "Léo Rolland",
   "license": "GPL-3.0",
@@ -33,6 +35,7 @@
     "summernote": "^0.8.11"
   },
   "devDependencies": {
+    "copyfiles": "^2.1.0",
     "electron": "^4.0.0"
   }
 }

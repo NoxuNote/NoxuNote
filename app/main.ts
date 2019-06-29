@@ -1,3 +1,4 @@
+export {};
 /**
  * main.js - The core script of NoxuNote, which represents the main Electron thread,
  * it instanciates and communicates with the renderer processes like noxuApp.mainWindow and mainDrawWindow
@@ -9,19 +10,14 @@
  */
 
 // Verbose
-const DEBUG = false
+const DEBUG = true
 
 // Importing electron library
-const electron	= require('electron')
-const Menu 			= electron.Menu
-const dialog 		= electron.dialog
-const app 			= electron.app
-const BrowserWindow = electron.BrowserWindow
-const ipc 			= electron.ipcMain // Handles asynchronous and synchronous messages sent from a renderer process (web page).
+const { Menu, dialog, app, BrowserWindow, ipcMain } = require('electron')
 // Importing NoxuNote librairies
 const browsers	= require("./Browsers.js")
 // Importing external modules
-const fs				= require('fs')
+const fs				= require('fs-extra')
 const homedir		= require('os').homedir()
 
 /***************************************************************************************************
@@ -30,9 +26,9 @@ const homedir		= require('os').homedir()
 
 // Catch squirrel events 
 if (handleSquirrelEvent(app)) {
-	return;
+	//return;
 }
-function handleSquirrelEvent(application) {
+function handleSquirrelEvent(application: Electron.App) {
 	if (process.argv.length === 1) {
 			return false;
 	}
@@ -45,7 +41,7 @@ function handleSquirrelEvent(application) {
 	const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
 	const exeName = path.basename(process.execPath);
 
-	const spawn = function(command, args) {
+	const spawn = function(command: any, args: any) {
 			let spawnedProcess, error;
 
 			try {
@@ -57,7 +53,7 @@ function handleSquirrelEvent(application) {
 			return spawnedProcess;
 	};
 
-	const spawnUpdate = function(args) {
+	const spawnUpdate = function(args: any[]) {
 			return spawn(updateDotExe, args);
 	};
 
@@ -96,7 +92,7 @@ function handleSquirrelEvent(application) {
 	}
 };
 
-let noxuApp
+let noxuApp: any;
 
 /***************************************************************************************************
  *                                         INITIALISATION                                          *
@@ -111,7 +107,7 @@ app.on('ready', () => {
 	noxuApp = new browsers.NoxuNoteApp(DEBUG)
 
 	// Create the Application's main menu
-    var template = [{
+    var template: any = [{
         label: "Application",
         submenu: [
             { label: "A propos", selector: "orderFrontStandardAboutPanel:" },
@@ -170,13 +166,13 @@ app.on('window-all-closed', () => {
  *                                       FONCTIONS USUELLES                                        *
  ***************************************************************************************************/
 
-ipc.on('getVersion', (event)=>event.returnValue = noxuApp.licence.getVersion())
+ipcMain.on('getVersion', (event: any)=>event.returnValue = noxuApp.licence.getVersion())
 
 /** 
  * Créee un fichier au format NoxuNote (.txt) 
  * @param title le nom du fichier
  */
-function save_as_noxunote(title, matiere, content) {
+function save_as_noxunote(title: string, matiere: any, content: any) {
 	// On détermine un nom par défaut.
 	var date = new Date()
 	var hour
@@ -198,7 +194,7 @@ function save_as_noxunote(title, matiere, content) {
  * Loads a noxunote file without prompting for save
  * @param {String} name Le nom du fichier à charger
  */
-function force_load(name) {
+function force_load(name: string) {
 	// Loading file content
 	var fileContent;
 	try {
@@ -214,33 +210,33 @@ function force_load(name) {
 	noxuApp.mainWindow.webContents.send('resetIsFileModified')
 }
 
-ipc.on('load_noxunote', (event, name) => event.returnValue = force_load(name));
+ipcMain.on('load_noxunote', (event: { returnValue: void; }, name: string) => event.returnValue = force_load(name));
 
 // Génère une fenêtre de dessin, appelé quand on appuis sur "Dessiner".
-ipc.on('dessiner', (event, url) => {
+ipcMain.on('dessiner', (event: any, url: any) => {
 	if (!noxuApp.mainDrawWindow) noxuApp.createMainDrawWindow(url)
 })
 
 // Utilisé quand un nouveau dessin est reçu par le mainDrawWindow. au format brut.
-ipc.on('newDessin', (event, data) => {
+ipcMain.on('newDessin', (event: any, data: any) => {
 	noxuApp.mainDrawWindow.browserWindow.close()
 	noxuApp.mainWindow.browserWindow.webContents.send('insertDrawing', data)
 })
-ipc.on('refreshImg', (event, filename) => {
+ipcMain.on('refreshImg', (event: any, filename: any) => {
 	noxuApp.mainDrawWindow.browserWindow.close()
 	noxuApp.mainWindow.browserWindow.webContents.send('refreshImg', filename)
 })
 
-ipc.on('save_as_noxunote', (event, title, matiere, content) => event.returnValue=save_as_noxunote(title, matiere, content));
+ipcMain.on('save_as_noxunote', (event: { returnValue: void; }, title: string, matiere: any, content: any) => event.returnValue=save_as_noxunote(title, matiere, content));
 
 /***************************************************************************************************
  *                                            PRINTING                                             *
  ***************************************************************************************************/
-function openExport(content) {
+function openExport(content: any) {
 	noxuApp.createPrePrintWindow(content)
 }
 // caller : the browser webcontent instance that calls the function
-function makePreview(format, css, content, caller) {
+function makePreview(format: any, css: any, content: any, caller: any) {
 	console.log('making preview..')
 	noxuApp.createMainOutputWindow(caller)
 	noxuApp.mainOutputWindow.browserWindow.webContents.on('did-finish-load', () => {
@@ -251,7 +247,7 @@ function makePreview(format, css, content, caller) {
 		noxuApp.mainOutputWindow.browserWindow.webContents.send('uploadedContent')
 	})
 }
-function makeFile(format) {
+function makeFile(format: any) {
 	// format non pris en charge actuellement
 	setTimeout(() => {
 		console.log('making file..')
@@ -274,7 +270,7 @@ function makeFile(format) {
 						printSelectionOnly: false,
 						landscape: false,
 					},  
-					(error, data) => {
+					(error: any, data: any) => {
 						if (error) {
 							dialog.showMessageBox({
 								type: "info", 
@@ -283,7 +279,7 @@ function makeFile(format) {
 								message: "Echec : Erreur lors de la génération du fichier PDF."
 							})
 						}
-						fs.writeFileSync(path, data, {flag:'w'}, (error) => {
+						fs.writeFileSync(path, data, {flag:'w'}, (error: any) => {
 							if (error) throw error
 							console.log('Write PDF successfully.')
 						})
@@ -309,16 +305,15 @@ function makeFile(format) {
 	}, 1);
 }
 
-ipc.on('openExport', (event, content) => openExport(content))
-ipc.on('makePreview', (event, format, css, content) => makePreview(format, css, content, event.sender))
-ipc.on('makeFile', (event, format) => makeFile(format))
+ipcMain.on('openExport', (event: any, content: any) => openExport(content))
+ipcMain.on('makePreview', (event: { sender: any; }, format: any, css: any, content: any) => makePreview(format, css, content, event.sender))
+ipcMain.on('makeFile', (event: any, format: any) => makeFile(format))
 
-function loadExternalLink(URL) {
-	var browser = new BrowserWindow({
+function loadExternalLink(URL: string) {
+	let browser: any = new BrowserWindow({
 		width: 1000,
 		height: 720,
 		icon: './icon.png',
-		maximized: false,
 		center: false,
 		movable: true,
 		frame: true,
@@ -327,41 +322,21 @@ function loadExternalLink(URL) {
 		backgroundColor: '#FFFFFF',
 	})
 	browser.loadURL(URL)
-	browser.on('closed', (event) => {
+	browser.on('closed', (event: any) => {
 		browser = null;
 	})
 }
-ipc.on('loadExternalLink', (event, URL) => loadExternalLink(URL))
+ipcMain.on('loadExternalLink', (event: any, URL: any) => loadExternalLink(URL))
 
-function loadTutorial() {
-	var browserTuto = new BrowserWindow({
-		width: 850,
-		height: 1080,
-		icon: './icon.png',
-		maximized: false,
-		center: false,
-		movable: true,
-		frame: true,
-		transparent: false,
-		backgroundColor: '#FFFFFF',
-		autoHideMenuBar: true,
-	})
-	browserTuto.loadURL(`file://${__dirname}/tutoriel/tuto.html`)
-	browserTuto.on('closed', (event) => {
-		browser = null;
-	})
-}
-ipc.on('loadTutorial', (event) => loadTutorial())
-
-ipc.on('saveToDoContent', (event, content) => {
+ipcMain.on('saveToDoContent', (event: any, content: any) => {
 	var path = homedir + '/NoxuNote/todo.txt';
 	try { fs.writeFileSync(path, content) }
 	catch (e) { console.log('Failed to save the file !' + e); }
 })
 
-ipc.on('minimizeWindow', event => BrowserWindow.fromWebContents(event.sender).minimize())
+ipcMain.on('minimizeWindow', (event: { sender: Electron.WebContents; }) => BrowserWindow.fromWebContents(event.sender).minimize())
 
-ipc.on('maximizeWindow', (event)=>{
+ipcMain.on('maximizeWindow', (event: { sender: Electron.WebContents; })=>{
 	let window = BrowserWindow.fromWebContents(event.sender)
 	if (window.isMaximized()) window.unmaximize()	
 	else window.maximize()
@@ -393,7 +368,7 @@ function promptImage() {
 	else return null
 }
 
-ipc.on('insertLocalImageDrawer', (event) => {
+ipcMain.on('insertLocalImageDrawer', (event: { returnValue: string; }) => {
 	event.returnValue = promptImage()
 })
 
@@ -407,7 +382,7 @@ ipc.on('insertLocalImageDrawer', (event) => {
  * @param {String} filePath URL du fichier à copier
  * @returns {String} URL du fichier copié
  */
-function copyFileToWorkingFolder(filePath) {
+function copyFileToWorkingFolder(filePath: string) {
 	let fileExt = ""
 	try {
 		fileExt = /\.[0-9a-z]+$/i.exec(filePath)[0]
@@ -424,29 +399,30 @@ function copyFileToWorkingFolder(filePath) {
 	return newFilePath
 }
 // Réception d'une demande de copie de fichier, aucune réponse n'est renvoyée de manière synchrone
-ipc.on('copyFileToWorkingFolder', (event, filePath) => event.returnValue = copyFileToWorkingFolder(filePath))
+ipcMain.on('copyFileToWorkingFolder', (event: { returnValue: string; }, filePath: any) => event.returnValue = copyFileToWorkingFolder(filePath))
 
-ipc.on('quit', (event) => noxuApp.quit())
+ipcMain.on('quit', (event: any) => noxuApp.quit())
 
 
 /***************************************************************************************************
  *                                            DATABASE                                             *
  ***************************************************************************************************/
 
-ipc.on('db_getMatList', (event) => { event.returnValue = noxuApp.db.matieres.matList })
-ipc.on('db_addMat', (event, name, colorcode) => { event.returnValue = noxuApp.db.matieres.addMat(name, colorcode) })
-ipc.on('db_editMat', (event, property, value, name) => { event.returnValue = noxuApp.db.matieres.setProperty(property, value, name) } )
-ipc.on('db_removeMat', (event, name) => { event.returnValue = noxuApp.db.matieres.removeMat(name) } )
-ipc.on('db_getColors', (event) => { event.returnValue = noxuApp.db.colors.colorsList })
-ipc.on('db_getFileList', (event)=> { event.returnValue = noxuApp.db.getFileList() })
-ipc.on('db_setNoteProperty', (event, property, value, name) => { event.returnValue = noxuApp.db.notes.setProperty(property, value, name) })
-ipc.on('db_deleteNote', (event, name) => event.returnValue = noxuApp.db.notes.deleteNote(name))
-ipc.on('db_getAssocList', (event) => event.returnValue = noxuApp.db.dactylo.assocList)
-ipc.on('db_removeAssoc', (event, input) => event.returnValue = noxuApp.db.dactylo.removeAssoc(input))
-ipc.on('db_addAssoc', (event, input, output) => event.returnValue = noxuApp.db.dactylo.addAssoc(input, output))
+ipcMain.on('db_getMatList', (event: { returnValue: any; }) => { event.returnValue = noxuApp.db.matieres.matList })
+ipcMain.on('db_addMat', (event: { returnValue: any; }, name: any, colorcode: any) => { event.returnValue = noxuApp.db.matieres.addMat(name, colorcode) })
+ipcMain.on('db_editMat', (event: { returnValue: any; }, property: any, value: any, name: any) => { event.returnValue = noxuApp.db.matieres.setProperty(property, value, name) } )
+ipcMain.on('db_removeMat', (event: { returnValue: any; }, name: any) => { event.returnValue = noxuApp.db.matieres.removeMat(name) } )
+ipcMain.on('db_getColors', (event: { returnValue: any; }) => { event.returnValue = noxuApp.db.colors.rawJson })
+ipcMain.on('db_getFileList', (event: { returnValue: any; })=> { event.returnValue = noxuApp.db.getFileList() })
+ipcMain.on('db_setNoteProperty', (event: { returnValue: any; }, property: any, value: any, name: any) => { event.returnValue = noxuApp.db.notes.setProperty(property, value, name) })
+ipcMain.on('db_deleteNote', (event: { returnValue: any; }, name: any) => event.returnValue = noxuApp.db.notes.deleteNote(name))
+ipcMain.on('db_getAssocList', (event: { returnValue: any; }) => event.returnValue = noxuApp.db.dactylo.rawJson)
+ipcMain.on('db_removeAssoc', (event: { returnValue: any; }, input: any) => event.returnValue = noxuApp.db.dactylo.removeAssoc(input))
+ipcMain.on('db_addAssoc', (event: { returnValue: any; }, input: any, output: any) => event.returnValue = noxuApp.db.dactylo.addAssoc(input, output))
 
-ipc.on('openSettings', (event, key) => { noxuApp.createSettingsWindow(key) })
+ipcMain.on('openSettings', (event: any, key: any) => { noxuApp.createSettingsWindow(key) })
 /***************************************************************************************************
  *                               RÉCUPÉRATION D'INFORMATIONS TIERCES                               *
  ***************************************************************************************************/
-ipc.on('amIMaximized', event => event.returnValue = BrowserWindow.fromWebContents(event.sender).isMaximized())
+ipcMain.on('amIMaximized', (event: { returnValue: boolean; sender: Electron.WebContents; }) => event.returnValue = BrowserWindow.fromWebContents(event.sender).isMaximized())
+// export {}

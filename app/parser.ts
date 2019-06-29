@@ -15,12 +15,12 @@ let regex = {
  * @param {string} texte une chaîne de caractère au format NoxuNote entrée par l'utilisateur.
  * @return la chaîne compilée au format HTML visible dans le processur graphique. 
  */
-function noteToHtml(texte) {
+export function noteToHtml(texte: string) {
 
 	try {
 		// Suppression des espaces inutiles.
 		texte = texte.trim();
-		original = texte
+		let original: string = texte
 
 		// Remplacement des $$ en ` pour les formules mathématiques
 		texte = texte.replace(regex.math, "`");
@@ -98,7 +98,7 @@ function noteToHtml(texte) {
  * @param index {number} le numero de la tr
  * @param content {string} le contenu de la tr
  */
-function parseTR(index, content) {
+function parseTR(index: number, content: string) {
 	// On remplace les slash situés dans des balises math par {NoxuSlash} pour ne pas interférer avec les tableaux
 	content = content.replace(/\`[\s\S]*?.\`/g, (x) => { return x.replace(/\//g, '{NoxuSlash}')})
 
@@ -116,8 +116,7 @@ function parseTR(index, content) {
 
 	// On construit le <tr>
 	var innerTR = document.createElement("tr")
-	innerTR.id = index
-	innerTR.onclick = function() { ipc.send('edit_div', index, getFormValue()) }
+	innerTR.id = index.toString()
 
 	// Pour chaque cellule/groupe, on insère un TD de taille correspondante
 	for (var i = 0; i < groups.length; i++) {
