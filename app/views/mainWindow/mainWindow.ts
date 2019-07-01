@@ -24,20 +24,62 @@ const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
 var title = "not defined";
 
+import * as $ from "jquery";
+
+declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
+
+const elts = {
+	header: {
+		titrePrincipal: document.getElementById("TitrePrincipal"),
+		modified: document.getElementById('isModified')
+	},
+	calc: {
+		menuBas: document.getElementById('menuBasCalc'),
+		normal: {
+			input: <HTMLInputElement>document.getElementById("calc"),
+			output: document.getElementById('calcResult')
+		},
+		derivative: {
+			input: <HTMLInputElement>document.getElementById("calcDerivative"),
+			output: document.getElementById('calcResultDerivative')
+		}		
+	},
+	menuGaucheSauver: {
+		menu: document.getElementById('menuGaucheSauver'),
+		matieres: document.getElementById('matieres'),
+		sauverInput: <HTMLInputElement>document.getElementById('menuGaucheSauverInput')
+	},
+	menuGaucheOuvrir: {
+		menu: document.getElementById('menuGaucheOuvrir')
+	},
+	toDo: {
+		menu: document.getElementById('toDoBlock'),
+		content: <HTMLInputElement>document.getElementById("toDoContent")
+	},
+	matieres: {
+		matNeutre: <HTMLInputElement>document.getElementById('matneutre')
+	},
+	insert: {
+		imageByUrlValue: <HTMLInputElement>document.getElementById("imageByUrlValue"),
+		imageByFileValue: <HTMLInputElement>document.getElementById("imageByFileValue")
+	},
+	listFiles: document.getElementById("listFiles")
+}
+
 // CTRL on windows, CMD on mac
 const metaKey = os.type()=="Darwin"?"Cmd":"Ctrl"
 
 var isFileModified = false
-function setIsFileModified(b) {
+function setIsFileModified(b: boolean) {
 	if (isFileModified != b) {
-		if (b) {
-			document.getElementById('isModified').classList.add('displayed')
-		} else {
-			document.getElementById('isModified').classList.remove('displayed')
-		}
+		if (b) 
+			elts.header.modified.classList.add('displayed')
+		else 
+		elts.header.modified.classList.remove('displayed')
 	}
 	isFileModified = b
 }
+
 
 const editor = $('#summernote')
 
@@ -45,7 +87,7 @@ const editor = $('#summernote')
  * Action à effectuer lorsque l'utilisateur choisit une option
  * dans la modale de confirmation de sauvegarde
  */
-let saveConfirmationModalAction = function () {}
+let saveConfirmationModalAction: Function = function () {}
 
 // Manageur de modales
 const modalManager = new ModalManager()
@@ -65,17 +107,17 @@ function boutonMenuGaucheSauver() {
 	// Apparaît
 	if (hiddenLeftSave) {
 		hiddenLeftSave = false;
-		document.getElementById('menuGaucheSauver').classList.toggle("appear");
+		elts.menuGaucheSauver.sauverInput.classList.toggle("appear");
 
 		// Si présent, disparait
 		if (!hiddenLeftOpen) {
 			hiddenLeftOpen = true;
-			document.getElementById('menuGaucheOuvrir').classList.toggle("appear");
+			elts.menuGaucheOuvrir.menu.classList.toggle("appear");
 		}
 
 	} else {
 		hiddenLeftSave = true;
-		document.getElementById('menuGaucheSauver').classList.toggle("appear");
+		elts.menuGaucheSauver.sauverInput.classList.toggle("appear");
 	}
 }
 
@@ -86,37 +128,18 @@ function boutonMenuGaucheOuvrir() {
 	// Apparait
 	if (hiddenLeftOpen) {
 		hiddenLeftOpen = false;
-		document.getElementById('menuGaucheOuvrir').classList.toggle("appear");
+		elts.menuGaucheOuvrir.menu.classList.toggle("appear");
 
 		// Si présent, disparait
 		if (!hiddenLeftSave) {
 			hiddenLeftSave = true;
-			document.getElementById('menuGaucheSauver').classList.toggle("appear");
+			elts.menuGaucheSauver.sauverInput.classList.toggle("appear");
 		}
 	} else {
 		hiddenLeftOpen = true;
-		document.getElementById('menuGaucheOuvrir').classList.toggle("appear");
+		elts.menuGaucheOuvrir.menu.classList.toggle("appear");
 	}
 }
-
-
-/**
-* Affiche/Masque le volet menu d'aide
-*/
-var hiddenHelp = true;
-function boutonAide() {
-	if (hiddenHelp) {
-		hiddenHelp = false;
-		// document.getElementById('menuGaucheSauver').style.display = 'block';
-		document.getElementById('menuDroitAide').classList.toggle("appear");
-	} else {
-		hiddenHelp = true;
-		// document.getElementById('menuGaucheSauver').style.display = 'none';
-		// http://jsfiddle.net/qrc8m/
-		document.getElementById('menuDroitAide').classList.toggle("appear");
-	}
-}
-
 
 /**
 * Affiche/Masque le volet menu calculatrice
@@ -125,13 +148,13 @@ var hiddenCalc = true;
 function boutonCalculatrice() {
 	if (hiddenCalc) {
 		hiddenCalc = false;
-		// document.getElementById('menuGaucheSauver').style.display = 'block';
-		document.getElementById('menuBasCalc').classList.toggle("appear");
+		// elts.menuGauche.sauverInput.style.display = 'block';
+		elts.calc.menuBas.classList.toggle("appear");
 	} else {
 		hiddenCalc = true;
-		// document.getElementById('menuGaucheSauver').style.display = 'none';
+		// elts.menuGauche.sauverInput.style.display = 'none';
 		// http://jsfiddle.net/qrc8m/
-		document.getElementById('menuBasCalc').classList.toggle("appear");
+		elts.calc.menuBas.classList.toggle("appear");
 	}
 }
 
@@ -142,13 +165,13 @@ var hiddenToDo = true;
 function toDo() {
 	if (hiddenToDo) {
 		hiddenToDo = false;
-		// document.getElementById('menuGaucheSauver').style.display = 'block';
-		document.getElementById('toDoBlock').classList.toggle("appear");
+		// elts.menuGauche.sauverInput.style.display = 'block';
+		elts.toDo.menu.classList.toggle("appear");
 	} else {
 		hiddenToDo = true;
-		// document.getElementById('menuGaucheSauver').style.display = 'none';
+		// elts.menuGauche.sauverInput.style.display = 'none';
 		// http://jsfiddle.net/qrc8m/
-		document.getElementById('toDoBlock').classList.toggle("appear");
+		elts.toDo.menu.classList.toggle("appear");
 	}
 }
 
@@ -158,7 +181,7 @@ function toDo() {
  * Ouvre une fenêtre de dessin
  * url - optionnel, permet d'éditer l'image donnée par l'url
  */
-function dessiner(url) {
+function dessiner(url?: string) {
 	ipc.send('dessiner', url);
 }
 
@@ -178,10 +201,10 @@ function save_as_noxunote() {
 */
 function onTypeOnTitle() {
 	setTimeout(() => {
-		title = document.getElementById('menuGaucheSauverInput').value.replace(/[><\/\\.]/g, "")
-		document.getElementById('TitrePrincipal').innerHTML = title
+		title = elts.menuGaucheSauver.sauverInput.value.replace(/[><\/\\.]/g, "")
+		elts.header.titrePrincipal.innerHTML = title
 		if (title == "") {
-			document.getElementById("TitrePrincipal").innerHTML = "(Cliquez pour nommer la note)"
+			elts.header.titrePrincipal.innerHTML = "(Cliquez pour nommer la note)"
 			title = "not defined";
 		}
 	}, 20)
@@ -189,35 +212,24 @@ function onTypeOnTitle() {
 
 
 /**
- * Nettoie entièrement l'affichage du document
- */
-function clearContent() {
-	var parent = document.getElementById('content')
-	while (parent.firstChild) {
-		parent.removeChild(parent.firstChild)
-	}
-}
-
-
-/**
  * Loads a file
  * @param path path to file
  */
-function load_noxunote(name) {
+function load_noxunote(name: any) {
 	ipc.sendSync('load_noxunote', name)
 }
 
 
-function setNoteTitle(newtitle) {
+function setNoteTitle(newtitle: string) {
 	// Définition du titre
 	title = newtitle
 	if (newtitle == "") {
-		document.getElementById("TitrePrincipal").innerHTML = "(Cliquez pour nommer la note)"
-		document.getElementById("menuGaucheSauverInput").value = ""
+		elts.header.titrePrincipal.innerHTML = "(Cliquez pour nommer la note)";
+		elts.menuGaucheSauver.sauverInput.value = ""
 		title = "not defined"
 	} else {
-		document.getElementById("TitrePrincipal").innerHTML = title
-		document.getElementById("menuGaucheSauverInput").value = title
+		elts.header.titrePrincipal.innerHTML = title;
+		elts.menuGaucheSauver.sauverInput.value = title
 	}
 }
 
@@ -226,10 +238,9 @@ function setNoteTitle(newtitle) {
  */
 function calcEvaluate() {
 	setTimeout(() => {
-		var input = document.getElementById("calc").value
-		var output = document.getElementById("calcResult")
+		let output = elts.calc.normal.output
 		try {
-			var result = math.eval(input)
+			let result = math.eval(elts.calc.normal.input.value)
 			if (result.toString().length < 40) {
 				if (result != "undefined") {
 					output.innerHTML = result
@@ -250,10 +261,9 @@ function calcEvaluate() {
  */
 function calcEvaluateDerivative() {
 	setTimeout(() => {
-		var input = document.getElementById("calcDerivative").value;
-		var output = document.getElementById("calcResultDerivative");
+		let output = elts.calc.derivative.output;
 		try {
-			var result = math.derivative(input, "x");
+			let result = math.derivative(elts.calc.derivative.input.value, "x");
 			if (result.toString().length < 40) {
 				if (result != "undefined") {
 					output.innerHTML = result;
@@ -273,7 +283,7 @@ function calcEvaluateDerivative() {
  * Affichage de la liste des fichiers dans le menu sauver
  */
 function generateFileList() {
-	var listFilesDiv = document.getElementById("listFiles")
+	var listFilesDiv = elts.listFiles
 	var matieres = ipcRenderer.sendSync('db_getMatList')
 	var files = ipcRenderer.sendSync('db_getFileList')
 
@@ -283,13 +293,13 @@ function generateFileList() {
 	}
 
 	// Mémorise les index des fichiers affichés
-	let shownFiles = []
+	let shownFiles: string[] = []
 
 	// Ajoute un fichier à la liste des fichiers à ouvrir
-	let addFile = f => {
+	let addFile = (f: any) => {
 		// Création de la pastille
 		var matDiv = document.createElement('div')
-		matDiv.classList += "pastille"
+		matDiv.classList.add("pastille")
 		matDiv.innerHTML = "•"
 		matDiv.style.color = f.color
 		listFilesDiv.appendChild(matDiv)
@@ -299,7 +309,7 @@ function generateFileList() {
 		innerDiv.style.display = "inline"
 		innerDiv.id = "file"
 		// Ajout du tooltip
-		let tooltip
+		let tooltip: { set: (arg0: { animateFunction: string; color: string; stickDistance: number; contentText: string; stickTo: string; target: HTMLDivElement; }) => void; show: () => void; hide: { (): void; (): void; }; mount: () => void; }
 		if (f.lastedit) {
 			tooltip = new HTML5TooltipUIComponent;
 			tooltip.set({
@@ -335,7 +345,7 @@ function generateFileList() {
 		listFilesDiv.appendChild(document.createElement('br'))
 		shownFiles.push(f.nom)
 	}
-	let addCategory = name => {
+	let addCategory = (name: string) => {
 		listFilesDiv.appendChild(document.createElement('hr'))
 		var innerDiv = document.createElement('h5')
 		innerDiv.style.display = "inline"
@@ -346,22 +356,22 @@ function generateFileList() {
 	}
 
 	// Affichage des matieres
-	matieres.forEach(m => {
+	matieres.forEach((m: { nom: any; }) => {
 		addCategory(m.nom)
-		files.filter(e => e['matiere'] === m.nom).forEach(addFile)
+		files.filter((e: { [x: string]: any; }) => e['matiere'] === m.nom).forEach(addFile)
 	})
 
 	// Affichage des éléments non inscrits
 	addCategory("Non triés")
-	files.filter(e => !shownFiles.includes(e.nom)).forEach(addFile)
+	files.filter((e: { nom: any; }) => !shownFiles.includes(e.nom)).forEach(addFile)
 }
 
 /**
  * Affichage des matières disponibles dans SAUVER
  */
-function generateMatList(db) {
+function generateMatList(db: undefined) {
 	// Suppression du conteneur actuel
-	var matList = document.getElementById('matieres')
+	var matList = elts.menuGaucheSauver.matieres
 	while (matList.firstChild) {
 		matList.removeChild(matList.firstChild)
 	}
@@ -371,7 +381,7 @@ function generateMatList(db) {
 	for (var i = 0; i < matieres.length; i++) {
 		var innerDiv = document.createElement('div')
 		innerDiv.id = "matiere"
-		checkbox = "<input type='radio' name='mat' value='" + matieres[i].nom + "'>"
+		let checkbox: string = "<input type='radio' name='mat' value='" + matieres[i].nom + "'>"
 		innerDiv.innerHTML = checkbox + matieres[i].nom
 		innerDiv.style.background = matieres[i].couleur
 		matList.appendChild(innerDiv)
@@ -382,12 +392,10 @@ function generateMatList(db) {
  * Renvoie la matière sélectionnée
  */
 function getMat() {
-	var form = document.getElementById('matieres').childNodes
-	for (i = 0; i < form.length; i++) {
-		console.log(form[i].firstChild);
-		if (form[i].firstChild.checked) {
-			return form[i].firstChild.value
-		}
+	var form = elts.menuGaucheSauver.matieres.childNodes
+	for (let i = 0; i < form.length; i++) {
+		let firstChild: HTMLInputElement = (<HTMLInputElement>form[i].firstChild);
+		if (firstChild.checked) return firstChild.value
 	}
 	return ""
 }
@@ -403,7 +411,7 @@ function openExport() {
  * Commande de création d'une nouvelle note
  */
 function newFile() {
-	const resetFunc = ()=>{
+	const resetFunc: Function = ()=>{
 		setNoteTitle("");
 		editor.summernote('reset')
 		setIsFileModified(false)
@@ -412,37 +420,16 @@ function newFile() {
 		saveConfirmationModalAction = resetFunc // On définit l'action de confirmation
 		modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
 	} else { // Si aucune modification actuellement, on charge directement la note
-		resetFunc.call()
+		resetFunc.call(null)
 	}	
-}
-
-/**
- * Commande de l'appui du bouton "image"
- */
-function insertLocalImage() {
-	ipc.send("insertLocalImage")
-}
-
-/**
- * Ouvre une fenêtre asciimath aide
- */
-function showAsciiMathHelp() {
-	ipc.send('loadExternalLink', 'http://asciimath.org')
-}
-
-/**
- * Ouvre une fenêtre tutoriel
- */
-function showTutorial() {
-	ipc.send('loadTutorial')
 }
 
 /**
  * Enregistre le contenu de la todo list lors de l'appui
  * sur la touche espace.
  */
-function toDoKeyPressed(event) {
-	var content = document.getElementById("toDoContent").value
+function toDoKeyPressed(event: any) {
+	var content = elts.toDo.content.value
 	ipc.send('saveToDoContent', content)
 }
 
@@ -456,10 +443,10 @@ function loadTodoFile() {
 	} catch (e) {
 		fileContent = ""
 	}
-	document.getElementById("toDoContent").value = fileContent
+	elts.toDo.content.value = fileContent
 }
 
-function openSettings(key) {
+function openSettings(key: any) {
 	ipc.send('openSettings', key)
 }
 
@@ -467,23 +454,24 @@ function openSettings(key) {
  * Définit une matière cochée par défaut dans le menu de sauvegarde, sinon coche neutre
  * @param {string} matiere La matière à cocher
  */
-function setNoteMatiere(matiere) {
-	let list = document.getElementById('matieres')
+function setNoteMatiere(matiere: any) {
+	let list = elts.menuGaucheSauver.matieres
 	let found = false
 	list.childNodes.forEach(e => {
-		if (e.firstChild.value === matiere) {
-			e.firstChild.checked = true
+		let firstChild = <HTMLInputElement>e.firstChild
+		if (firstChild.value === matiere) {
+			firstChild.checked = true
 			found = true
 		}
-		else e.firstChild.checked = false
+		else firstChild.checked = false
 	})
-	if (!found) document.getElementById('matneutre').checked = true
+	if (!found) elts.matieres.matNeutre.checked = true
 }
 
 /**
  * Insère l'image donnée par l'url
  */
-function insertImg(url) {
+function insertImg(url: any) {
 	editor.summernote('restoreRange')
 	editor.summernote('focus')
 	editor.summernote('insertImage', url, url)
@@ -507,7 +495,7 @@ function closeWindow() {
 /***************************************************************************************************
  *										SUMMERNOTE      			               			       *
  ***************************************************************************************************/
-var MediaButton = function (context) {
+var MediaButton = function (context: any) {
 	var ui = $.summernote.ui;
 	// create button
 	var button = ui.button({
@@ -519,7 +507,7 @@ var MediaButton = function (context) {
 	return button.render();   // return button as jquery object
 }
 
-var EquationButton = function (context) {
+var EquationButton = function (context: any) {
 	var ui = $.summernote.ui;
 	// create button
 	var button = ui.button({
@@ -534,7 +522,7 @@ var EquationButton = function (context) {
 	return button.render();   // return button as jquery object
 }
 
-var SchemaCreationButton = function (context) {
+var SchemaCreationButton = function (context: any) {
 	var ui = $.summernote.ui;
 	// create button
 	var button = ui.button({
@@ -548,7 +536,7 @@ var SchemaCreationButton = function (context) {
 	return button.render();   // return button as jquery object
 }
 
-var SchemaEditionButton = function (context) {
+var SchemaEditionButton = function (context: any) {
 	var ui = $.summernote.ui;
 	// create button
 	var button = ui.button({
@@ -556,21 +544,25 @@ var SchemaEditionButton = function (context) {
 		tooltip: 'Modifier l\'image',
 		click: () => {
 			// Get highlighted image
-			clickedImg = context.layoutInfo.editable.data('target')
-			let url = ""
-			if (os.type() == "Windows_NT") url = clickedImg.src.toString().replace("file:///", "") // Pas de slash au début des path windows
-			else url = clickedImg.src.toString().replace("file:///", "/") // Slash au début des paths (chemins absolus) sous unix
-			console.log('edition du fichier : ', extractUrlFromSrc(url))
-			dessiner(extractUrlFromSrc(url))
+			let target = context.layoutInfo.editable.data('target')
+			if (target instanceof HTMLImageElement) {
+				let clickedImg = <HTMLImageElement>target
+				let url = ""
+				if (os.type() == "Windows_NT") url = clickedImg.src.toString().replace("file:///", "") // Pas de slash au début des path windows
+				else url = clickedImg.src.toString().replace("file:///", "/") // Slash au début des paths (chemins absolus) sous unix
+				console.log('edition du fichier : ', extractUrlFromSrc(url))
+				dessiner(extractUrlFromSrc(url))
+			}
 		}
 	});
 	return button.render();   // return button as jquery object
 }
 
-$(document).ready(initializeSummernote())
+$(document).ready(initializeSummernote)
 
 function initializeSummernote() {
-	const wordsDictionnary = ipcRenderer.sendSync('db_getAssocList').map(element => element.output)
+	const wordsDictionnary = ipcRenderer.sendSync('db_getAssocList').map((element: { output: any; }) => element.output)
+	// @ts-ignore
 	editor.summernote({
 		lang: 'fr-FR',
 		focus: true,
@@ -581,8 +573,8 @@ function initializeSummernote() {
 		hint: {
 			words: wordsDictionnary,
 			match: /\b(\w{1,})$/,
-			search: function (keyword, callback) {
-				callback($.grep(this.words, function (item) {
+			search: function (keyword: any, callback: (arg0: any) => void) {
+				callback($.grep(this.words, function (item: { indexOf: (arg0: any) => number; }) {
 					return item.indexOf(keyword) === 0;
 				}))
 			}
@@ -635,10 +627,10 @@ function initializeSummernote() {
 					$("#fullscreenLoader").addClass('disabled')
 				}, 1000)
 			},
-			onChange: function (contents, $editable) {
+			onChange: function (contents: any, $editable: any) {
 				setIsFileModified(true)
 			},
-			onKeydown: function (e) {
+			onKeydown: function (e: { keyCode: number; }) {
 				/**
 				 * Lors d'un appui sur entrée, on vérifie si la ligne débute par un marqueur NoxuNote
 				 * Par exemple ##Titre doit transformer la ligne en un titre de niveau 2.
@@ -679,7 +671,7 @@ function initializeSummernote() {
  * @param {*} ele Element après lequel le curseur doit être inseré
  * @param {*} e Evenement type clavier
  */
-function setCursorAfterElement(ele, e) {
+function setCursorAfterElement(ele: Node & ParentNode, e: { preventDefault: () => void; }) {
 	var dummyElement; // Élement fictif crée après ele
 	if (!ele.nextElementSibling) { // Si il n'éxiste pas déjà un élément suivant, on le crée
 		dummyElement = document.createElement('p')
@@ -710,7 +702,7 @@ function setCursorAfterElement(ele, e) {
  * l'insère dans l'éditeur summernote. Ferme aussi la modal
  */
 function insertImageFromUrl() {
-	const field = document.getElementById("imageByUrlValue");
+	const field = elts.insert.imageByUrlValue;
 	insertImg(field.value)
 	modalManager.closeAllModal()
 	field.value = ""
@@ -721,9 +713,9 @@ function insertImageFromUrl() {
  * l'insère dans l'éditeur summernote. Ferme aussi la modal
  */
 function insertImageFromFile() {
-	const field = document.getElementById("imageByFileValue")
+	const field = elts.insert.imageByFileValue
 	const files = field.files;
-	Array.from(files).forEach(f=>{
+	Array.from(files).forEach((f: { path: any; })=>{
 		// Copie de l'image dans le répertoire de travail
 		const copiedImagePath = ipc.sendSync('copyFileToWorkingFolder', f.path)
 		insertImg(copiedImagePath)
@@ -736,7 +728,7 @@ function insertImageFromFile() {
  * Extrait l'url de l'image en ignorant les métadonnées type abc.jpg?<metadonnées>
  * @param {String} src HTMLImageElement.src - Source de l'image
  */
-function extractUrlFromSrc(src) {
+function extractUrlFromSrc(src: string) {
 	if (src.includes("?")) {
 		return /^[\s\S]*\?/.exec(src)[0].replace('?', '')
 	} else {
@@ -749,9 +741,9 @@ function extractUrlFromSrc(src) {
  * a jour les métadonnées de la source (image.jpg?<metadonnées>)
  * @param {String} url 
  */
-function refreshImg(url) {
+function refreshImg(url: any) {
 	$images = document.getElementsByClassName('note-editing-area')[0].querySelectorAll("img")
-	$images.forEach((i) => {
+	$images.forEach((i: { src: string; }) => {
 		// Pour l'instant, applique la MAJ sur toutes les images (pour simplifier le code)
 		i.src = extractUrlFromSrc(i.src) + "?" + new Date().getTime();
 	})
@@ -799,16 +791,16 @@ notificationService.showNotification("Bienvenue dans NoxuNote", `version ${ipcRe
 /***************************************************************************************************
  *      ASSOCIATION DES ÉVÈNEMENTS DE L'IPC AUX FONCTIONS DU PROCESSUS GRAPHIQUE (AU DESSUS).      *
  ***************************************************************************************************/
-ipcRenderer.on('setNoteTitle', (event, title) => setNoteTitle(title))
-ipcRenderer.on('setNoteMatiere', (event, matiere) => setNoteMatiere(matiere))
-ipcRenderer.on('callSaveAsNoxuNote', (event) => save_as_noxunote())
-ipcRenderer.on('resetIsFileModified', (event) => setIsFileModified(false))
-ipcRenderer.on('updateDb', (event) => { generateFileList(); generateMatList(); refreshDictionnary() })
-ipcRenderer.on('setNoteContent', (event, note) => setNoteContent(note))
-ipcRenderer.on('insertDrawing', (event, url) => insertImg(url))
-ipcRenderer.on('refreshImg', (event, url) => refreshImg(url))
-ipcRenderer.on('electron_request_close', (event) => closeWindow()) // Permet de gérer graphiquement l'alerte de sauvegarde
-ipcRenderer.on('showNotification', (event, notification)=>{
+ipcRenderer.on('setNoteTitle', (event: any, title: any) => setNoteTitle(title))
+ipcRenderer.on('setNoteMatiere', (event: any, matiere: any) => setNoteMatiere(matiere))
+ipcRenderer.on('callSaveAsNoxuNote', (event: any) => save_as_noxunote())
+ipcRenderer.on('resetIsFileModified', (event: any) => setIsFileModified(false))
+ipcRenderer.on('updateDb', (event: any) => { generateFileList(); generateMatList(); refreshDictionnary() })
+ipcRenderer.on('setNoteContent', (event: any, note: any) => setNoteContent(note))
+ipcRenderer.on('insertDrawing', (event: any, url: any) => insertImg(url))
+ipcRenderer.on('refreshImg', (event: any, url: any) => refreshImg(url))
+ipcRenderer.on('electron_request_close', (event: any) => closeWindow()) // Permet de gérer graphiquement l'alerte de sauvegarde
+ipcRenderer.on('showNotification', (event: any, notification: string)=>{
 	// On reçoit un objet Notification serialisé, il faut le transformer en objet
 	const notifArgs = JSON.parse(notification)
 	if (notifArgs.b1Action) notifArgs.b1Action = eval(notifArgs.b1Action) // On déserialise les fonctions

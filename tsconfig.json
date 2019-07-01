@@ -1,15 +1,21 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "noImplicitAny": true,
     "sourceMap": true,
     "allowJs": true,
+    "lib": ["es2016", "dom"],
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]
-    }
+    },
+    "types": [
+      "jquery",
+      "summernote",
+      "mathjax"
+    ]
   },
   "include": [
     "app/**/*"
