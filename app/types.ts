@@ -74,3 +74,18 @@ export type Note = {
   lastEdit: string;
   content: string;
 }
+
+
+//
+// ─── PLUGINS ────────────────────────────────────────────────────────────────────
+//
+export interface NoxunotePlugin {
+  /**
+   * Elements interacting with the plugin
+   */
+  elts: any;
+  /**
+   * Plugin initialization method
+   */
+  init(): void;
+}  

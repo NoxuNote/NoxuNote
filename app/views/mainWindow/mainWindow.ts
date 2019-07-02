@@ -24,9 +24,9 @@ const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
 var title = "not defined";
 
-import * as Summernote from 'summernote'
 import * as $ from "jquery";
-import { EventEmitter } from 'electron';
+import { CalcPlugin } from './plugins/calc';
+import { NoxunotePlugin } from "../../types";
 
 
 declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
@@ -37,15 +37,12 @@ const elts = {
 		modified: document.getElementById('isModified')
 	},
 	calc: {
-		menuBas: document.getElementById('menuBasCalc'),
-		normal: {
-			input: <HTMLInputElement>document.getElementById("calc"),
-			output: document.getElementById('calcResult')
-		},
-		derivative: {
-			input: <HTMLInputElement>document.getElementById("calcDerivative"),
-			output: document.getElementById('calcResultDerivative')
-		}		
+		menu: document.getElementById('menuBasCalc'),
+		triggerElements: [document.getElementById("triggerCalc")],
+		normalInput: <HTMLInputElement>document.getElementById("calc"),
+		normalOutput: document.getElementById('calcResult'),
+		derivativeInput: <HTMLInputElement>document.getElementById("calcDerivative"),
+		derivativeOutput: document.getElementById('calcResultDerivative')
 	},
 	menuGaucheSauver: {
 		menu: document.getElementById('menuGaucheSauver'),
@@ -68,6 +65,10 @@ const elts = {
 	},
 	listFiles: document.getElementById("listFiles")
 }
+
+var plugins: NoxunotePlugin[] = [
+	new CalcPlugin(elts.calc)
+]
 
 // CTRL on windows, CMD on mac
 const metaKey = os.type()=="Darwin"?"Cmd":"Ctrl"
@@ -144,22 +145,6 @@ function boutonMenuGaucheOuvrir() {
 	}
 }
 
-/**
-* Affiche/Masque le volet menu calculatrice
-*/
-var hiddenCalc = true;
-function boutonCalculatrice() {
-	if (hiddenCalc) {
-		hiddenCalc = false;
-		// elts.menuGauche.sauverInput.style.display = 'block';
-		elts.calc.menuBas.classList.toggle("appear");
-	} else {
-		hiddenCalc = true;
-		// elts.menuGauche.sauverInput.style.display = 'none';
-		// http://jsfiddle.net/qrc8m/
-		elts.calc.menuBas.classList.toggle("appear");
-	}
-}
 
 /**
 * Affiche/Masque le volet menu Todo
@@ -234,52 +219,6 @@ function setNoteTitle(newtitle: string) {
 		elts.header.titrePrincipal.innerHTML = title;
 		elts.menuGaucheSauver.sauverInput.value = title
 	}
-}
-
-/**
- * Affichage des matières disponibles dans SAUVER
- */
-function calcEvaluate() {
-	setTimeout(() => {
-		let output = elts.calc.normal.output
-		try {
-			let result = math.eval(elts.calc.normal.input.value)
-			if (result.toString().length < 40) {
-				if (result != "undefined") {
-					output.innerHTML = result
-				} else {
-					output.innerHTML = "(indéfini)"
-				}
-			} else {
-				output.innerHTML = "(indéfini)"
-			}
-		} catch (e) {
-			output.innerHTML = "(indéfini)";
-		}
-	}, 20);
-}
-
-/**
- * Calcule et affiche la derivée de la fonction
- */
-function calcEvaluateDerivative() {
-	setTimeout(() => {
-		let output = elts.calc.derivative.output;
-		try {
-			let result = math.derivative(elts.calc.derivative.input.value, "x");
-			if (result.toString().length < 40) {
-				if (result != "undefined") {
-					output.innerHTML = result;
-				} else {
-					output.innerHTML = "(indéfini)";
-				}
-			} else {
-				output.innerHTML = "(indéfini)";
-			}
-		} catch (e) {
-			output.innerHTML = "(indéfini)";
-		}
-	}, 20);
 }
 
 /**
