@@ -1,6 +1,6 @@
 export { };
 
-import { BrowserWindow, dialog, shell, Menu, WebContents, ipcMain } from "electron";
+import { BrowserWindow, WebContents } from "electron";
 import { Licence } from "./Licence"
 import { INoxunoteWindow, INoxunoteApp, ISettingsWindow } from "./types";
 import { DataBase } from "./DataBase"
@@ -36,7 +36,7 @@ class MainWindow implements INoxunoteWindow {
             minWidth: 200,
             transparent: false,
             backgroundColor: '#1E232A',
-            autoHideMenuBar: true,
+            autoHideMenuBar: true
         })
         // Shortcut to webContents (retrocompatibility)
         this.webContents = this.browserWindow.webContents;
@@ -104,7 +104,7 @@ class MainOutputWindow implements INoxunoteWindow {
 class SettingsWindow implements INoxunoteWindow, ISettingsWindow {
     allowClose: boolean;
     browserWindow: BrowserWindow;
-    constructor(key?: string) {
+    constructor() {
         this.browserWindow = new BrowserWindow({
             width: 1024,
             height: 600,
@@ -177,7 +177,7 @@ class NoxuNoteApp implements INoxunoteApp {
     }
     createMainWindow() {
         this.mainWindow = new MainWindow()
-        this.mainWindow.browserWindow.on('closed', (event: any) => {
+        this.mainWindow.browserWindow.on('closed', () => {
             this.db.saveAllJson()
             this.mainWindow = null
         })

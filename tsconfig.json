@@ -14,7 +14,9 @@
     "types": [
       "jquery",
       "summernote",
-      "mathjax"
+      "mathjax",
+      "electron",
+      "node",
     ]
   },
   "include": [

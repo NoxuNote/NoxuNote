@@ -24,7 +24,10 @@ const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
 var title = "not defined";
 
+import * as Summernote from 'summernote'
 import * as $ from "jquery";
+import { EventEmitter } from 'electron';
+
 
 declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
 
@@ -369,7 +372,7 @@ function generateFileList() {
 /**
  * Affichage des matières disponibles dans SAUVER
  */
-function generateMatList(db: undefined) {
+function generateMatList() {
 	// Suppression du conteneur actuel
 	var matList = elts.menuGaucheSauver.matieres
 	while (matList.firstChild) {
@@ -496,7 +499,7 @@ function closeWindow() {
  *										SUMMERNOTE      			               			       *
  ***************************************************************************************************/
 var MediaButton = function (context: any) {
-	var ui = $.summernote.ui;
+	var ui = ($ as any).summernote.ui;
 	// create button
 	var button = ui.button({
 		contents: '<i class="fas fa-image"></i>',
@@ -508,7 +511,7 @@ var MediaButton = function (context: any) {
 }
 
 var EquationButton = function (context: any) {
-	var ui = $.summernote.ui;
+	var ui = ($ as any).summernote.ui;
 	// create button
 	var button = ui.button({
 		contents: '<i class="fas fa-calculator"/>',
@@ -523,7 +526,7 @@ var EquationButton = function (context: any) {
 }
 
 var SchemaCreationButton = function (context: any) {
-	var ui = $.summernote.ui;
+	var ui = ($ as any).summernote.ui;
 	// create button
 	var button = ui.button({
 		contents: '<i class="fas fa-pencil-ruler"></i>',
@@ -537,7 +540,7 @@ var SchemaCreationButton = function (context: any) {
 }
 
 var SchemaEditionButton = function (context: any) {
-	var ui = $.summernote.ui;
+	var ui = ($ as any).summernote.ui;
 	// create button
 	var button = ui.button({
 		contents: '<i class="fas fa-pencil-ruler"></i>',
@@ -630,33 +633,36 @@ function initializeSummernote() {
 			onChange: function (contents: any, $editable: any) {
 				setIsFileModified(true)
 			},
-			onKeydown: function (e: { keyCode: number; }) {
+			onKeydown: function (e: KeyboardEvent) {
 				/**
 				 * Lors d'un appui sur entrée, on vérifie si la ligne débute par un marqueur NoxuNote
 				 * Par exemple ##Titre doit transformer la ligne en un titre de niveau 2.
 				 */
 				if (e.keyCode === 13) {
 					const selection = window.getSelection()
-					const data = selection.getRangeAt(0).commonAncestorContainer.data // Stocke le contenu de la ligne entrée
+					const data = (<CharacterData>selection.getRangeAt(0).commonAncestorContainer).data // Stocke le contenu de la ligne entrée
 					if (data) {
 						const line = data.toString()
 						if (line.substr(0, 3) === "###") {
 							// Changement du format de la ligne
-							editor.summernote("formatH1")
+							editor.summernote("formatH1");
+							let parent = <HTMLElement>selection.anchorNode.parentNode;
 							// Suppression des caractères ### avec éventuels espaces au début
-							selection.anchorNode.parentNode.innerText = selection.anchorNode.parentNode.innerText.toString().replace(/^[#\s]*/g, "")
+							parent.innerText = parent.innerText.toString().replace(/^[#\s]*/g, "")
 							// Déplacement du curseur à la fin de la ligne
-							setCursorAfterElement(selection.anchorNode.parentNode, e)
+							setCursorAfterElement(parent, e)
 						}
 						else if (line.substr(0, 2) === "##") {
-							editor.summernote("formatH2")
-							selection.anchorNode.parentNode.innerText = selection.anchorNode.parentNode.innerText.toString().replace(/^[#\s]*/g, "")
-							setCursorAfterElement(selection.anchorNode.parentNode, e)
+							editor.summernote("formatH2");
+							let parent = <HTMLElement>selection.anchorNode.parentNode;
+							parent.innerText = parent.innerText.toString().replace(/^[#\s]*/g, "")
+							setCursorAfterElement(parent, e)
 						}
 						else if (line.substr(0, 1) === "#") {
-							editor.summernote("formatH3")
-							selection.anchorNode.parentNode.innerText = selection.anchorNode.parentNode.innerText.toString().replace(/^[#\s]*/g, "")
-							setCursorAfterElement(selection.anchorNode.parentNode, e)
+							editor.summernote("formatH3");
+							let parent = <HTMLElement>selection.anchorNode.parentNode;
+							parent.innerText = parent.innerText.toString().replace(/^[#\s]*/g, "")
+							setCursorAfterElement(parent, e)
 						}
 					}
 				}
@@ -671,18 +677,18 @@ function initializeSummernote() {
  * @param {*} ele Element après lequel le curseur doit être inseré
  * @param {*} e Evenement type clavier
  */
-function setCursorAfterElement(ele: Node & ParentNode, e: { preventDefault: () => void; }) {
+function setCursorAfterElement(ele: HTMLElement, e: { preventDefault: () => void; }) {
 	var dummyElement; // Élement fictif crée après ele
 	if (!ele.nextElementSibling) { // Si il n'éxiste pas déjà un élément suivant, on le crée
 		dummyElement = document.createElement('p')
 		dummyElement.appendChild(document.createTextNode('\u00A0'))
 		ele.parentNode.appendChild(dummyElement)
 	}
-	var nextElement = ele.nextElementSibling // Élement suivant
+	let nextElement: Element = ele.nextElementSibling; // Élement suivant
 	//nextElement.tabIndex = 0
 
 	// Déplacement du curseur
-	nextElement.focus()
+	(<HTMLElement>nextElement).focus()
 	var r = document.createRange();
 	r.setStart(nextElement.childNodes[0], 0);
 	r.setEnd(nextElement.childNodes[0], 0);
@@ -742,7 +748,7 @@ function extractUrlFromSrc(src: string) {
  * @param {String} url 
  */
 function refreshImg(url: any) {
-	$images = document.getElementsByClassName('note-editing-area')[0].querySelectorAll("img")
+	let $images = document.getElementsByClassName('note-editing-area')[0].querySelectorAll("img")
 	$images.forEach((i: { src: string; }) => {
 		// Pour l'instant, applique la MAJ sur toutes les images (pour simplifier le code)
 		i.src = extractUrlFromSrc(i.src) + "?" + new Date().getTime();
@@ -754,7 +760,7 @@ function refreshImg(url: any) {
  * Définit le contenu complet de l'éditeur selon le code "content"
  * @param {String} content Contenu de la note à charger (code html)
  */
-function setNoteContent(content) {
+function setNoteContent(content: string) {
 	// Conversion des anciens formats de noxunote en HTML (ne gère pas les tableaux)
 	if (content.includes("@NOXUNOTE_BEGIN")) {
 		console.log("Ancien format détecté, formattage ...")
