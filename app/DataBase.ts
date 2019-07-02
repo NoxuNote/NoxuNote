@@ -1,24 +1,30 @@
-const { Dactylo } = require("./databases/Dactylo");
+import { JSONDataBase } from "./types";
+import { Notes } from "./databases/Notes";
+import { Matieres } from "./databases/Matieres";
+import { Dactylo } from "./databases/Dactylo"
+
 const { Colors } = require("./databases/Colors");
-const { Matieres } = require("./databases/Matieres");
-const { Notes } = require("./databases/Notes");
-
-const homedir = require('os').homedir();
-exports.homedir = homedir;
 const fs = require('fs-extra')
-
-const mkdirSync = function (dirPath) {
-    try {
-        fs.mkdirSync(dirPath)
-    } catch (err) {
-        if (err.code !== 'EEXIST') throw err
-    }
-}
+const homedir		= require('os').homedir()
+// const mkdirSync = function (dirPath: string) {
+//     try {
+//         fs.mkdirSync(dirPath)
+//     } catch (err) {
+//         if (err.code !== 'EEXIST') throw err
+//     }
+// }
 
 /***************************************************************************************************
  *                               BASE DE DONNÉE, CONTIENT DES TABLES                               *
  ***************************************************************************************************/
-class DataBase {
+export class DataBase {
+    
+    public notesFolder: string;
+    public matieres: Matieres;
+    public colors: JSONDataBase;
+    public notes: Notes;
+    public dactylo: Dactylo;
+
     constructor() {
         this.createNoxuNoteFolder()
         this.notesFolder = homedir + '/NoxuNote/notes/'
@@ -32,9 +38,9 @@ class DataBase {
      */
     createNoxuNoteFolder() {
         if (!fs.existsSync(homedir+'/NoxuNote/')) {
-            mkdirSync(homedir+'/NoxuNote/')
-            mkdirSync(homedir+'/NoxuNote/notes')
-            mkdirSync(homedir+'/NoxuNote/created_images')
+            fs.mkdirSync(homedir+'/NoxuNote/')
+            fs.mkdirSync(homedir+'/NoxuNote/notes')
+            fs.mkdirSync(homedir+'/NoxuNote/created_images')
         }
     }
     /**
@@ -83,5 +89,3 @@ class DataBase {
         return json
     }
 }
-
-module.exports.DataBase = DataBase

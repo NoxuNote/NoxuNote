@@ -1,22 +1,29 @@
+import { shell } from "electron";
+import { INoxunoteApp } from "./types";
+
 const http = require('http')
 const https = require('https')
 var querystring = require('querystring')
 var os = require("os")
 
-class Licence {
+export class Licence {
+    actualVersion: string;
+    lastVersion: string;
+    changeLog: string;
+    id: number;
 
     /**
      * Instancie les connexions à l'API NoxuNote
      * @param {Object} noxuNoteAppInstance NoxuApp instance
      * @param {boolean} DEBUG NoxuNote en mode debug ou non
      */
-    constructor(noxuNoteAppInstance, DEBUG) {
+    constructor(noxuNoteAppInstance: INoxunoteApp, DEBUG: any) {
         this.actualVersion = "1.0.0"
         this.lastVersion = null
         this.changeLog = null
         this.id = Math.floor(Math.random() * Math.floor(99999))
         if (!DEBUG) {
-            this.getChangelogJSON((response) => {
+            this.getChangelogJSON((response: { lastVersion: string; changeLog: string; }) => {
                 this.lastVersion = response.lastVersion
                 this.changeLog = response.changeLog
                 this.sendActivityPacket(false)
@@ -54,11 +61,11 @@ class Licence {
         return this.actualVersion
     }
 
-    getChangelogJSON(callback) {
+    getChangelogJSON(callback: { (response: any): void; (arg0: any): void; }) {
         var url = 'https://noxunote.fr/prototype/version.json';
-        https.get(url, function (res) {
+        https.get(url, function (res: { on: { (arg0: string, arg1: (chunk: any) => void): void; (arg0: string, arg1: () => void): void; }; }) {
             var body = '';
-            res.on('data', function (chunk) {
+            res.on('data', function (chunk: string) {
                 body += chunk;
             });
             res.on('end', () => {
@@ -70,13 +77,13 @@ class Licence {
                 }
                 // On définit les attributs de la licence
             });
-        }).on('error', function (e) {
+        }).on('error', function (e: any) {
             console.error("Erreur de récupération du changelog.");
         });
     }
 
     // Envoi un paquet anonyme a noxunote.fr contenant la version de NoxuNote et le nom de l'OS
-    sendActivityPacket(isUpdate) {
+    sendActivityPacket(isUpdate: boolean) {
         // Build the post string from an object
         var type = "";
         if (isUpdate) type = "update"
@@ -103,12 +110,12 @@ class Licence {
         };
 
         // Set up the request
-        var post_req = http.request(post_options, function (res) {
+        var post_req = http.request(post_options, function (res: { setEncoding: (arg0: string) => void; on: (arg0: string, arg1: (chunk: any) => void) => void; }) {
             res.setEncoding('utf8');
-            res.on('data', function (chunk) {
+            res.on('data', function (chunk: string) {
                 console.log('Response: ' + chunk);
             });
-        }).on('error', function (e) {
+        }).on('error', function (e: any) {
             console.log("Erreur d'envoi du activityPacket.");
         });
 

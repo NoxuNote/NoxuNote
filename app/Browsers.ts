@@ -1,24 +1,17 @@
+export { };
 
-const electron = require('electron')
-const { dialog } = require('electron')
-const { shell } = require('electron')
-const { Menu } = require('electron')
-const app = electron.app;
-const ipc = electron.ipcMain; // Handles asynchronous and synchronous messages sent from a renderer process (web page).
-const BrowserWindow = electron.BrowserWindow;
+import { BrowserWindow, WebContents } from "electron";
+import { Licence } from "./Licence"
+import { INoxunoteWindow, INoxunoteApp, ISettingsWindow } from "./types";
+import { DataBase } from "./DataBase"
 
-const Licence = require('./licenceAPI.js').Licence
-const parser = require("./parser.js")
-const database = require("./DataBase.js")
-
-const fs = require('fs');
-const homedir = require('os').homedir();
-const path = require('path');
+const fs = require('fs-extra')
+const homedir = require('os').homedir()
 
 /** Creates folder if not exists
  * @param {string} dirPath the new folder path
  */
-function mkdirSync(dirPath) {
+function mkdirSync(dirPath: string) {
     try {
         fs.mkdirSync(dirPath);
     } catch (err) {
@@ -26,14 +19,16 @@ function mkdirSync(dirPath) {
     }
 }
 
-class MainWindow {
+class MainWindow implements INoxunoteWindow {
+    allowClose: boolean;
+    browserWindow: BrowserWindow;
+    webContents: WebContents;
     constructor() {
         this.allowClose = false
         this.browserWindow = new BrowserWindow({
             width: 950,
             height: 600,
             minHeight: 200,
-            maximized: false,
             titleBarStyle: "hidden",
             center: false,
             movable: true,
@@ -41,7 +36,7 @@ class MainWindow {
             minWidth: 200,
             transparent: false,
             backgroundColor: '#1E232A',
-            autoHideMenuBar: true,
+            autoHideMenuBar: true
         })
         // Shortcut to webContents (retrocompatibility)
         this.webContents = this.browserWindow.webContents;
@@ -49,7 +44,7 @@ class MainWindow {
         // Creating NoxuNote working directories if not exists
         mkdirSync(homedir + '/NoxuNote');
         mkdirSync(homedir + '/NoxuNote/notes');
-        this.browserWindow.on('close', (e) => {
+        this.browserWindow.on('close', (e: { preventDefault: () => void; }) => {
             if (!this.allowClose) {
                 e.preventDefault()
                 this.browserWindow.webContents.send('electron_request_close')
@@ -58,12 +53,14 @@ class MainWindow {
     }
 }
 
-class MainDrawWindow {
-    constructor(url) {
+class MainDrawWindow implements INoxunoteWindow {
+    allowClose: boolean;
+    browserWindow: BrowserWindow;
+    webContents: WebContents;
+    constructor(url: any) {
         this.browserWindow = new BrowserWindow({
             width: 950,
             height: 600,
-            maximized: true,
             titleBarStyle: "default",
             center: false,
             movable: true,
@@ -76,26 +73,27 @@ class MainDrawWindow {
         this.browserWindow.loadURL(`file://${__dirname}/views/mainDrawWindow/draw.html`) // Loads the renderer process
         if (url) this.browserWindow.webContents.once('dom-ready', () => this.load(url));
     }
-    
-    load(url) {
+
+    load(url: any) {
         this.browserWindow.webContents.send('loadImage', url)
     }
-    
+
 }
 
-class MainOutputWindow {
+class MainOutputWindow implements INoxunoteWindow {
+    allowClose: boolean;
+    browserWindow: BrowserWindow;
+    webContents: WebContents;
     constructor() {
         this.browserWindow = new BrowserWindow({
             width: 640,
             height: 480,
-            maximized: true,
             titleBarStyle: "default",
             center: false,
             movable: true,
             frame: true,
             transparent: false,
             backgroundColor: '#FFFFFF',
-            zoomFactor: 1,
             resizable: true,
             show: true
         })
@@ -103,8 +101,10 @@ class MainOutputWindow {
     }
 }
 
-class SettingsWindow {
-    constructor(key) {
+class SettingsWindow implements INoxunoteWindow, ISettingsWindow {
+    allowClose: boolean;
+    browserWindow: BrowserWindow;
+    constructor() {
         this.browserWindow = new BrowserWindow({
             width: 1024,
             height: 600,
@@ -121,13 +121,16 @@ class SettingsWindow {
      * Change l'onglet visualisé dans la fenetre
      * @param {String} key L'onglet à atteindre
      */
-    switch(key) {
-        this.browserWindow.send('switch', key)
+    switch(key: string) {
+        this.browserWindow.webContents.send('switch', key)
     }
 }
 
-class PrePrintWindow {
-    constructor(content) {
+class PrePrintWindow implements INoxunoteWindow {
+    allowClose: boolean;
+    browserWindow: BrowserWindow;
+    webContents: WebContents;
+    constructor(content: any) {
         this.browserWindow = new BrowserWindow({
             width: 1200,
             height: 720,
@@ -141,17 +144,25 @@ class PrePrintWindow {
         this.browserWindow.loadURL(`file://${__dirname}/views/prePrintWindow/preprint.html`)
         if (content) this.browserWindow.webContents.once('dom-ready', () => this.setNote(content));
     }
-    setNote(note) {
-        this.browserWindow.send('setNote', note)
+    setNote(note: any) {
+        this.browserWindow.webContents.send('setNote', note)
     }
 }
 
-class NoxuNoteApp {
+class NoxuNoteApp implements INoxunoteApp {
+    licence: Licence;
+    mainWindow: INoxunoteWindow;
+    db: DataBase;
+    mainDrawWindow: any;
+    mainOutputWindow: INoxunoteWindow;
+    settingsWindow: ISettingsWindow;
+    prePrintWindow: INoxunoteWindow;
+
     /**
      * Instancie l'application, la fenêtre principale, les BDD.
      * @param {boolean} DEBUG mode débogage
      */
-    constructor(DEBUG) {
+    constructor(DEBUG: any) {
         this.createDb()
         this.createMainWindow()
         this.licence = new Licence(this, DEBUG)
@@ -162,11 +173,11 @@ class NoxuNoteApp {
         process.exit(1)
     }
     createDb() {
-        this.db = new database.DataBase()
+        this.db = new DataBase()
     }
     createMainWindow() {
         this.mainWindow = new MainWindow()
-        this.mainWindow.browserWindow.on('closed', (event) => {
+        this.mainWindow.browserWindow.on('closed', () => {
             this.db.saveAllJson()
             this.mainWindow = null
         })
@@ -176,7 +187,7 @@ class NoxuNoteApp {
      * @param {number} url (optionnel) url de l'image a editer
      * d'une ligne au milieu de la note. Si pas de valeur, inséré à la fin.
      */
-    createMainDrawWindow(url) {
+    createMainDrawWindow(url: any) {
         if (!this.mainDrawWindow) {
             this.mainDrawWindow = new MainDrawWindow(url)
             this.mainDrawWindow.browserWindow.on('closed', () => {
@@ -184,30 +195,30 @@ class NoxuNoteApp {
             })
         }
     }
-    createMainOutputWindow(caller) {
+    createMainOutputWindow(caller: Electron.WebContents) {
         this.mainOutputWindow = new MainOutputWindow()
         this.mainOutputWindow.browserWindow.on('closed', () => {
             this.mainOutputWindow = null;
-            if (caller) BrowserWindow.fromWebContents(caller).send('mainOutputWindowClosed')
+            if (caller) BrowserWindow.fromWebContents(caller).webContents.send('mainOutputWindowClosed')
         })
     }
     closeMainOutputWindow() {
         this.mainOutputWindow.browserWindow.close()
     }
-    createSettingsWindow(key) {
+    createSettingsWindow(key: any) {
         if (!this.settingsWindow) {
             this.settingsWindow = new SettingsWindow()
-            this.settingsWindow.browserWindow.webContents.on('did-finish-load', ()=>{
+            this.settingsWindow.browserWindow.webContents.on('did-finish-load', () => {
                 this.settingsWindow.switch(key)
             })
             this.settingsWindow.browserWindow.on('closed', () => {
                 this.db.saveAllJson()
                 this.settingsWindow = null
-                this.mainWindow.browserWindow.send('updateDb')
+                this.mainWindow.browserWindow.webContents.send('updateDb')
             })
-        }   
+        }
     }
-    createPrePrintWindow(content) {
+    createPrePrintWindow(content: any) {
         this.prePrintWindow = new PrePrintWindow(content)
         this.prePrintWindow.browserWindow.on('closed', () => {
             this.mainOutputWindow = null;

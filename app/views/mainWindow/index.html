@@ -3,20 +3,20 @@
 <head>
 	<title>NoxuNote</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
-	<link rel="stylesheet" type="text/css" href="../../node_modules/html5tooltipsjs/html5tooltips.css">
-	<link rel="stylesheet" type="text/css" href="../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
+	<link rel="stylesheet" type="text/css" href="../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.css">
+	<link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
 	<link rel="stylesheet" href="./materializecss-custom.css">
 	<link rel="stylesheet" href="./bootstrap-sandstone.min.css">
 	<link rel="stylesheet" href="./customBootstrap.css">
 	<link rel="stylesheet" href="./customMaterialize.css">
 	<link rel="stylesheet" href="./fullscreenLoader.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
-	<link rel="stylesheet" href="../../node_modules/summernote/dist/summernote-bs4.css">
+	<link rel="stylesheet" href="../../../node_modules/summernote/dist/summernote-bs4.css">
 	<link rel="stylesheet" href="./customEditor.css">
 	<link rel="stylesheet" href="./modals.css">
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-	<script src="../../node_modules/code-prettify/loader/run_prettify.js"></script>	
+	<script src="../../../node_modules/code-prettify/loader/run_prettify.js"></script>	
 </head>
 
 <header>
@@ -40,9 +40,9 @@
 		</div>
 	</div>
 	<div id="toDoBlock" class="toDoBlock">
-		<i class="fas fa-times leftPannelClose" style="top: 5px" onClick="toDo()"></i>
+		<i id="triggerTodo2" class="fas fa-times leftPannelClose" style="top: 5px"></i>
 		<div id="toDoBlockheader" class="toDoTitle">À faire</div>
-		<textarea name="toDoContent" id="toDoContent" onKeyUp="toDoKeyPressed(event)" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
+		<textarea name="toDoContent" id="toDoContent" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
 	</div>
 
 	<div id="menuGaucheSauver" class="mlateral mlateral-gauche">
@@ -132,13 +132,13 @@
 	<div id="menuBasCalc">
 		<div style="float: left; margin-top: 1px;  margin-bottom: 1px;">
 			<span class="calcText">Calculateur</span> 
-			<input id="calc" type="text" name="expr" onKeyDown="calcEvaluate()">
+			<input id="calc" type="text" name="expr">
 			<span class="calcText">=</span>
 			<span id="calcResult" class="calcText">0</span>
 		</div>
 		<div style="float: right; margin-top: 1px;  margin-bottom: 1px; margin-right: 5px;">
 			<span class="calcText">Dérivateur</span> 
-			<input id="calcDerivative" type="text" name="expr" onKeyDown="calcEvaluateDerivative()">
+			<input id="calcDerivative" type="text" name="expr">
 			<span class="calcText">=</span>
 			<span id="calcResultDerivative" class="calcText">0</span>
 		</div>
@@ -152,10 +152,10 @@
 			<li class="multimenu_btn" onclick="openSettings()"><a class="btn-floating red" data-tooltip="Réglages" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-cog"></i>
 			</a></li>
-			<li class="multimenu_btn" onclick="toDo()"><a class="btn-floating orange darken-1" data-tooltip="Block notes" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li id="triggerTodo" class="multimenu_btn"><a class="btn-floating orange darken-1" data-tooltip="Block notes" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-sticky-note"></i>
 			</a></li>
-			<li class="multimenu_btn" onclick="boutonCalculatrice()"><a class="btn-floating yellow darken-1" data-tooltip="Calculatrice" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li id="triggerCalc" class="multimenu_btn"><a class="btn-floating yellow darken-1" data-tooltip="Calculatrice" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-calculator"></i>
 			</a></li>
 			<li class="multimenu_btn" onclick="openExport()"><a class="btn-floating green" data-tooltip="Exporter la note" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
@@ -368,7 +368,7 @@
 </body>
 
 <footer>
-	<script src="../../node_modules/code-prettify/loader/run_prettify.js?skin=sons-of-obsidian"></script>
+	<script src="../../../node_modules/code-prettify/loader/run_prettify.js?skin=sons-of-obsidian"></script>
 	<style>
 	.prettyprint {
 		background: rgba(0, 0, 0, 0.34);
@@ -376,14 +376,15 @@
 		margin: 0px;
 	}	
 	</style>
-	<script src="../../node_modules/html5tooltipsjs/html5tooltips.js"></script>
-	<script src="../../node_modules/jquery/dist/jquery.min.js"></script>
-	<script src="../../node_modules/materialize-css/dist/js/materialize.min.js"></script>
-	<script src="../../node_modules/popper.js/dist/umd/popper.min.js"></script>
-	<script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
-	<script src="../../node_modules/summernote/dist/summernote-bs4.min.js"></script>
-	<script src="../../node_modules/summernote/lang/summernote-fr-FR.js"></script>
-	<script src="../../node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
+	<script>var exports = {"__esModule": true};</script>
+	<script src="../../../node_modules/html5tooltipsjs/html5tooltips.js"></script>
+	<script src="../../../node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="../../../node_modules/materialize-css/dist/js/materialize.min.js"></script>
+	<script src="../../../node_modules/popper.js/dist/umd/popper.min.js"></script>
+	<script src="../../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="../../../node_modules/summernote/dist/summernote-bs4.min.js"></script>
+	<script src="../../../node_modules/summernote/lang/summernote-fr-FR.js"></script>
+	<script src="../../../node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
 	<script src="draggable.js"></script>
 	<script src="mainWindow.js"></script> <!-- Electron Script -->
 	<script src="keyShortcuts.js"></script> <!-- Electron Script -->

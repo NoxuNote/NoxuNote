@@ -1,9 +1,12 @@
+import { ipcRenderer } from "electron";
+
 /**
  * Ce script à pour d'attribuer différents comportements VISUELS de l'interface selon
  * le système d'exploitation utilisé.
  * (darwin = macOS)
  */
 const platform = require('os').platform()
+
 
 // Sur mac
 if (platform === 'darwin') {
