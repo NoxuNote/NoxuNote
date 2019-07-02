@@ -17,6 +17,7 @@
       "mathjax",
       "electron",
       "node",
+      "mathjs"
     ]
   },
   "include": [

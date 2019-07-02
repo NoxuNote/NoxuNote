@@ -328,12 +328,6 @@ function loadExternalLink(URL: string) {
 }
 ipcMain.on('loadExternalLink', (event: any, URL: any) => loadExternalLink(URL))
 
-ipcMain.on('saveToDoContent', (event: any, content: any) => {
-	var path = homedir + '/NoxuNote/todo.txt';
-	try { fs.writeFileSync(path, content) }
-	catch (e) { console.log('Failed to save the file !' + e); }
-})
-
 ipcMain.on('minimizeWindow', (event: { sender: Electron.WebContents; }) => BrowserWindow.fromWebContents(event.sender).minimize())
 
 ipcMain.on('maximizeWindow', (event: { sender: Electron.WebContents; })=>{

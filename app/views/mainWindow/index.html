@@ -40,9 +40,9 @@
 		</div>
 	</div>
 	<div id="toDoBlock" class="toDoBlock">
-		<i class="fas fa-times leftPannelClose" style="top: 5px" onClick="toDo()"></i>
+		<i id="triggerTodo2" class="fas fa-times leftPannelClose" style="top: 5px"></i>
 		<div id="toDoBlockheader" class="toDoTitle">À faire</div>
-		<textarea name="toDoContent" id="toDoContent" onKeyUp="toDoKeyPressed(event)" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
+		<textarea name="toDoContent" id="toDoContent" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
 	</div>
 
 	<div id="menuGaucheSauver" class="mlateral mlateral-gauche">
@@ -152,7 +152,7 @@
 			<li class="multimenu_btn" onclick="openSettings()"><a class="btn-floating red" data-tooltip="Réglages" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-cog"></i>
 			</a></li>
-			<li class="multimenu_btn" onclick="toDo()"><a class="btn-floating orange darken-1" data-tooltip="Block notes" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li id="triggerTodo" class="multimenu_btn"><a class="btn-floating orange darken-1" data-tooltip="Block notes" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-sticky-note"></i>
 			</a></li>
 			<li id="triggerCalc" class="multimenu_btn"><a class="btn-floating yellow darken-1" data-tooltip="Calculatrice" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">

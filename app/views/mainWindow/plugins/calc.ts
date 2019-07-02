@@ -1,5 +1,6 @@
 import { NoxunotePlugin } from "../../../types";
-const math = require("mathjs")
+
+import math = require('mathjs');
 
 export type CalcElements = {
   menu: HTMLElement
@@ -7,7 +8,7 @@ export type CalcElements = {
   derivativeInput: HTMLInputElement,
   normalOutput: HTMLElement,
   derivativeOutput: HTMLElement,
-  triggerElements: HTMLElement[]
+  triggers: HTMLElement[]
 }
 
 export class CalcPlugin implements NoxunotePlugin {
@@ -21,15 +22,15 @@ export class CalcPlugin implements NoxunotePlugin {
     this.elts.normalInput.addEventListener('keyup', ()=>this.calcEvaluate())
     this.elts.derivativeInput.addEventListener('keyup', ()=>this.calcEvaluateDerivative())
     // Opens the calculator
-    this.elts.triggerElements.forEach( (e:HTMLElement) => {
-      e.addEventListener('click', ()=>this.boutonCalculatrice())
+    this.elts.triggers.forEach( (e:HTMLElement) => {
+      e.addEventListener('click', ()=>this.toggle())
     })
   }
 
   /**
   * Affiche/Masque le volet menu calculatrice
   */
-  public boutonCalculatrice() {
+  public toggle() {
     this.elts.menu.classList.toggle("appear");
   }
 
@@ -63,7 +64,7 @@ export class CalcPlugin implements NoxunotePlugin {
     setTimeout(() => {
       let output = this.elts.derivativeOutput
       try {
-        let result = math.derivative(this.elts.derivativeInput.value, "x");
+        let result = math.derivative(this.elts.derivativeInput.value, "x").toString();
         if (result.toString().length < 40) {
           if (result != "undefined") {
             output.innerHTML = result;

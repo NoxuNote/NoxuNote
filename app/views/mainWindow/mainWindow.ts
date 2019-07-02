@@ -27,6 +27,7 @@ var title = "not defined";
 import * as $ from "jquery";
 import { CalcPlugin } from './plugins/calc';
 import { NoxunotePlugin } from "../../types";
+import { TodoPlugin } from "./plugins/todo";
 
 
 declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
@@ -38,7 +39,7 @@ const elts = {
 	},
 	calc: {
 		menu: document.getElementById('menuBasCalc'),
-		triggerElements: [document.getElementById("triggerCalc")],
+		triggers: [document.getElementById("triggerCalc")],
 		normalInput: <HTMLInputElement>document.getElementById("calc"),
 		normalOutput: document.getElementById('calcResult'),
 		derivativeInput: <HTMLInputElement>document.getElementById("calcDerivative"),
@@ -53,8 +54,10 @@ const elts = {
 		menu: document.getElementById('menuGaucheOuvrir')
 	},
 	toDo: {
+		triggers: [document.getElementById('triggerTodo'), document.getElementById('triggerTodo2')],
 		menu: document.getElementById('toDoBlock'),
-		content: <HTMLInputElement>document.getElementById("toDoContent")
+		content: <HTMLInputElement>document.getElementById("toDoContent"),
+		ipc: ipc
 	},
 	matieres: {
 		matNeutre: <HTMLInputElement>document.getElementById('matneutre')
@@ -67,7 +70,8 @@ const elts = {
 }
 
 var plugins: NoxunotePlugin[] = [
-	new CalcPlugin(elts.calc)
+	new CalcPlugin(elts.calc),
+	new TodoPlugin(elts.toDo)
 ]
 
 // CTRL on windows, CMD on mac
@@ -144,26 +148,6 @@ function boutonMenuGaucheOuvrir() {
 		elts.menuGaucheOuvrir.menu.classList.toggle("appear");
 	}
 }
-
-
-/**
-* Affiche/Masque le volet menu Todo
-*/
-var hiddenToDo = true;
-function toDo() {
-	if (hiddenToDo) {
-		hiddenToDo = false;
-		// elts.menuGauche.sauverInput.style.display = 'block';
-		elts.toDo.menu.classList.toggle("appear");
-	} else {
-		hiddenToDo = true;
-		// elts.menuGauche.sauverInput.style.display = 'none';
-		// http://jsfiddle.net/qrc8m/
-		elts.toDo.menu.classList.toggle("appear");
-	}
-}
-
-
 
 /**
  * Ouvre une fenêtre de dessin
@@ -366,27 +350,6 @@ function newFile() {
 	}	
 }
 
-/**
- * Enregistre le contenu de la todo list lors de l'appui
- * sur la touche espace.
- */
-function toDoKeyPressed(event: any) {
-	var content = elts.toDo.content.value
-	ipc.send('saveToDoContent', content)
-}
-
-/**
- * Met à jour le contenu du bloc notes avec le contenu du fichier
- */
-function loadTodoFile() {
-	var fileContent = ""
-	try {
-		fileContent = fs.readFileSync(homedir + "/NoxuNote/todo.txt").toString();
-	} catch (e) {
-		fileContent = ""
-	}
-	elts.toDo.content.value = fileContent
-}
 
 function openSettings(key: any) {
 	ipc.send('openSettings', key)
@@ -724,9 +687,6 @@ function refreshDictionnary() {
  ***************************************************************************************************/
 // Génération de la liste des fichiers dans "Ouvrir"
 generateFileList()
-
-// Remplissage de la todolist
-loadTodoFile()
 
 // Enable tab character insertion on default input
 generateMatList()
