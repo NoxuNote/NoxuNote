@@ -18,6 +18,7 @@ const DEBUG = true
 const { Menu, dialog, app, BrowserWindow, ipcMain  } = require('electron')
 // Importing NoxuNote librairies
 import { NoxuNoteApp } from "./Browsers";
+import { fileURLToPath } from "url";
 // Importing external modules
 const fs				= require('fs-extra')
 const homedir		= require('os').homedir()
@@ -386,19 +387,16 @@ ipcMain.on('db_addMat', (event: { returnValue: any; }, name: any, colorcode: any
 ipcMain.on('db_editMat', (event: { returnValue: any; }, property: any, value: any, name: any) => { event.returnValue = noxuApp.db.matieres.setProperty(property, value, name) } )
 ipcMain.on('db_removeMat', (event: { returnValue: any; }, name: any) => { event.returnValue = noxuApp.db.matieres.removeMat(name) } )
 ipcMain.on('db_getColors', (event: { returnValue: any; }) => { event.returnValue = noxuApp.db.colors.rawJson })
-ipcMain.on('db_getFileList', (event: { returnValue: any; })=> { event.returnValue = noxuApp.db.getFileList() })
-ipcMain.on('db_setNoteProperty', (event: { returnValue: any; }, property: any, value: any, name: any) => { event.returnValue = noxuApp.db.notes.setProperty(property, value, name) })
-ipcMain.on('db_deleteNote', (event: { returnValue: any; }, name: any) => event.returnValue = noxuApp.db.notes.deleteNote(name))
 ipcMain.on('db_getAssocList', (event: { returnValue: any; }) => event.returnValue = noxuApp.db.dactylo.rawJson)
 ipcMain.on('db_removeAssoc', (event: { returnValue: any; }, input: any) => event.returnValue = noxuApp.db.dactylo.removeAssoc(input))
 ipcMain.on('db_addAssoc', (event: { returnValue: any; }, input: any, output: any) => event.returnValue = noxuApp.db.dactylo.addAssoc(input, output))
 
 // Notes
-ipcMain.on('db_notes_getNoteList', (event: any, title: string, content: string, matiere?: number, isfavorite?: boolean) => {
-	event.returnValue = noxuApp.db.notes.saveNewNote(title, content, matiere, isfavorite) 
+ipcMain.on('db_notes_getNoteList', (event: any) => {
+	event.returnValue = noxuApp.db.notes.getNoteList()
 })
-ipcMain.on('db_notes_saveNewNote', (event: any, title: string, content: string, matiere?: number, isfavorite?: boolean) => {
-	event.returnValue = noxuApp.db.notes.saveNewNote(title, content, matiere, isfavorite) 
+ipcMain.on('db_notes_saveNewNote', (event: any, title: string, content: string, options: {matiere?: number, isfavorite?: boolean, filename?: string}) => {
+	event.returnValue = noxuApp.db.notes.saveNewNote(title, content, options) 
 })
 ipcMain.on('db_notes_saveNote', (event: any, note: Note) => {
 	event.returnValue = noxuApp.db.notes.saveNote(note) 

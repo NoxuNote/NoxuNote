@@ -69,9 +69,15 @@
 	</div>
 
 	<div id="menuGaucheOuvrir" class="mlateral mlateral-gauche">
-		<i class="fas fa-times leftPannelClose" onClick='boutonMenuGaucheOuvrir()'></i>
-		<h2 style="margin-top: 5px; margin-bottom: 5px; font-size: 1.8em;">Ouvrir</h2>
-		<div id="listFiles"></div>
+		<i id="menuGaucheOuvrirTrigger" class="fas fa-times leftPannelClose"></i>
+		<div id="fileCategorySelector">
+			<h2>Ce PC <button>+</button></h2>
+			<div id="allMat" class="matiere">
+				<i class="far fa-folder-open"></i> Toutes
+			</div>
+			<div id="matList"></div>
+		</div>
+		<div id="filesList"></div>
 		<div class="savebutton" onclick="openSettings('Notes')">Gérer les notes</div>
 	</div>
 

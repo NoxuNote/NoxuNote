@@ -28,6 +28,7 @@ import * as $ from "jquery";
 import { CalcPlugin } from './plugins/calc';
 import { NoxunotePlugin } from "../../types";
 import { TodoPlugin } from "./plugins/todo";
+import { BrowsePlugin } from "./plugins/browse";
 
 
 declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
@@ -51,13 +52,16 @@ const elts = {
 		sauverInput: <HTMLInputElement>document.getElementById('menuGaucheSauverInput')
 	},
 	menuGaucheOuvrir: {
-		menu: document.getElementById('menuGaucheOuvrir')
+		menu: document.getElementById('menuGaucheOuvrir'),
+		triggers: [document.getElementById('menuGaucheOuvrirTrigger')],
+		allMat: document.getElementById('allMat'),
+		matList: document.getElementById('matList'),
+		filesList: document.getElementById('filesList')
 	},
 	toDo: {
 		triggers: [document.getElementById('triggerTodo'), document.getElementById('triggerTodo2')],
 		menu: document.getElementById('toDoBlock'),
-		content: <HTMLInputElement>document.getElementById("toDoContent"),
-		ipc: ipc
+		content: <HTMLInputElement>document.getElementById("toDoContent")
 	},
 	matieres: {
 		matNeutre: <HTMLInputElement>document.getElementById('matneutre')
@@ -71,7 +75,8 @@ const elts = {
 
 var plugins: NoxunotePlugin[] = [
 	new CalcPlugin(elts.calc),
-	new TodoPlugin(elts.toDo)
+	new TodoPlugin(elts.toDo),
+	new BrowsePlugin(elts.menuGaucheOuvrir, ipc)
 ]
 
 // CTRL on windows, CMD on mac
@@ -163,7 +168,7 @@ function dessiner(url?: string) {
 function save_as_noxunote() {
 	ipc.sendSync('save_as_noxunote', title, getMat(), editor.summernote('code'));
 	setIsFileModified(false)
-	generateFileList()
+	plugins.find(p => p instanceof BrowsePlugin).init()
 }
 
 
@@ -205,92 +210,92 @@ function setNoteTitle(newtitle: string) {
 	}
 }
 
-/**
- * Affichage de la liste des fichiers dans le menu sauver
- */
-function generateFileList() {
-	var listFilesDiv = elts.listFiles
-	var matieres = ipcRenderer.sendSync('db_getMatList')
-	var files = ipcRenderer.sendSync('db_getFileList')
+// /**
+//  * Affichage de la liste des fichiers dans le menu sauver
+//  */
+// function generateFileList() {
+// 	var listFilesDiv = elts.listFiles
+// 	var matieres = ipcRenderer.sendSync('db_getMatList')
+// 	var files = ipcRenderer.sendSync('db_getFileList')
 
-	// Nettoyage des fichiers affichés
-	while (listFilesDiv.firstChild) {
-		listFilesDiv.removeChild(listFilesDiv.firstChild);
-	}
+// 	// Nettoyage des fichiers affichés
+// 	while (listFilesDiv.firstChild) {
+// 		listFilesDiv.removeChild(listFilesDiv.firstChild);
+// 	}
 
-	// Mémorise les index des fichiers affichés
-	let shownFiles: string[] = []
+// 	// Mémorise les index des fichiers affichés
+// 	let shownFiles: string[] = []
 
-	// Ajoute un fichier à la liste des fichiers à ouvrir
-	let addFile = (f: any) => {
-		// Création de la pastille
-		var matDiv = document.createElement('div')
-		matDiv.classList.add("pastille")
-		matDiv.innerHTML = "•"
-		matDiv.style.color = f.color
-		listFilesDiv.appendChild(matDiv)
+// 	// Ajoute un fichier à la liste des fichiers à ouvrir
+// 	let addFile = (f: any) => {
+// 		// Création de la pastille
+// 		var matDiv = document.createElement('div')
+// 		matDiv.classList.add("pastille")
+// 		matDiv.innerHTML = "•"
+// 		matDiv.style.color = f.color
+// 		listFilesDiv.appendChild(matDiv)
 
-		// Création du texte
-		var innerDiv = document.createElement('div')
-		innerDiv.style.display = "inline"
-		innerDiv.id = "file"
-		// Ajout du tooltip
-		let tooltip: { set: (arg0: { animateFunction: string; color: string; stickDistance: number; contentText: string; stickTo: string; target: HTMLDivElement; }) => void; show: () => void; hide: { (): void; (): void; }; mount: () => void; }
-		if (f.lastedit) {
-			tooltip = new HTML5TooltipUIComponent;
-			tooltip.set({
-				animateFunction: "spin",
-				color: "slate",
-				stickDistance: 20,
-				contentText: '<i class="fas fa-clock-o"></i> Dernière modif : ' + f.lastedit,
-				stickTo: "right",
-				target: innerDiv
-			});
-			innerDiv.addEventListener('mouseenter', () => tooltip.show());
-			innerDiv.addEventListener('mouseleave', () => tooltip.hide());
-			innerDiv.addEventListener('click', () => tooltip.hide());
-			tooltip.mount();
-		}
-		const nomNote = f.nom.replace(".txt", "")
-		innerDiv.innerHTML = nomNote
+// 		// Création du texte
+// 		var innerDiv = document.createElement('div')
+// 		innerDiv.style.display = "inline"
+// 		innerDiv.id = "file"
+// 		// Ajout du tooltip
+// 		let tooltip: { set: (arg0: { animateFunction: string; color: string; stickDistance: number; contentText: string; stickTo: string; target: HTMLDivElement; }) => void; show: () => void; hide: { (): void; (): void; }; mount: () => void; }
+// 		if (f.lastedit) {
+// 			tooltip = new HTML5TooltipUIComponent;
+// 			tooltip.set({
+// 				animateFunction: "spin",
+// 				color: "slate",
+// 				stickDistance: 20,
+// 				contentText: '<i class="fas fa-clock-o"></i> Dernière modif : ' + f.lastedit,
+// 				stickTo: "right",
+// 				target: innerDiv
+// 			});
+// 			innerDiv.addEventListener('mouseenter', () => tooltip.show());
+// 			innerDiv.addEventListener('mouseleave', () => tooltip.hide());
+// 			innerDiv.addEventListener('click', () => tooltip.hide());
+// 			tooltip.mount();
+// 		}
+// 		const nomNote = f.nom.replace(".txt", "")
+// 		innerDiv.innerHTML = nomNote
 		
-		innerDiv.onclick = () => {
-			// Lors d'un clic, définit l'action de la modale de confirmation
-			// sur le chargement de la nouvelle note
-			if (isFileModified) {
-				saveConfirmationModalAction = ()=>load_noxunote(nomNote) // On définit l'action de confirmation
-				modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
-			} else { // Si aucune modification actuellement, on charge directement la note
-				load_noxunote(nomNote)
-			}
-		}
+// 		innerDiv.onclick = () => {
+// 			// Lors d'un clic, définit l'action de la modale de confirmation
+// 			// sur le chargement de la nouvelle note
+// 			if (isFileModified) {
+// 				saveConfirmationModalAction = ()=>load_noxunote(nomNote) // On définit l'action de confirmation
+// 				modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
+// 			} else { // Si aucune modification actuellement, on charge directement la note
+// 				load_noxunote(nomNote)
+// 			}
+// 		}
 
-		listFilesDiv.appendChild(innerDiv);
+// 		listFilesDiv.appendChild(innerDiv);
 
-		// Ajout d'un br et inscription dans la liste des éléments affichés
-		listFilesDiv.appendChild(document.createElement('br'))
-		shownFiles.push(f.nom)
-	}
-	let addCategory = (name: string) => {
-		listFilesDiv.appendChild(document.createElement('hr'))
-		var innerDiv = document.createElement('h5')
-		innerDiv.style.display = "inline"
-		innerDiv.title = name
-		innerDiv.innerHTML = '<span style="color: #EEEEEE">' + name + '</span>'
-		listFilesDiv.appendChild(innerDiv)
-		listFilesDiv.appendChild(document.createElement('br'))
-	}
+// 		// Ajout d'un br et inscription dans la liste des éléments affichés
+// 		listFilesDiv.appendChild(document.createElement('br'))
+// 		shownFiles.push(f.nom)
+// 	}
+// 	let addCategory = (name: string) => {
+// 		listFilesDiv.appendChild(document.createElement('hr'))
+// 		var innerDiv = document.createElement('h5')
+// 		innerDiv.style.display = "inline"
+// 		innerDiv.title = name
+// 		innerDiv.innerHTML = '<span style="color: #EEEEEE">' + name + '</span>'
+// 		listFilesDiv.appendChild(innerDiv)
+// 		listFilesDiv.appendChild(document.createElement('br'))
+// 	}
 
-	// Affichage des matieres
-	matieres.forEach((m: { nom: any; }) => {
-		addCategory(m.nom)
-		files.filter((e: { [x: string]: any; }) => e['matiere'] === m.nom).forEach(addFile)
-	})
+// 	// Affichage des matieres
+// 	matieres.forEach((m: { nom: any; }) => {
+// 		addCategory(m.nom)
+// 		files.filter((e: { [x: string]: any; }) => e['matiere'] === m.nom).forEach(addFile)
+// 	})
 
-	// Affichage des éléments non inscrits
-	addCategory("Non triés")
-	files.filter((e: { nom: any; }) => !shownFiles.includes(e.nom)).forEach(addFile)
-}
+// 	// Affichage des éléments non inscrits
+// 	addCategory("Non triés")
+// 	files.filter((e: { nom: any; }) => !shownFiles.includes(e.nom)).forEach(addFile)
+// }
 
 /**
  * Affichage des matières disponibles dans SAUVER
@@ -685,8 +690,6 @@ function refreshDictionnary() {
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/
-// Génération de la liste des fichiers dans "Ouvrir"
-generateFileList()
 
 // Enable tab character insertion on default input
 generateMatList()
@@ -700,7 +703,7 @@ ipcRenderer.on('setNoteTitle', (event: any, title: any) => setNoteTitle(title))
 ipcRenderer.on('setNoteMatiere', (event: any, matiere: any) => setNoteMatiere(matiere))
 ipcRenderer.on('callSaveAsNoxuNote', (event: any) => save_as_noxunote())
 ipcRenderer.on('resetIsFileModified', (event: any) => setIsFileModified(false))
-ipcRenderer.on('updateDb', (event: any) => { generateFileList(); generateMatList(); refreshDictionnary() })
+ipcRenderer.on('updateDb', (event: any) => { plugins.find(p=>p instanceof BrowsePlugin).init(); generateMatList(); refreshDictionnary() })
 ipcRenderer.on('setNoteContent', (event: any, note: any) => setNoteContent(note))
 ipcRenderer.on('insertDrawing', (event: any, url: any) => insertImg(url))
 ipcRenderer.on('refreshImg', (event: any, url: any) => refreshImg(url))

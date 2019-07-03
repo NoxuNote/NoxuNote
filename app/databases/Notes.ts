@@ -30,11 +30,17 @@ export class Notes extends JSONDataBase {
         this.rawJson = fs.readJSONSync(this.path);
         // reset parsedJson
         this.parsedJson = []
-        this.rawJson.array.forEach((element: any) => {
+        let files: String[] = this.getFiles()
+        this.rawJson.forEach((element: any) => {
             // Vérification que l'element est complet
-            if (element.filename && element.lastedit && element.isfavorite!=undefined) {
-                console.error("(ERREUR) Dans user_notes.json, objet incorrect ", element.toString())
+            if (!element.filename || !element.lastedit || element.isfavorite==undefined) {
+                console.error("(ERREUR) Dans user_notes.json, objet incorrect " + element.toString())
                 return
+            }
+            // Vérification que le fichier existe
+            if (!files.includes(element.filename)) {
+                console.warn("(WARNING) Fichier user_notes.json non présent dans le système de fichiers")
+                return 
             }
             /**
              * Contenu dans la beta : filename, lastedit, isfavorite
@@ -48,6 +54,7 @@ export class Notes extends JSONDataBase {
             // Parse rawjson to Note
             let meta: NoteMetadata = {
                 id: id,
+                title: element.title ? element.title : element.filename,
                 filename: element.filename,
                 lastedit: element.lastedit,
                 isfavorite: element.isfavorite
@@ -56,6 +63,15 @@ export class Notes extends JSONDataBase {
             if (element.matiere) meta.matiere = element.matiere
             this.parsedJson.push(meta)
         });
+        // Link files without metadata
+        files.forEach((f:string) => {
+            let parsedJsonSearch = this.parsedJson.filter( (m:NoteMetadata) => m.filename == f )
+            console.warn(`Le fichier ${f} n'avait pas de métadata associée, création ...`)
+            if (parsedJsonSearch.length === 0) {
+                // the file f has no NoteMetadata associated, create it
+                this.saveNewNote(Notes.unDotTxt(f), fs.readFileSync(Notes.notesPath+f, {encoding: 'utf-8'}).toString(), {filename: f})
+            }
+        })
         // Save parsedJson
         this.saveJson()
     }
@@ -69,13 +85,20 @@ export class Notes extends JSONDataBase {
     }
 
     /**
-     * Ajoute .txt a  un nom de note
+     * Ajoute .txt a un nom de note
      * @param name Nom de la note
      */
     public static dotTxt(name: string): string {
         if (/.txt$/g.exec(name))
             return name;
         return name + '.txt';
+    }
+    /**
+     * Supprime .txt a un nom de note
+     * @param name Nom de la note
+     */
+    public static unDotTxt(name: string): string {
+        return name.replace(/.txt$/g, '')
     }
 
     // /**
@@ -119,18 +142,18 @@ export class Notes extends JSONDataBase {
      * Crée une nouvelle note en ayant au moins un **titre** et le **contenu**.
      * @param title Titre de la note
      * @param content Contenu de la note
-     * @param matiere (Optionnel) Matière de la note
-     * @param isfavorite (Optionnel) Note favorite
+     * @param options {matiere?: number, isfavorite?: boolean, filename?: string}
      */
-    public saveNewNote(title: string, content: string, matiere?: number, isfavorite?: boolean): Note {
+    public saveNewNote(title: string, content: string, options?: {matiere?: number, isfavorite?: boolean, filename?: string}): Note {
         const generatedId: string = Notes.generateId()
         let metadata: NoteMetadata = {
             id: generatedId,
-            filename: Notes.dotTxt(generatedId),
+            title: title,
+            filename: options.filename ? options.filename : Notes.dotTxt(generatedId),
             lastedit: Notes.getDate(),
-            isfavorite: isfavorite!=undefined ? isfavorite : false
+            isfavorite: options.isfavorite!=undefined ? options.isfavorite : false
         }
-        if (matiere) metadata.matiere = matiere
+        if (options.matiere) metadata.matiere = options.matiere
         let newNote: Note = {
             meta: metadata,
             content: content
@@ -148,7 +171,7 @@ export class Notes extends JSONDataBase {
     }
     public getNote(noteId: string): Note {
         let meta:NoteMetadata = this.parsedJson.find( (data: NoteMetadata) => data.id === noteId)
-        let content:string = fs.readFileSync(Notes.notesPath + meta.filename).toString()
+        let content:string = fs.readFileSync(Notes.notesPath + meta.filename, {encoding: 'utf-8'}).toString()
         return {
             meta: meta,
             content: content
@@ -174,7 +197,7 @@ export class Notes extends JSONDataBase {
          * Écriture des metadata
          */
         let index: number = this.parsedJson.findIndex( (meta:NoteMetadata) => meta.id === note.meta.id )
-        if (index == -1) 
+        if (index !== -1) 
             this.parsedJson[index] = note.meta // La note éxiste déjà dans user_notes.json, On met à jour les données
         else
             this.parsedJson.push(note.meta) // La note n'éxiste pas dans user_notes.json, On la crée
@@ -182,7 +205,7 @@ export class Notes extends JSONDataBase {
         /**
          * Écriture du contenu de la note
          */
-        fs.writeFileSync(note.meta.filename, note.content)
+        fs.writeFileSync(Notes.notesPath + note.meta.filename, note.content)
     }
 
     /**

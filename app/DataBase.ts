@@ -52,40 +52,40 @@ export class DataBase {
         this.notes.saveJson()
         this.dactylo.saveJson()
     }
-    /**
-     * Renvoie une liste d'objets contenant chacun les informations d'une note enregistrée.
-     */
-    getFileList() {
-        var json = []
-        // On récupère la liste des fichiers
-        var files = fs.readdirSync(this.notesFolder)
-        // Pour chaque fichier trouvé
-        for (var i = 0; i < files.length; i++) {
-            // S'il ne commence pas par un point
-            if (files[i].substring(0, 1) != ".") {
-                // Récupération des données associées à chaque fichier
-                var details = this.notes.getNoteMetadata(files[i])
-                if (details) {
-                    json.push({
-                        "nom": files[i].replace(/\.txt/g, ''),
-                        "matiere": details.matiere,
-                        "lastedit": details.lastedit,
-                        "isfavorite": details.isfavorite,
-                        "color": this.matieres.getColor(details.matiere)
-                    })
-                    // Si aucune donnée n'est trouvée, on ne renseigne pas l'objet json
-                } else {
-                    json.push({
-                        "nom": files[i].replace(/\.txt/g, ''),
-                        "matiere": null,
-                        "lastedit": null,
-                        "isfavorite": null,
-                        "color": null
-                    })
-                }
-            }
-        }
-        // On renvoie l'objet final
-        return json
-    }
+    // /**
+    //  * Renvoie une liste d'objets contenant chacun les informations d'une note enregistrée.
+    //  */
+    // getFileList() {
+    //     var json = []
+    //     // On récupère la liste des fichiers
+    //     var files = fs.readdirSync(this.notesFolder)
+    //     // Pour chaque fichier trouvé
+    //     for (var i = 0; i < files.length; i++) {
+    //         // S'il ne commence pas par un point
+    //         if (files[i].substring(0, 1) != ".") {
+    //             // Récupération des données associées à chaque fichier
+    //             var details = this.getNoteMetadata(files[i])
+    //             if (details) {
+    //                 json.push({
+    //                     "nom": files[i].replace(/\.txt/g, ''),
+    //                     "matiere": details.matiere,
+    //                     "lastedit": details.lastedit,
+    //                     "isfavorite": details.isfavorite,
+    //                     "color": this.matieres.getColor(details.matiere)
+    //                 })
+    //                 // Si aucune donnée n'est trouvée, on ne renseigne pas l'objet json
+    //             } else {
+    //                 json.push({
+    //                     "nom": files[i].replace(/\.txt/g, ''),
+    //                     "matiere": null,
+    //                     "lastedit": null,
+    //                     "isfavorite": null,
+    //                     "color": null
+    //                 })
+    //             }
+    //         }
+    //     }
+    //     // On renvoie l'objet final
+    //     return json
+    // }
 }

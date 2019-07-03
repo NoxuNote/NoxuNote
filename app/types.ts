@@ -70,6 +70,7 @@ export class JSONDataBase {
 //
 export type NoteMetadata = {
   id: string;
+  title: string;
   filename: string;
   lastedit: string;
   isfavorite: boolean;

@@ -9,7 +9,8 @@
   "main": "main.js",
   "scripts": {
     "electron:run": "./node_modules/.bin/electron ./dist/main.js",
-    "start": "tsc & npm run buildassets & npm run electron:run",
+    "build": "tsc & npm run buildassets",
+    "start": "npm run build & npm run electron:run",
     "buildassets": "copyfiles -u 1 app/**/* dist/"
   },
   "author": "Léo Rolland",

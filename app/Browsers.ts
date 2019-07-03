@@ -7,6 +7,7 @@ import { DataBase } from "./DataBase"
 
 const fs = require('fs-extra')
 const homedir = require('os').homedir()
+const process = require('process')
 
 /** Creates folder if not exists
  * @param {string} dirPath the new folder path
@@ -162,7 +163,7 @@ export class NoxuNoteApp {
      * Instancie l'application, la fenêtre principale, les BDD.
      * @param {boolean} DEBUG mode débogage
      */
-    constructor(DEBUG: any) {
+    constructor(public DEBUG: any) {
         this.createDb()
         this.createMainWindow()
         this.licence = new Licence(this, DEBUG)

@@ -6,8 +6,7 @@ const fs        = require('fs-extra')
 export type TodoElements = {
   triggers: HTMLElement[],
   menu: HTMLElement,
-  content: HTMLInputElement,
-  ipc: IpcRenderer
+  content: HTMLInputElement
 }
 
 export class TodoPlugin implements NoxunotePlugin {
