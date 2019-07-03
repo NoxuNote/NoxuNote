@@ -68,13 +68,23 @@ export class JSONDataBase {
 //
 // ─── DATA STRUCTURES ────────────────────────────────────────────────────────────
 //
-export type Note = {
+export type NoteMetadata = {
   id: string;
-  file?: string;
-  lastEdit: string;
+  filename: string;
+  lastedit: string;
+  isfavorite: boolean;
+  matiere?: number;
+}
+export type Note = {
+  meta: NoteMetadata
   content: string;
 }
 
+export type Matiere = {
+  id: string;
+  name: string;
+  color: string;
+}
 
 //
 // ─── PLUGINS ────────────────────────────────────────────────────────────────────

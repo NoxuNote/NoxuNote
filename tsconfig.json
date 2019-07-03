@@ -17,7 +17,8 @@
       "mathjax",
       "electron",
       "node",
-      "mathjs"
+      "mathjs",
+      "fs-extra"
     ]
   },
   "include": [

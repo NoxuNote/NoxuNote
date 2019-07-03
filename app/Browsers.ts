@@ -149,7 +149,7 @@ class PrePrintWindow implements INoxunoteWindow {
     }
 }
 
-class NoxuNoteApp implements INoxunoteApp {
+export class NoxuNoteApp {
     licence: Licence;
     mainWindow: INoxunoteWindow;
     db: DataBase;

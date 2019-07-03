@@ -1,3 +1,5 @@
+import { INoxunoteApp, Note } from "./types";
+
 export {};
 /**
  * main.js - The core script of NoxuNote, which represents the main Electron thread,
@@ -13,9 +15,9 @@ export {};
 const DEBUG = true
 
 // Importing electron library
-const { Menu, dialog, app, BrowserWindow, ipcMain } = require('electron')
+const { Menu, dialog, app, BrowserWindow, ipcMain  } = require('electron')
 // Importing NoxuNote librairies
-const browsers	= require("./Browsers.js")
+import { NoxuNoteApp } from "./Browsers";
 // Importing external modules
 const fs				= require('fs-extra')
 const homedir		= require('os').homedir()
@@ -92,7 +94,7 @@ function handleSquirrelEvent(application: Electron.App) {
 	}
 };
 
-let noxuApp: any;
+let noxuApp: NoxuNoteApp;
 
 /***************************************************************************************************
  *                                         INITIALISATION                                          *
@@ -104,7 +106,7 @@ app.on('ready', () => {
 		if (noxuApp.mainDrawWindow) noxuApp.mainDrawWindow.browserWindow.webContents.send('undo')
 	}
 	// Création de la fenêtre principale
-	noxuApp = new browsers.NoxuNoteApp(DEBUG)
+	noxuApp = new NoxuNoteApp(DEBUG)
 
 	// Create the Application's main menu
     var template: any = [{
@@ -138,7 +140,7 @@ app.on('ready', () => {
 		]}
 	];
 	if(DEBUG) {
-		noxuApp.mainWindow.browserWindow.openDevTools()
+		noxuApp.mainWindow.browserWindow.webContents.openDevTools()
 		noxuApp.mainWindow.browserWindow.maximize()
 	} else Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 });
@@ -150,7 +152,7 @@ or clicking on the application's dock or taskbar icon.
 app.on('activate', () => {
 	if (noxuApp.mainWindow === null) {
 		// Création de la fenêtre principale
-		noxuApp = new browsers.NoxuNoteApp()
+		noxuApp = new NoxuNoteApp(DEBUG)
 		// createWindow();
 	}
 });
@@ -179,7 +181,6 @@ function save_as_noxunote(title: string, matiere: any, content: any) {
 	if (date.getMinutes() < 10) hour = date.getHours() + "h0" + date.getMinutes()
 	else hour = date.getHours() + "h" + date.getMinutes()
 	const mois = new Intl.DateTimeFormat('fr-FR', { month: 'long'}).format(date)
-
 	let now = hour + " le " + date.getDate() + " " + mois + " " + date.getFullYear()
 	if (title == "not defined") title = "Note " + now
 	var path = homedir + '/NoxuNote/notes/' + title + '.txt';
@@ -190,27 +191,6 @@ function save_as_noxunote(title: string, matiere: any, content: any) {
 	noxuApp.db.notes.setProperty('lastedit', now, title)
 }
 
-/**
- * Loads a noxunote file without prompting for save
- * @param {String} name Le nom du fichier à charger
- */
-function force_load(name: string) {
-	// Loading file content
-	var fileContent;
-	try {
-		fileContent = fs.readFileSync(homedir + "/NoxuNote/notes/" + name + ".txt").toString();
-	} catch (e) {
-		console.log(e);
-	}
-	// Setting file content to renderThread divs
-	noxuApp.mainWindow.webContents.send('setNoteContent', fileContent)
-	// Setting file title to renderThread title
-	noxuApp.mainWindow.webContents.send('setNoteTitle', name)
-	noxuApp.mainWindow.webContents.send('setNoteMatiere', noxuApp.db.notes.getNoteMetadata(name+'.txt').matiere)
-	noxuApp.mainWindow.webContents.send('resetIsFileModified')
-}
-
-ipcMain.on('load_noxunote', (event: { returnValue: void; }, name: string) => event.returnValue = force_load(name));
 
 // Génère une fenêtre de dessin, appelé quand on appuis sur "Dessiner".
 ipcMain.on('dessiner', (event: any, url: any) => {
@@ -264,7 +244,6 @@ function makeFile(format: any) {
 				noxuApp.mainOutputWindow.browserWindow.webContents.printToPDF(
 					{
 						marginsType: 1,
-						silent: false,
 						pageSize: "A4",
 						printBackground: true,
 						printSelectionOnly: false,
@@ -413,6 +392,23 @@ ipcMain.on('db_deleteNote', (event: { returnValue: any; }, name: any) => event.r
 ipcMain.on('db_getAssocList', (event: { returnValue: any; }) => event.returnValue = noxuApp.db.dactylo.rawJson)
 ipcMain.on('db_removeAssoc', (event: { returnValue: any; }, input: any) => event.returnValue = noxuApp.db.dactylo.removeAssoc(input))
 ipcMain.on('db_addAssoc', (event: { returnValue: any; }, input: any, output: any) => event.returnValue = noxuApp.db.dactylo.addAssoc(input, output))
+
+// Notes
+ipcMain.on('db_notes_getNoteList', (event: any, title: string, content: string, matiere?: number, isfavorite?: boolean) => {
+	event.returnValue = noxuApp.db.notes.saveNewNote(title, content, matiere, isfavorite) 
+})
+ipcMain.on('db_notes_saveNewNote', (event: any, title: string, content: string, matiere?: number, isfavorite?: boolean) => {
+	event.returnValue = noxuApp.db.notes.saveNewNote(title, content, matiere, isfavorite) 
+})
+ipcMain.on('db_notes_saveNote', (event: any, note: Note) => {
+	event.returnValue = noxuApp.db.notes.saveNote(note) 
+})
+ipcMain.on('db_notes_setProperty', (event: any, property: string, value: (string|number|boolean), id: string) => {
+	event.returnValue = noxuApp.db.notes.setProperty(property, value, id)
+})
+ipcMain.on('db_notes_deleteNote', (event: any, id: string) => {
+	event.returnValue = noxuApp.db.notes.deleteNote(id)
+})
 
 ipcMain.on('openSettings', (event: any, key: any) => { noxuApp.createSettingsWindow(key) })
 /***************************************************************************************************
