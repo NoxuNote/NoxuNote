@@ -379,14 +379,13 @@ ipcMain.on('quit', (event: any) => noxuApp.quit())
 
 
 /***************************************************************************************************
- *                                            DATABASE                                             *
+ *                                           DATABASES                                             *
  ***************************************************************************************************/
 
-ipcMain.on('db_getMatList', (event: { returnValue: any; }) => { event.returnValue = noxuApp.db.matieres.matList })
-ipcMain.on('db_addMat', (event: { returnValue: any; }, name: any, colorcode: any) => { event.returnValue = noxuApp.db.matieres.addMat(name, colorcode) })
-ipcMain.on('db_editMat', (event: { returnValue: any; }, property: any, value: any, name: any) => { event.returnValue = noxuApp.db.matieres.setProperty(property, value, name) } )
-ipcMain.on('db_removeMat', (event: { returnValue: any; }, name: any) => { event.returnValue = noxuApp.db.matieres.removeMat(name) } )
+ // Couleurs
 ipcMain.on('db_getColors', (event: { returnValue: any; }) => { event.returnValue = noxuApp.db.colors.rawJson })
+
+// Dactylo
 ipcMain.on('db_getAssocList', (event: { returnValue: any; }) => event.returnValue = noxuApp.db.dactylo.rawJson)
 ipcMain.on('db_removeAssoc', (event: { returnValue: any; }, input: any) => event.returnValue = noxuApp.db.dactylo.removeAssoc(input))
 ipcMain.on('db_addAssoc', (event: { returnValue: any; }, input: any, output: any) => event.returnValue = noxuApp.db.dactylo.addAssoc(input, output))
@@ -395,7 +394,10 @@ ipcMain.on('db_addAssoc', (event: { returnValue: any; }, input: any, output: any
 ipcMain.on('db_notes_getNoteList', (event: any) => {
 	event.returnValue = noxuApp.db.notes.getNoteList()
 })
-ipcMain.on('db_notes_saveNewNote', (event: any, title: string, content: string, options: {matiere?: number, isfavorite?: boolean, filename?: string}) => {
+ipcMain.on('db_notes_getNote', (event: any, id: string) => {
+	event.returnValue = noxuApp.db.notes.getNote(id) 
+})
+ipcMain.on('db_notes_saveNewNote', (event: any, title: string, content: string, options: {matiere?: string, isfavorite?: boolean, filename?: string}) => {
 	event.returnValue = noxuApp.db.notes.saveNewNote(title, content, options) 
 })
 ipcMain.on('db_notes_saveNote', (event: any, note: Note) => {
@@ -406,6 +408,20 @@ ipcMain.on('db_notes_setProperty', (event: any, property: string, value: (string
 })
 ipcMain.on('db_notes_deleteNote', (event: any, id: string) => {
 	event.returnValue = noxuApp.db.notes.deleteNote(id)
+})
+
+// Matieres
+ipcMain.on('db_matieres_getMatieres', (event: any) => {
+	event.returnValue = noxuApp.db.matieres.getMatList()
+})
+ipcMain.on('db_matieres_addMat', (event: any, name: string, colorcode: string) => {
+	event.returnValue = noxuApp.db.matieres.addMat(name, colorcode)
+})
+ipcMain.on('db_matieres_removeMat', (event: any, id: string) => {
+	event.returnValue = noxuApp.db.matieres.removeMat(id)
+})
+ipcMain.on('db_matieres_setProperty', (event: any, property: string, value: (string|number|boolean), id: string) => {
+	event.returnValue = noxuApp.db.matieres.setProperty(property, value, id)
 })
 
 ipcMain.on('openSettings', (event: any, key: any) => { noxuApp.createSettingsWindow(key) })

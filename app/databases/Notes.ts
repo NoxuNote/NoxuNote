@@ -144,7 +144,7 @@ export class Notes extends JSONDataBase {
      * @param content Contenu de la note
      * @param options {matiere?: number, isfavorite?: boolean, filename?: string}
      */
-    public saveNewNote(title: string, content: string, options?: {matiere?: number, isfavorite?: boolean, filename?: string}): Note {
+    public saveNewNote(title: string, content: string, options?: {matiere?: string, isfavorite?: boolean, filename?: string}): Note {
         const generatedId: string = Notes.generateId()
         let metadata: NoteMetadata = {
             id: generatedId,
@@ -219,7 +219,6 @@ export class Notes extends JSONDataBase {
         // check
         if (!["id", "filename", "lastedit", "isfavorite", "matiere"].includes(property)) {
             throw Error(`La propriete ${property} n'appartient pas au type NoteMetadata`)
-            return null
         }
         // edit metadata property
         let meta: NoteMetadata = this.getMetadataFromId(id)

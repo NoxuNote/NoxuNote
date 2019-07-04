@@ -343,6 +343,11 @@ em {
 	transform: translateX(0);
 	-webkit-transform: translateX(0);
 }
+#menuGaucheOuvrir {
+	width: 90vw;
+	padding-top: 0px;
+	background-color: #40464e;
+}
 /* MENU DROITE */
 .mlateral-droit {
     right: 0px;
@@ -441,7 +446,7 @@ div#file {
 	margin-left: 15px;
 }
 div#file:hover {
-	color: #CCCCCC;
+	background-color: #00000021;
 }
 input#calc, input#calcDerivative{
 	border: none;
@@ -618,4 +623,75 @@ div.pastille {
 }
 .notification-footer>button {
 	margin-left: 5px
+}
+
+@media screen and (max-width: 991px) {
+  .browseColumn {
+  		width: 350px;
+		margin-bottom: 20px;
+/* 		overflow-y: scroll; */
+/* 		height: 30vh; */
+	}
+}
+@media screen and (min-width: 992px) {
+  .browseColumn {
+		box-shadow: 10px 0 30px -3px #0000003b;
+		overflow-y: scroll;
+	}
+}
+
+.matiere {
+	display: block;
+	padding: 3px 10px 3px 10px;
+	font-size: 1.2em;
+}
+.matiere:hover {
+	cursor: pointer;
+	background-color: #00000030;
+	border-radius: 5px;
+}
+.matiere-selected {
+	background-color: #00000030;
+	border-radius: 5px;
+}
+.file {
+	min-height: 50px;
+	padding: 10px 20px 10px 25px;
+	display: block;
+	font-size: 1.1em;
+}
+.file:hover {
+	cursor: pointer;
+	background-color: #00000030;
+}
+.file-selected {
+	background-color: #00000030;
+}
+.lastEdit {
+	color: #8a8a8a;
+	font-size: 0.8em;
+}
+.fileDetailsTable>tr>td {
+	text-align: left;
+	border: none;
+	background-color: transparent;
+}
+.tableMainColumn {
+	text-decoration: underline;
+}
+.fileDetailsTable>tr {
+	border: none;
+	background-color: transparent;
+}
+.fileDetailsTable {
+	margin-bottom: 20px;
+}
+.notePreview {
+	background-color: #2b2e38;
+	border-radius: 5px;
+	height: 40vh;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding: 15px;
+	margin-bottom: 30px;
 }

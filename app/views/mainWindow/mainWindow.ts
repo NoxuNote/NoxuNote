@@ -26,7 +26,7 @@ var title = "not defined";
 
 import * as $ from "jquery";
 import { CalcPlugin } from './plugins/calc';
-import { NoxunotePlugin } from "../../types";
+import { NoxunotePlugin, Matiere } from "../../types";
 import { TodoPlugin } from "./plugins/todo";
 import { BrowsePlugin } from "./plugins/browse";
 
@@ -55,8 +55,10 @@ const elts = {
 		menu: document.getElementById('menuGaucheOuvrir'),
 		triggers: [document.getElementById('menuGaucheOuvrirTrigger')],
 		allMat: document.getElementById('allMat'),
+		allMatNotesCount: document.getElementById('allMatNotesCount'),
 		matList: document.getElementById('matList'),
-		filesList: document.getElementById('filesList')
+		filesList: document.getElementById('filesList'),
+		fileLookup: document.getElementById('fileLookup')
 	},
 	toDo: {
 		triggers: [document.getElementById('triggerTodo'), document.getElementById('triggerTodo2')],
@@ -308,13 +310,13 @@ function generateMatList() {
 	}
 
 	// Récupération de la liste des matières
-	var matieres = ipcRenderer.sendSync('db_getMatList')
+	var matieres: Matiere[] = ipcRenderer.sendSync('db_matieres_getMatieres')
 	for (var i = 0; i < matieres.length; i++) {
 		var innerDiv = document.createElement('div')
 		innerDiv.id = "matiere"
-		let checkbox: string = "<input type='radio' name='mat' value='" + matieres[i].nom + "'>"
-		innerDiv.innerHTML = checkbox + matieres[i].nom
-		innerDiv.style.background = matieres[i].couleur
+		let checkbox: string = "<input type='radio' name='mat' value='" + matieres[i].id + "'>"
+		innerDiv.innerHTML = checkbox + matieres[i].name
+		innerDiv.style.background = matieres[i].color
 		matList.appendChild(innerDiv)
 	}
 }

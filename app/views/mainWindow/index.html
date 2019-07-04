@@ -68,19 +68,35 @@
 		<div id="matiere" onClick="openSettings('Matières')"><i class="fas fa-plus-circle"></i></div>
 	</div>
 
-	<div id="menuGaucheOuvrir" class="mlateral mlateral-gauche">
-		<i id="menuGaucheOuvrirTrigger" class="fas fa-times leftPannelClose"></i>
-		<div id="fileCategorySelector">
-			<h2>Ce PC <button>+</button></h2>
-			<div id="allMat" class="matiere">
-				<i class="far fa-folder-open"></i> Toutes
+	<div id="menuGaucheOuvrir" class="mlateral mlateral-gauche appear p-0">
+		<i id="menuGaucheOuvrirTrigger" class="fas fa-times leftPannelClose" onclick="boutonMenuGaucheOuvrir()"></i>
+		<div class="container-fluid h-100">
+			<div class="row h-100">
+				<div class="col-lg-3 browseColumn pt-2">
+					<h2>Stockage</h2>
+	
+					<div id="allMat" class="matiere matiere-selected mt-4">
+						<i class="far fa-hdd"></i> Toutes les notes
+						<div id="allMatNotesCount" class="float-right"></div>
+					</div>
+					<h5 class="mt-4">Ce PC
+						<button type="button" class="btn btn-sm btn-light float-right">
+							<i class="fas fa-plus"></i>
+						</button>
+					</h5>
+					<div id="matList"></div>
+				</div>
+				<div class="col-md-4 browseColumn pl-0 pr-0 pt-2">
+					<h2 class="pl-4"> Notes</h2>
+					<div id="filesList"></div>
+				</div>
+				<div class="col-md-5 pl-4 pt-2 overflow-auto">
+					<h2> Aperçu</h2>
+					<div id="fileLookup"></div>
+				</div>
 			</div>
-			<div id="matList"></div>
 		</div>
-		<div id="filesList"></div>
-		<div class="savebutton" onclick="openSettings('Notes')">Gérer les notes</div>
 	</div>
-
 	<!-- <div id="menuDroitAide" class="mlateral mlateral-droit" style="color: #FFFFFF;">
 		<i class="fas fa-times rightPannelClose" onClick="boutonAide()"></i>
 		<div class="savebutton" onclick="showTutorial()">Afficher le tutoriel</div>
