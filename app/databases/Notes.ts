@@ -224,6 +224,7 @@ export class Notes extends JSONDataBase {
         }
         // edit metadata property
         let meta: NoteMetadata = this.getMetadataFromId(id)
+        if (!meta) throw Error(`Aucune note trouvée avec l'id ${id}`)
         Object.defineProperty(meta, property, value)
         return meta
     }
