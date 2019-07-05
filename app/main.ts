@@ -183,7 +183,7 @@ function save_as_noxunote(title: string, matiere: any, content: any) {
 	else hour = date.getHours() + "h" + date.getMinutes()
 	const mois = new Intl.DateTimeFormat('fr-FR', { month: 'long'}).format(date)
 	let now = hour + " le " + date.getDate() + " " + mois + " " + date.getFullYear()
-	if (title == "not defined") title = "Note " + now
+	if (title == "(Sans titre)") title = "Note " + now
 	var path = homedir + '/NoxuNote/notes/' + title + '.txt';
 	try { fs.writeFileSync(path, content) }
 	catch (e) { console.log('Failed to save the file !' + e) }
@@ -377,6 +377,15 @@ ipcMain.on('copyFileToWorkingFolder', (event: { returnValue: string; }, filePath
 
 ipcMain.on('quit', (event: any) => noxuApp.quit())
 
+// Redirection de la commande loadNote (Charge une note "doucement")
+ipcMain.on('loadNote', (event: any, note: Note) => {
+	event.returnValue = noxuApp.mainWindow.browserWindow.webContents.send('loadNote', note)
+})
+
+// Redirection de la commande forceReset vers mainWindow
+ipcMain.on('forceReset', (event: any) => {
+	event.returnValue = noxuApp.mainWindow.browserWindow.webContents.send('forceReset')
+})
 
 /***************************************************************************************************
  *                                           DATABASES                                             *

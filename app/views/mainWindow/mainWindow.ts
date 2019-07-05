@@ -22,16 +22,18 @@ const ModalManager = require("./ModalManager.js")
 const NotificationService = require("./NotificationService.js")
 const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
-var title = "not defined";
+var title = "(Sans titre)";
 
 import * as $ from "jquery";
 import { CalcPlugin } from './plugins/calc';
-import { NoxunotePlugin, Matiere } from "../../types";
+import { NoxunotePlugin, Matiere, Note } from "../../types";
 import { TodoPlugin } from "./plugins/todo";
 import { BrowsePlugin } from "./plugins/browse";
 
 
 declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
+
+const editor = $('#summernote')
 
 const elts = {
 	header: {
@@ -81,10 +83,27 @@ var plugins: NoxunotePlugin[] = [
 	new BrowsePlugin(elts.menuGaucheOuvrir, ipc)
 ]
 
+/**
+ * - Objet Note issu de la BDD (en cours d'édition)
+ * Il doit toujours être à jour par rapport au contenu
+ * en BDD.
+ * - Vaut undefined si on travaille sur une nouvelle Note.
+ * Au moment de la sauvegarde, prend la valeur de la note sauvegardée en BDD.
+ */
+let loadedNote: Note = undefined;
+function setLoadedNote(note: Note): void {
+	loadedNote = note;
+	(<BrowsePlugin>plugins.find(p=>p instanceof BrowsePlugin)).setLoadedNote(note)
+}
+
 // CTRL on windows, CMD on mac
 const metaKey = os.type()=="Darwin"?"Cmd":"Ctrl"
 
 var isFileModified = false
+/**
+ * Définit la variable isFileModified en mettant à jour l'affichage (disquette)
+ * @param b Le fichier est il modifié par rapport au contenu du disque ?
+ */
 function setIsFileModified(b: boolean) {
 	if (isFileModified != b) {
 		if (b) 
@@ -95,8 +114,6 @@ function setIsFileModified(b: boolean) {
 	isFileModified = b
 }
 
-
-const editor = $('#summernote')
 
 /**
  * Action à effectuer lorsque l'utilisateur choisit une option
@@ -168,8 +185,21 @@ function dessiner(url?: string) {
  * Enregistre la note au format NoxuNote
  */
 function save_as_noxunote() {
-	ipc.sendSync('save_as_noxunote', title, getMat(), editor.summernote('code'));
+	// Si on éditait déjà une note
+	if (loadedNote) {
+		console.debug("Sauvegarde de la note deja existante", loadedNote.meta)
+		// On met a jour le contenu de la note sauvée
+		loadedNote.content = editor.summernote('code').toString()
+		loadedNote.meta.title = title
+		// Et on sauvegarde les changements en BDD
+		setLoadedNote(ipc.sendSync('db_notes_saveNote', loadedNote))
+	} else {
+		console.debug("Sauvegarde d'une nouvelle note", editor.summernote('code'))
+		// On définit la note actuellement editée
+		setLoadedNote(ipc.sendSync('db_notes_saveNewNote', title, editor.summernote('code').toString(), {matiere: getMat()}))
+	}
 	setIsFileModified(false)
+	// Recharge la liste des notes
 	plugins.find(p => p instanceof BrowsePlugin).init()
 }
 
@@ -184,20 +214,10 @@ function onTypeOnTitle() {
 		elts.header.titrePrincipal.innerHTML = title
 		if (title == "") {
 			elts.header.titrePrincipal.innerHTML = "(Cliquez pour nommer la note)"
-			title = "not defined";
+			title = "(Sans titre)";
 		}
 	}, 20)
 }
-
-
-/**
- * Loads a file
- * @param path path to file
- */
-function load_noxunote(name: any) {
-	ipc.sendSync('load_noxunote', name)
-}
-
 
 function setNoteTitle(newtitle: string) {
 	// Définition du titre
@@ -205,7 +225,7 @@ function setNoteTitle(newtitle: string) {
 	if (newtitle == "") {
 		elts.header.titrePrincipal.innerHTML = "(Cliquez pour nommer la note)";
 		elts.menuGaucheSauver.sauverInput.value = ""
-		title = "not defined"
+		title = "(Sans titre)"
 	} else {
 		elts.header.titrePrincipal.innerHTML = title;
 		elts.menuGaucheSauver.sauverInput.value = title
@@ -340,20 +360,32 @@ function openExport() {
 	ipc.send('openExport', editor.summernote('code'));
 }
 
+
+//
+// ─── REINITIALISATION INTERFACE ─────────────────────────────────────────────────
+//
+
+/**
+ * Reset l'interface sans avertissement
+ */
+function forceReset() {
+	setNoteTitle("");
+	setLoadedNote(null);
+	editor.summernote('reset')
+	setIsFileModified(false)
+	plugins.find(p=>p instanceof BrowsePlugin).init() // Met a jour l'affichage des fichiers
+}
 /**
  * Commande de création d'une nouvelle note
+ * de manière douce
  */
 function newFile() {
-	const resetFunc: Function = ()=>{
-		setNoteTitle("");
-		editor.summernote('reset')
-		setIsFileModified(false)
-	}
+
 	if (isFileModified) {
-		saveConfirmationModalAction = resetFunc // On définit l'action de confirmation
+		saveConfirmationModalAction = forceReset // On définit l'action de confirmation
 		modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
 	} else { // Si aucune modification actuellement, on charge directement la note
-		resetFunc.call(null)
+		forceReset()
 	}	
 }
 
@@ -689,6 +721,27 @@ $('#editorRoot').click(() => { editor.summernote('focus') })
 function refreshDictionnary() {
 	// TODO
 }
+
+/**
+ * Charge une note de manière douce
+ * (Vérifie que l'ancienne est bien enregistrée etc.)
+ */
+function loadNote(note: Note) {
+	// Lors d'un clic, définit l'action de la modale de confirmation
+	// sur le chargement de la nouvelle note
+	if (isFileModified) {
+		saveConfirmationModalAction = ()=>loadNote(note) // On définit l'action de confirmation
+		modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
+	} else { // Si aucune modification actuellement, on charge directement la note
+		setLoadedNote(note);
+		setNoteTitle(note.meta.title)
+		setNoteMatiere(note.meta.matiere)
+		setNoteContent(note.content)
+	}
+	setIsFileModified(false)
+	plugins.find(p=>p instanceof BrowsePlugin).init() // Met a jour l'affichage des fichiers
+}
+ipcRenderer.on('loadNote', (event: any, note: Note) => loadNote(note))
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/
@@ -709,6 +762,7 @@ ipcRenderer.on('updateDb', (event: any) => { plugins.find(p=>p instanceof Browse
 ipcRenderer.on('setNoteContent', (event: any, note: any) => setNoteContent(note))
 ipcRenderer.on('insertDrawing', (event: any, url: any) => insertImg(url))
 ipcRenderer.on('refreshImg', (event: any, url: any) => refreshImg(url))
+ipcRenderer.on('forceReset', (event:any) => forceReset())
 ipcRenderer.on('electron_request_close', (event: any) => closeWindow()) // Permet de gérer graphiquement l'alerte de sauvegarde
 ipcRenderer.on('showNotification', (event: any, notification: string)=>{
 	// On reçoit un objet Notification serialisé, il faut le transformer en objet

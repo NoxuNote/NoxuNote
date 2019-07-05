@@ -33,8 +33,8 @@ export class Notes extends JSONDataBase {
         let files: String[] = this.getFiles()
         this.rawJson.forEach((element: any) => {
             // Vérification que l'element est complet
-            if (!element.filename || !element.lastedit || element.isfavorite==undefined) {
-                console.error("(ERREUR) Dans user_notes.json, objet incorrect " + element.toString())
+            if (!element || !element.filename || !element.lastedit || element.isfavorite==undefined) {
+                console.error("(ERREUR) Dans user_notes.json, objet incorrect ", element.toString())
                 return
             }
             // Vérification que le fichier existe
@@ -66,8 +66,8 @@ export class Notes extends JSONDataBase {
         // Link files without metadata
         files.forEach((f:string) => {
             let parsedJsonSearch = this.parsedJson.filter( (m:NoteMetadata) => m.filename == f )
-            console.warn(`Le fichier ${f} n'avait pas de métadata associée, création ...`)
             if (parsedJsonSearch.length === 0) {
+                console.warn(`Le fichier ${f} n'avait pas de métadata associée, création ...`)
                 // the file f has no NoteMetadata associated, create it
                 this.saveNewNote(Notes.unDotTxt(f), fs.readFileSync(Notes.notesPath+f, {encoding: 'utf-8'}).toString(), {filename: f})
             }
@@ -171,6 +171,7 @@ export class Notes extends JSONDataBase {
     }
     public getNote(noteId: string): Note {
         let meta:NoteMetadata = this.parsedJson.find( (data: NoteMetadata) => data.id === noteId)
+        if (!meta) throw Error("Note non trouvée : " + noteId)
         let content:string = fs.readFileSync(Notes.notesPath + meta.filename, {encoding: 'utf-8'}).toString()
         return {
             meta: meta,
@@ -192,7 +193,7 @@ export class Notes extends JSONDataBase {
      * Sauvegarde/Met à jour une note
      * @param note La note à enregistrer
      */
-    public saveNote(note: Note): void {
+    public saveNote(note: Note): Note {
         /**
          * Écriture des metadata
          */
@@ -206,6 +207,7 @@ export class Notes extends JSONDataBase {
          * Écriture du contenu de la note
          */
         fs.writeFileSync(Notes.notesPath + note.meta.filename, note.content)
+        return note
     }
 
     /**
@@ -227,9 +229,17 @@ export class Notes extends JSONDataBase {
     }
 
     public deleteNote(id: string): NoteMetadata[] {
-        delete this.parsedJson[this.findIndexNote(id)];
-        fs.unlinkSync(Notes.notesPath + Notes.dotTxt(name));
+        console.debug(this.parsedJson)
+        let meta: NoteMetadata = this.getMetadataFromId(id)
+        if (!meta) throw Error('Aucune donnée trouvée pour l\'ID ' + id + ' Trace parsedJson : ' + JSON.stringify(this.parsedJson))
+        // Suppression du fichier
+        fs.unlinkSync(Notes.notesPath + meta.filename);
+        // Suppression dans parsedJson
+        let index = this.parsedJson.findIndex((m:NoteMetadata) => m.id == id)
+        this.parsedJson.splice(index, 1);
+        // Sauvegarde des modifications
         this.saveJson()
+        console.debug(this.parsedJson)
         return this.parsedJson;
     }
 }

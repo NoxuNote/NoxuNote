@@ -15,6 +15,13 @@ export class BrowsePlugin implements NoxunotePlugin {
 
   public noteList: NoteMetadata[]
   public matieres: Matiere[]
+
+  /**
+   * Image de la variable loadedNote de mainWindow.js
+   * mise à jour grace à la fonction setLoadedNote() présente dans mainWindow.js
+   * qui appelle la méthode de cette classe.
+   */
+  private loadedNote: Note
   
   constructor(public elts: BrowseElements, public ipc: IpcRenderer) {
     this.init()
@@ -26,6 +33,20 @@ export class BrowsePlugin implements NoxunotePlugin {
   init() {
     this.renderFiles()
     this.renderMatieres()
+    // Si un note est chargée dans l'editeur
+    if (this.loadedNote) {
+      // On met a jour l'affichage lookup sur les données de cette note
+      this.renderLookup(this.loadedNote.meta.id)
+    } else {
+      // Sinon on n'affiche rien
+      this.elts.fileLookup.innerHTML = ""
+    }
+  }
+
+  loadNote(id: string) {
+    // VERIFI
+    let note: Note = this.ipc.sendSync('db_notes_getNote', id)
+    this.ipc.send('loadNote', note)
   }
 
   renderFiles(selectedMatiereId?: string, orderBy?: string) {
@@ -45,15 +66,6 @@ export class BrowsePlugin implements NoxunotePlugin {
   renderLookup(noteId: string) {
     this.elts.fileLookup.innerHTML = ""
     let note: Note = this.ipc.sendSync('db_notes_getNote', noteId)
-    // Load button
-    let button = document.createElement('button')
-    button.classList.add("btn", "btn-primary", "mb-4", "mt-4")
-    button.innerText = "Ouvrir"
-    this.elts.fileLookup.appendChild(button)
-    // Informations
-    let informations = document.createElement('h4')
-    informations.innerText = "Informations"
-    this.elts.fileLookup.appendChild(informations)
     // Table d'informations
     let rechMat: Matiere = this.matieres.find(m=>m.id==note.meta.matiere)
     let data: Array<{a:string, b:string}> = [
@@ -94,7 +106,25 @@ export class BrowsePlugin implements NoxunotePlugin {
     preview.innerHTML = note.content
     preview.classList.add('notePreview')
     this.elts.fileLookup.appendChild(preview)
-    
+    // Load button
+    let button = document.createElement('button')
+    button.classList.add("btn", "btn-secondary", "float-right", "mt-0")
+    button.innerHTML = '<i class="fas fa-pen"></i> Ouvrir'
+    button.addEventListener('click', ()=>this.ipc.send('loadNote', note))
+    this.elts.fileLookup.appendChild(button)
+    // Delete button
+    let deleteButton = document.createElement('button')
+    deleteButton.classList.add("btn", "btn-warn", "float-right", "mt-0")
+    deleteButton.innerHTML = '<i class="fas fa-pen"></i> Supprimer'
+    deleteButton.addEventListener('click', ()=>{
+      if (confirm('Voulez vous vraiment supprimer cette note ?')) {
+        // Si la note correspond à celle ouverte, on demande un reset de l'interface
+        if (this.loadedNote && this.loadedNote.meta.id == note.meta.id) this.ipc.sendSync('forceReset')
+        this.ipc.sendSync('db_notes_deleteNote', note.meta.id)
+        this.init()
+      }
+    })
+    this.elts.fileLookup.appendChild(deleteButton)
   }
 
   private generateTable(data: Array<{a:string, b:string}>): HTMLTableElement {
@@ -114,11 +144,11 @@ export class BrowsePlugin implements NoxunotePlugin {
   }
 
   private generateFileElement(meta: NoteMetadata): HTMLDivElement {
-    // FICHIER :  <div class="file file-selected">CM1
-    //						  <div class="lastEdit">vendredi 6 juin à 13h40</div>
-    //            </div>
     let el = document.createElement('div')
     el.classList.add('file')
+    if (this.loadedNote && this.loadedNote.meta.id == meta.id) {
+      el.classList.add('file-selected')
+    }
     el.appendChild(document.createTextNode(meta.title))
     let subEl = document.createElement('div')
     subEl.classList.add('lastEdit')
@@ -128,6 +158,13 @@ export class BrowsePlugin implements NoxunotePlugin {
     el.addEventListener('click', (event: MouseEvent) => {
       this.renderLookup(meta.id)
     })
+    // Bouton ouvrir
+    let button = document.createElement('button')
+    button.classList.add('fileQuickLoadButton', 'btn', 'btn-sm', 'btn-secondary')
+    button.setAttribute('data-tooltip', "Ouvrir")
+    button.innerHTML = '<i class="fas fa-pen"></i>'
+    button.addEventListener('click', ()=>this.loadNote(meta.id))
+    el.appendChild(button)
     return el
   }
 
@@ -148,7 +185,6 @@ export class BrowsePlugin implements NoxunotePlugin {
   }
 
   private generateMatiereElement(m: Matiere): HTMLDivElement {
-    // MATIERE : <div class="matiere"><i class="far fa-folder-open"></i> Anglais</div>
     let el = document.createElement('div')
     el.classList.add('matiere')
     let subEl = document.createElement('i')
@@ -160,13 +196,21 @@ export class BrowsePlugin implements NoxunotePlugin {
     const noteCount: string = this.noteList.filter((n:NoteMetadata) => {
       return n.matiere? n.matiere==m.id : false
     }).length.toString()
-    console.debug(this.noteList)
-    console.debug(noteCount)
     let noteCountElement = document.createElement('div')
     noteCountElement.classList.add('float-right')
     noteCountElement.innerText = `(${noteCount})`
     el.appendChild(noteCountElement)
     return el
+  }
+
+  /**
+   * Définit dans cet objet uniquement la valeur loadedNote
+   * Appelé dans la fonction setLoadedNote de **mainWindow.ts**
+   * @param note nouvelle note chargée
+   */
+  public setLoadedNote(note: Note): void {
+    if (note == null) this.loadNote = undefined
+    else this.loadedNote = note
   }
 
 }

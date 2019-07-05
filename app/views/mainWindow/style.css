@@ -625,6 +625,10 @@ div.pastille {
 	margin-left: 5px
 }
 
+/*
+ * ─── BROWSE ─────────────────────────────────────────────────────────────────────
+ */
+	
 @media screen and (max-width: 991px) {
   .browseColumn {
   		width: 350px;
@@ -659,6 +663,7 @@ div.pastille {
 	padding: 10px 20px 10px 25px;
 	display: block;
 	font-size: 1.1em;
+  	position: relative;
 }
 .file:hover {
 	cursor: pointer;
@@ -694,4 +699,13 @@ div.pastille {
 	overflow-x: hidden;
 	padding: 15px;
 	margin-bottom: 30px;
+}
+.fileQuickLoadButton {
+	position: absolute;
+	top: 16px;
+	right: 10px;
+	visibility: hidden;
+}
+.file:hover>.fileQuickLoadButton {
+	visibility: visible;
 }
