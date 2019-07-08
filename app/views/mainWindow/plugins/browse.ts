@@ -1,5 +1,6 @@
 import { NoxunotePlugin, NoteMetadata, Matiere, Note } from "../../../types";
 import { IpcRenderer, TouchBarButton } from "electron";
+import { isNull } from "util";
 
 export type BrowseElements = {
   menu: HTMLElement,
@@ -33,8 +34,9 @@ export class BrowsePlugin implements NoxunotePlugin {
   init() {
     this.renderFiles()
     this.renderMatieres()
-    // Si un note est chargée dans l'editeur
-    if (this.loadedNote) {
+    // Si un note est chargée dans l'editeur et qu'elle éxiste encore dans la liste des notes
+    // /!\ Suppose que this.noteList est à jour avec la BDD.
+    if (this.loadedNote && this.noteList.map(nl=>nl.id).includes(this.loadedNote.meta.id)) {
       // On met a jour l'affichage lookup sur les données de cette note
       this.renderLookup(this.loadedNote.meta.id)
     } else {
@@ -44,12 +46,12 @@ export class BrowsePlugin implements NoxunotePlugin {
   }
 
   loadNote(id: string) {
-    // VERIFI
     let note: Note = this.ipc.sendSync('db_notes_getNote', id)
     this.ipc.send('loadNote', note)
   }
 
   renderFiles(selectedMatiereId?: string, orderBy?: string) {
+    console.debug('Génération de la liste des notes (Browse)')
     this.noteList = this.ipc.sendSync('db_notes_getNoteList')
     // clean allfiles node
     var child = this.elts.filesList.lastElementChild;  
@@ -58,12 +60,17 @@ export class BrowsePlugin implements NoxunotePlugin {
         child = this.elts.filesList.lastElementChild;  
     } 
     // create node for each filesList
+    console.debug(`Génération d'un élément HTML pour la liste de notes ${JSON.stringify(this.noteList.map(n=>n.title))}`)
     this.noteList.forEach( (n: NoteMetadata) => {
       this.elts.filesList.appendChild(this.generateFileElement(n))
     })
   }
 
   renderLookup(noteId: string) {
+    if (!this.noteList.map(nl=>nl.id).includes(noteId)) {
+      console.error(`BrowsePlugin.renderLookup(${noteId}) a été call avec l'id ${noteId} qui n'éxiste plus !`)
+      return
+    }
     this.elts.fileLookup.innerHTML = ""
     let note: Note = this.ipc.sendSync('db_notes_getNote', noteId)
     // Table d'informations
@@ -120,7 +127,9 @@ export class BrowsePlugin implements NoxunotePlugin {
       if (confirm('Voulez vous vraiment supprimer cette note ?')) {
         // Si la note correspond à celle ouverte, on demande un reset de l'interface
         if (this.loadedNote && this.loadedNote.meta.id == note.meta.id) this.ipc.sendSync('forceReset')
+        console.debug('Envoi commande suppression')
         this.ipc.sendSync('db_notes_deleteNote', note.meta.id)
+        console.debug('réinitialisation du browser de notes')
         this.init()
       }
     })
@@ -147,6 +156,7 @@ export class BrowsePlugin implements NoxunotePlugin {
     let el = document.createElement('div')
     el.classList.add('file')
     if (this.loadedNote && this.loadedNote.meta.id == meta.id) {
+      console.debug(`generateFileElement > this.loadedNote trouvé dans les notes et vaut ${JSON.stringify(this.loadedNote.meta)}`)
       el.classList.add('file-selected')
     }
     el.appendChild(document.createTextNode(meta.title))
@@ -169,6 +179,7 @@ export class BrowsePlugin implements NoxunotePlugin {
   }
 
   renderMatieres() {
+    console.debug('Génération de la liste des matières (Browse)')
     this.matieres = this.ipc.sendSync('db_matieres_getMatieres')
     // clean allfiles node
     var child = this.elts.matList.lastElementChild;  
@@ -209,8 +220,9 @@ export class BrowsePlugin implements NoxunotePlugin {
    * @param note nouvelle note chargée
    */
   public setLoadedNote(note: Note): void {
-    if (note == null) this.loadNote = undefined
-    else this.loadedNote = note
+    console.debug(`setLoadedNote(${note})`)
+    if (note) this.loadedNote = note
+    else this.loadedNote = undefined
   }
 
 }

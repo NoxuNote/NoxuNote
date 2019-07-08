@@ -170,7 +170,8 @@ export class Notes extends JSONDataBase {
         return this.parsedJson
     }
     public getNote(noteId: string): Note {
-        let meta:NoteMetadata = this.parsedJson.find( (data: NoteMetadata) => data.id === noteId)
+        console.debug(`Récupération de la note ${noteId} dans la liste :`, this.parsedJson.map(p=>p.id))
+        let meta:NoteMetadata = this.parsedJson.find( (data: NoteMetadata) => data.id == noteId)
         if (!meta) throw Error("Note non trouvée : " + noteId)
         let content:string = fs.readFileSync(Notes.notesPath + meta.filename, {encoding: 'utf-8'}).toString()
         return {
@@ -230,17 +231,16 @@ export class Notes extends JSONDataBase {
     }
 
     public deleteNote(id: string): NoteMetadata[] {
-        console.debug(this.parsedJson)
         let meta: NoteMetadata = this.getMetadataFromId(id)
         if (!meta) throw Error('Aucune donnée trouvée pour l\'ID ' + id + ' Trace parsedJson : ' + JSON.stringify(this.parsedJson))
         // Suppression du fichier
         fs.unlinkSync(Notes.notesPath + meta.filename);
         // Suppression dans parsedJson
         let index = this.parsedJson.findIndex((m:NoteMetadata) => m.id == id)
-        this.parsedJson.splice(index, 1);
+        let deleted = this.parsedJson.splice(index, 1);
         // Sauvegarde des modifications
         this.saveJson()
-        console.debug(this.parsedJson)
+        console.debug(`Element supprimé de this.parsedJson > ${JSON.stringify(deleted)}`)
         return this.parsedJson;
     }
 }
