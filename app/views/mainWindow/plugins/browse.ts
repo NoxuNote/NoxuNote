@@ -23,6 +23,11 @@ export class BrowsePlugin implements NoxunotePlugin {
    * qui appelle la méthode de cette classe.
    */
   private loadedNote: Note
+
+  /**
+   * ID de la note visible dans "Aperçu" sur laquelle on vient de cliquer dans l'arborescence
+   */
+  private clickedNoteId: string;
   
   constructor(public elts: BrowseElements, public ipc: IpcRenderer) {
     this.init()
@@ -32,17 +37,20 @@ export class BrowsePlugin implements NoxunotePlugin {
   }
   
   init() {
-    this.renderFiles()
-    this.renderMatieres()
-    // Si un note est chargée dans l'editeur et qu'elle éxiste encore dans la liste des notes
+    // Mise a jour de la liste des notes
+    this.noteList = this.ipc.sendSync('db_notes_getNoteList')
+    // Si un note est cliquée dans l'arborescence et qu'elle éxiste encore dans la liste des notes
     // /!\ Suppose que this.noteList est à jour avec la BDD.
-    if (this.loadedNote && this.noteList.map(nl=>nl.id).includes(this.loadedNote.meta.id)) {
+    if (this.clickedNoteId && this.noteList.map(nl=>nl.id).includes(this.clickedNoteId)) {
       // On met a jour l'affichage lookup sur les données de cette note
-      this.renderLookup(this.loadedNote.meta.id)
+      this.renderLookup(this.clickedNoteId)
     } else {
       // Sinon on n'affiche rien
+      this.clickedNoteId = null
       this.elts.fileLookup.innerHTML = ""
     }
+    this.renderFiles()
+    this.renderMatieres()
   }
 
   loadNote(id: string) {
@@ -50,9 +58,15 @@ export class BrowsePlugin implements NoxunotePlugin {
     this.ipc.send('loadNote', note)
   }
 
-  renderFiles(selectedMatiereId?: string, orderBy?: string) {
+  /**
+   * Génère la vue des fichiers
+   * @param updateNoteList Synchronise la liste des notes avec la BDD
+   * @param selectedMatiereId Optionnel - Id de la matière à filtrer
+   * @param orderBy Optionnel - Paramètre de tri
+   */
+  renderFiles(updateNoteList: boolean = false, selectedMatiereId?: string, orderBy?: string) {
     console.debug('Génération de la liste des notes (Browse)')
-    this.noteList = this.ipc.sendSync('db_notes_getNoteList')
+    if (updateNoteList) this.noteList = this.ipc.sendSync('db_notes_getNoteList')
     // clean allfiles node
     var child = this.elts.filesList.lastElementChild;  
     while (child) { 
@@ -75,6 +89,7 @@ export class BrowsePlugin implements NoxunotePlugin {
     let note: Note = this.ipc.sendSync('db_notes_getNote', noteId)
     // Table d'informations
     let rechMat: Matiere = this.matieres.find(m=>m.id==note.meta.matiere)
+    //let matiereInnerHTML: string = this.generateMatiereSelector(noteId)
     let data: Array<{a:string, b:string}> = [
       {
         a: "Titre",
@@ -121,7 +136,7 @@ export class BrowsePlugin implements NoxunotePlugin {
     this.elts.fileLookup.appendChild(button)
     // Delete button
     let deleteButton = document.createElement('button')
-    deleteButton.classList.add("btn", "btn-warn", "float-right", "mt-0")
+    deleteButton.classList.add("btn", "btn-danger", "float-right", "mt-0")
     deleteButton.innerHTML = '<i class="fas fa-pen"></i> Supprimer'
     deleteButton.addEventListener('click', ()=>{
       if (confirm('Voulez vous vraiment supprimer cette note ?')) {
@@ -134,6 +149,10 @@ export class BrowsePlugin implements NoxunotePlugin {
       }
     })
     this.elts.fileLookup.appendChild(deleteButton)
+  }
+
+  private generateMatiereSelector(noteId: string): string {
+    throw new Error("Method not implemented.");
   }
 
   private generateTable(data: Array<{a:string, b:string}>): HTMLTableElement {
@@ -157,7 +176,10 @@ export class BrowsePlugin implements NoxunotePlugin {
     el.classList.add('file')
     if (this.loadedNote && this.loadedNote.meta.id == meta.id) {
       console.debug(`generateFileElement > this.loadedNote trouvé dans les notes et vaut ${JSON.stringify(this.loadedNote.meta)}`)
-      el.classList.add('file-selected')
+      el.classList.add('file-loaded')
+    }
+    if (this.clickedNoteId && this.clickedNoteId == meta.id) {
+      el.classList.add('file-clicked')
     }
     el.appendChild(document.createTextNode(meta.title))
     let subEl = document.createElement('div')
@@ -166,6 +188,8 @@ export class BrowsePlugin implements NoxunotePlugin {
     el.appendChild(subEl)
     // Handle click
     el.addEventListener('click', (event: MouseEvent) => {
+      this.clickedNoteId = meta.id
+      this.renderFiles(true)
       this.renderLookup(meta.id)
     })
     // Bouton ouvrir
@@ -221,8 +245,7 @@ export class BrowsePlugin implements NoxunotePlugin {
    */
   public setLoadedNote(note: Note): void {
     console.debug(`setLoadedNote(${note})`)
-    if (note) this.loadedNote = note
-    else this.loadedNote = undefined
+    this.loadedNote = note
   }
 
 }

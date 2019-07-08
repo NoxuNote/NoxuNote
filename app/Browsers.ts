@@ -27,8 +27,8 @@ class MainWindow implements INoxunoteWindow {
     constructor() {
         this.allowClose = false
         this.browserWindow = new BrowserWindow({
-            width: 950,
-            height: 600,
+            width: 1200,
+            height: 800,
             minHeight: 200,
             titleBarStyle: "hidden",
             center: false,

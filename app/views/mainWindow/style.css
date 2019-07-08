@@ -669,8 +669,8 @@ div.pastille {
 	cursor: pointer;
 	background-color: #00000030;
 }
-.file-selected {
-	background-color: #00000030;
+.file-loaded {
+	border-left: 5px solid #47a966;
 }
 .lastEdit {
 	color: #8a8a8a;
@@ -708,4 +708,7 @@ div.pastille {
 }
 .file:hover>.fileQuickLoadButton {
 	visibility: visible;
+}
+.file-clicked {
+	background-color: #00000030;
 }
