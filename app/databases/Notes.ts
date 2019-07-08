@@ -216,17 +216,19 @@ export class Notes extends JSONDataBase {
      * ATTENTION : La note déjà avoir été crée
      * @param {string} property La valeur a modifier
      * @param {any} value Nouvelle valeur
-     * @param {any} name Nom de la note
+     * @param {any} id Id de la note
      */
     public setProperty(property: string, value: (string|number|boolean), id: string): NoteMetadata {
         // check
         if (!["id", "filename", "lastedit", "isfavorite", "matiere"].includes(property)) {
             throw Error(`La propriete ${property} n'appartient pas au type NoteMetadata`)
         }
+        console.debug(`Affectation de la pté. ${property} = ${value} pour la note ${id}`)
         // edit metadata property
         let meta: NoteMetadata = this.getMetadataFromId(id)
         if (!meta) throw Error(`Aucune note trouvée avec l'id ${id}`)
-        Object.defineProperty(meta, property, value)
+        Object.defineProperty(meta, property, {value: value})
+        // let newObj = Object.assign(meta)
         return meta
     }
 

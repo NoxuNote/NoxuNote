@@ -1,6 +1,7 @@
 import { NoxunotePlugin, NoteMetadata, Matiere, Note } from "../../../types";
 import { IpcRenderer, TouchBarButton } from "electron";
 import { isNull } from "util";
+import $ = require("jquery");
 
 export type BrowseElements = {
   menu: HTMLElement,
@@ -89,8 +90,8 @@ export class BrowsePlugin implements NoxunotePlugin {
     let note: Note = this.ipc.sendSync('db_notes_getNote', noteId)
     // Table d'informations
     let rechMat: Matiere = this.matieres.find(m=>m.id==note.meta.matiere)
-    //let matiereInnerHTML: string = this.generateMatiereSelector(noteId)
-    let data: Array<{a:string, b:string}> = [
+    let matiereElement: HTMLElement = this.generateMatiereSelector(noteId)
+    let data: Array<{a:string, b:string|HTMLElement}> = [
       {
         a: "Titre",
         b: note.meta.title
@@ -113,7 +114,7 @@ export class BrowsePlugin implements NoxunotePlugin {
       },
       {
         a: "Matière",
-        b: rechMat? rechMat.name : "(aucune)"
+        b: matiereElement
       }
     ]
     let table = this.generateTable(data)
@@ -151,21 +152,63 @@ export class BrowsePlugin implements NoxunotePlugin {
     this.elts.fileLookup.appendChild(deleteButton)
   }
 
-  private generateMatiereSelector(noteId: string): string {
-    throw new Error("Method not implemented.");
+  private generateMatiereSelector(noteId: string): HTMLSelectElement {
+    let note: NoteMetadata = this.noteList.find(n=>n.id==noteId)
+    let selectEl = document.createElement('select')
+    selectEl.classList.add('form-control')
+    let options: HTMLOptionElement[] = []
+    // Crée une option pour chaque matiere
+    let optDefault = document.createElement('option') 
+    optDefault.value = '-1'
+    optDefault.innerText = '(Aucune)'
+    optDefault.selected = true
+    optDefault.addEventListener('click', (e: MouseEvent) => {
+      
+    })
+    options.push(optDefault)
+    this.matieres.forEach((m: Matiere) => {
+      let opt = document.createElement('option')
+      opt.value = m.id
+      opt.style.backgroundColor = m.color
+      opt.innerText = m.name
+      if (note.matiere && note.matiere == m.id) {
+        opt.selected = true
+        optDefault.selected = false
+      }
+      options.push(opt)
+    })
+    // Ajout des options au selecteur
+    options.forEach(o=>selectEl.appendChild(o))
+    // Bind du clic sur un element
+    let that = this
+    selectEl.onchange = function (e: any) {
+      // db_notes_setProperty > property: string, value: (string|number|boolean), id: string
+      let value = $(this).val()
+      that.ipc.sendSync('db_notes_setProperty', 'matiere', value, noteId)
+      that.init()
+    }
+    return selectEl
   }
 
-  private generateTable(data: Array<{a:string, b:string}>): HTMLTableElement {
+  private generateTable(data: Array<{a:string|HTMLElement, b:string|HTMLElement}>): HTMLTableElement {
     let table: HTMLTableElement = document.createElement('table')
-    data.forEach( (data: {a:string, b:string}) => {
+    data.forEach( (data: {a:string|HTMLElement, b:string|HTMLElement}) => {
       let tr = document.createElement('tr')
-      let tda = document.createElement('td')
-      let tdb = document.createElement('td')
-      tda.classList.add('tableMainColumn')
-      tda.innerHTML = data.a
-      tdb.innerHTML = data.b
-      tr.appendChild(tda)
-      tr.appendChild(tdb)
+      if (data.a instanceof HTMLElement) {
+        tr.appendChild(data.a)
+      } else {
+        let tda = document.createElement('td')
+        tda.classList.add('tableMainColumn')
+        tda.innerHTML = data.a
+        tr.appendChild(tda)
+      }
+      if (data.b instanceof HTMLElement) {
+        tr.appendChild(data.b)
+      } else {
+        let tdb = document.createElement('td')
+        tdb.innerHTML = data.b
+        tr.appendChild(tdb)
+      }
       table.appendChild(tr)
     })
     return table
