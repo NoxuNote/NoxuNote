@@ -74,7 +74,7 @@ export type NoteMetadata = {
   filename: string;
   lastedit: string;
   isfavorite: boolean;
-  matiere?: string;
+  matiere: string;
 }
 export type Note = {
   meta: NoteMetadata

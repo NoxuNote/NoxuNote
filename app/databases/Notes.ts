@@ -54,13 +54,12 @@ export class Notes extends JSONDataBase {
             // Parse rawjson to Note
             let meta: NoteMetadata = {
                 id: id,
-                title: element.title ? element.title : element.filename,
+                title: element.title ? Notes.unDotTxt(element.title) : Notes.unDotTxt(element.filename),
                 filename: element.filename,
                 lastedit: element.lastedit,
-                isfavorite: element.isfavorite
+                isfavorite: element.isfavorite,
+                matiere: element.matiere ? element.matiere : ''
             }
-            // Ajout de la matiere si présente
-            if (element.matiere) meta.matiere = element.matiere
             this.parsedJson.push(meta)
         });
         // Link files without metadata
@@ -149,9 +148,10 @@ export class Notes extends JSONDataBase {
         let metadata: NoteMetadata = {
             id: generatedId,
             title: title,
-            filename: options.filename ? options.filename : Notes.dotTxt(generatedId),
+            filename: options && options.filename ? options.filename : Notes.dotTxt(generatedId),
             lastedit: Notes.getDate(),
-            isfavorite: options.isfavorite!=undefined ? options.isfavorite : false
+            isfavorite: options.isfavorite!=undefined ? options.isfavorite : false,
+            matiere: options && options.matiere ? options.matiere : ''
         }
         if (options.matiere) metadata.matiere = options.matiere
         let newNote: Note = {
@@ -227,7 +227,7 @@ export class Notes extends JSONDataBase {
         // edit metadata property
         let meta: NoteMetadata = this.getMetadataFromId(id)
         if (!meta) throw Error(`Aucune note trouvée avec l'id ${id}`)
-        Object.defineProperty(meta, property, {value: value})
+        Object.defineProperty(meta, property, {value: value, writable: true, configurable: true})
         // let newObj = Object.assign(meta)
         return meta
     }

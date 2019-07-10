@@ -238,7 +238,7 @@ export class BrowsePlugin implements NoxunotePlugin {
     // Bouton ouvrir
     let button = document.createElement('button')
     button.classList.add('fileQuickLoadButton', 'btn', 'btn-sm', 'btn-secondary')
-    button.setAttribute('data-tooltip', "Ouvrir")
+    // button.setAttribute('data-tooltip', "Ouvrir")
     button.innerHTML = '<i class="fas fa-pen"></i>'
     button.addEventListener('click', ()=>this.loadNote(meta.id))
     el.appendChild(button)
