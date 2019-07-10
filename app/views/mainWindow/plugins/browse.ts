@@ -81,6 +81,10 @@ export class BrowsePlugin implements NoxunotePlugin {
     })
   }
 
+  /**
+   * Génère la vue de l'onglet Aperçu
+   * @param noteId iD de la note à afficher
+   */
   renderLookup(noteId: string) {
     if (!this.noteList.map(nl=>nl.id).includes(noteId)) {
       console.error(`BrowsePlugin.renderLookup(${noteId}) a été call avec l'id ${noteId} qui n'éxiste plus !`)
@@ -152,6 +156,10 @@ export class BrowsePlugin implements NoxunotePlugin {
     this.elts.fileLookup.appendChild(deleteButton)
   }
 
+  /**
+   * Génère un selecteur de matière pour changer la matière liée à une note
+   * @param noteId 
+   */
   private generateMatiereSelector(noteId: string): HTMLSelectElement {
     let note: NoteMetadata = this.noteList.find(n=>n.id==noteId)
     let selectEl = document.createElement('select')
@@ -190,6 +198,10 @@ export class BrowsePlugin implements NoxunotePlugin {
     return selectEl
   }
 
+  /**
+   * Génère une table de deux colonnes avec les données fournies
+   * @param data Un tableau bidimensionnel à deux colonnes qui décrit le contenu de la table
+   */
   private generateTable(data: Array<{a:string|HTMLElement, b:string|HTMLElement}>): HTMLTableElement {
     let table: HTMLTableElement = document.createElement('table')
     data.forEach( (data: {a:string|HTMLElement, b:string|HTMLElement}) => {
@@ -214,6 +226,10 @@ export class BrowsePlugin implements NoxunotePlugin {
     return table
   }
 
+  /**
+   * Génère un élément note cliquable dans la liste des Notes du navigateur.
+   * @param meta Metadata de la note
+   */
   private generateFileElement(meta: NoteMetadata): HTMLDivElement {
     let el = document.createElement('div')
     el.classList.add('file')
@@ -245,6 +261,9 @@ export class BrowsePlugin implements NoxunotePlugin {
     return el
   }
 
+  /**
+   * Génère la vue de la liste des matières
+   */
   renderMatieres() {
     console.debug('Génération de la liste des matières (Browse)')
     this.matieres = this.ipc.sendSync('db_matieres_getMatieres')
@@ -262,6 +281,10 @@ export class BrowsePlugin implements NoxunotePlugin {
     this.elts.allMatNotesCount.innerText = `(${this.noteList.length})`
   }
 
+  /**
+   * Génère un élément matière cliquable à afficher dans la liste des matières.
+   * @param m La matière
+   */
   private generateMatiereElement(m: Matiere): HTMLDivElement {
     let el = document.createElement('div')
     el.classList.add('matiere')

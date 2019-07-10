@@ -74,9 +74,15 @@ export class Notes extends JSONDataBase {
         // Save parsedJson
         this.saveJson()
     }
+    /**
+     * Génère un id (très probablement) unique au format texte
+     */
     public static generateId(): string {
         return Math.floor(Math.random() * Math.floor(99999999)).toString()
     }
+    /**
+     * Génère un texte en français décrivant l'instant présent
+     */
     public static getDate(): string {
         const options = { weekday: 'long', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric' };
         const date = (new Date()).toLocaleDateString('fr-FR', options)
@@ -232,6 +238,10 @@ export class Notes extends JSONDataBase {
         return meta
     }
 
+    /**
+     * Supprime une note, fichier compris
+     * @param id Note à supprimer
+     */
     public deleteNote(id: string): NoteMetadata[] {
         let meta: NoteMetadata = this.getMetadataFromId(id)
         if (!meta) throw Error('Aucune donnée trouvée pour l\'ID ' + id + ' Trace parsedJson : ' + JSON.stringify(this.parsedJson))
