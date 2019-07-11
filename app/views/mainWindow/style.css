@@ -718,3 +718,21 @@ div.pastille {
 	font-size: 1.3em;
 	cursor: pointer;
 }
+.fileSearch {
+	width: 102px;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 20px;
+	background-color: #ffffff;
+	margin-bottom: 8px;
+	cursor: pointer;
+
+	opacity: 0.4;
+	transition: opacity 0.2s, width 0.2s;
+} 
+.fileSearch:focus, .fileSearch:valid {
+	opacity: 1;
+	cursor: text;
+	width: 70%;
+	transition: opacity 0.2s, width 0.3s cubic-bezier(0, 0, 0, 1);
+}
