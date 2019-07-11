@@ -226,7 +226,7 @@ export class Notes extends JSONDataBase {
      */
     public setProperty(property: string, value: (string|number|boolean), id: string): NoteMetadata {
         // check
-        if (!["id", "filename", "lastedit", "isfavorite", "matiere"].includes(property)) {
+        if (!["title", "id", "filename", "lastedit", "isfavorite", "matiere"].includes(property)) {
             throw Error(`La propriete ${property} n'appartient pas au type NoteMetadata`)
         }
         console.debug(`Affectation de la pté. ${property} = ${value} pour la note ${id}`)

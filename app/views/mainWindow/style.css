@@ -712,3 +712,9 @@ div.pastille {
 .file-clicked {
 	background-color: #00000030;
 }
+.isFavorite {
+	color: #ffd767;
+	padding-top: 9px;
+	font-size: 1.3em;
+	cursor: pointer;
+}

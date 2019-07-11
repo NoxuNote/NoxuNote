@@ -1,5 +1,5 @@
 import { NoxunotePlugin, NoteMetadata, Matiere, Note } from "../../../types";
-import { IpcRenderer, TouchBarButton } from "electron";
+import { IpcRenderer, TouchBarButton, Input } from "electron";
 import { isNull } from "util";
 import $ = require("jquery");
 
@@ -94,19 +94,22 @@ export class BrowsePlugin implements NoxunotePlugin {
     let note: Note = this.ipc.sendSync('db_notes_getNote', noteId)
     // Table d'informations
     let rechMat: Matiere = this.matieres.find(m=>m.id==note.meta.matiere)
-    let matiereElement: HTMLElement = this.generateMatiereSelector(noteId)
     let data: Array<{a:string, b:string|HTMLElement}> = [
       {
         a: "Titre",
-        b: note.meta.title
+        b: this.generateTitreInput(note.meta)
+      },
+      {
+        a: "Matière",
+        b: this.generateMatiereSelector(note.meta)
+      },
+      {
+        a: "Favoris",
+        b: this.generateIsFavoriteCheckbox(note.meta)
       },
       {
         a: "Dernière modif.",
         b: note.meta.lastedit
-      },
-      {
-        a: "Favoris",
-        b: note.meta.isfavorite? "Oui" : "Non"
       },
       {
         a: "Id",
@@ -115,10 +118,6 @@ export class BrowsePlugin implements NoxunotePlugin {
       {
         a: "Fichier",
         b: note.meta.filename
-      },
-      {
-        a: "Matière",
-        b: matiereElement
       }
     ]
     let table = this.generateTable(data)
@@ -158,10 +157,9 @@ export class BrowsePlugin implements NoxunotePlugin {
 
   /**
    * Génère un selecteur de matière pour changer la matière liée à une note
-   * @param noteId 
+   * @param meta Metadata de la note
    */
-  private generateMatiereSelector(noteId: string): HTMLSelectElement {
-    let note: NoteMetadata = this.noteList.find(n=>n.id==noteId)
+  private generateMatiereSelector(meta: NoteMetadata): HTMLSelectElement {
     let selectEl = document.createElement('select')
     selectEl.classList.add('form-control')
     let options: HTMLOptionElement[] = []
@@ -179,7 +177,7 @@ export class BrowsePlugin implements NoxunotePlugin {
       opt.value = m.id
       opt.style.backgroundColor = m.color
       opt.innerText = m.name
-      if (note.matiere && note.matiere == m.id) {
+      if (meta.matiere && meta.matiere == m.id) {
         opt.selected = true
         optDefault.selected = false
       }
@@ -192,10 +190,68 @@ export class BrowsePlugin implements NoxunotePlugin {
     selectEl.onchange = function (e: any) {
       // db_notes_setProperty > property: string, value: (string|number|boolean), id: string
       let value = $(this).val()
-      that.ipc.sendSync('db_notes_setProperty', 'matiere', value, noteId)
+      that.ipc.sendSync('db_notes_setProperty', 'matiere', value, meta.id)
       that.init()
     }
     return selectEl
+  }
+
+  private generateIsFavoriteCheckbox(meta: NoteMetadata): HTMLElement {
+    let input = document.createElement('i')
+    input.classList.add( meta.isfavorite? 'fas' : 'far', 'fa-star', 'isFavorite')
+    input.onclick = ()=>{
+      this.ipc.sendSync('db_notes_setProperty', 'isfavorite', !meta.isfavorite, meta.id)
+      this.init()
+    }
+    return input
+  }
+
+  /**
+   * Génère un input pour modifier le nom de la note
+   * @param meta Métadata de la note
+   */
+  private generateTitreInput(meta: NoteMetadata): HTMLDivElement {
+    /*
+      <div class="input-group">
+        <input class="form-control" value="TITRE" type="text">
+        <div class="input-group-append">
+          <span class="input-group-button">
+            <button class="btn btn-secondary"><i class="fas fa-save"></i></button>  
+          </span>
+        </div>
+      </div>
+     */
+    let mainDiv = document.createElement('div')
+    mainDiv.classList.add('input-group')
+
+    let input = document.createElement('input')
+    input.classList.add('form-control')
+    input.value = meta.title
+    input.type = "text"
+    mainDiv.appendChild(input)
+
+    let subDiv = document.createElement('div')
+    subDiv.classList.add('input-group-append')
+    mainDiv.appendChild(subDiv)
+
+    let span = document.createElement('span')
+    span.classList.add('input-group-button')
+    subDiv.appendChild(span)
+
+    let button = document.createElement('button')
+    button.classList.add('btn', 'btn-secondary')
+    button.innerHTML = `<i class="fas fa-save"></i>`
+    button.onclick = () => {
+      if (input.value.trim().length > 0) {
+        this.ipc.sendSync('db_notes_setProperty', 'title', input.value.trim(), meta.id)
+        this.init()
+      } else {
+        input.value = meta.title
+      }
+    }
+    span.appendChild(button)
+
+    return mainDiv
   }
 
   /**
@@ -240,7 +296,10 @@ export class BrowsePlugin implements NoxunotePlugin {
     if (this.clickedNoteId && this.clickedNoteId == meta.id) {
       el.classList.add('file-clicked')
     }
-    el.appendChild(document.createTextNode(meta.title))
+    let title = document.createElement('div')
+    let star:string = meta.isfavorite ? '<i class="fas fa-star" style="color:#ffd767"></i> ' : ''
+    title.innerHTML = star + meta.title
+    el.appendChild(title)
     let subEl = document.createElement('div')
     subEl.classList.add('lastEdit')
     subEl.innerText = meta.lastedit
