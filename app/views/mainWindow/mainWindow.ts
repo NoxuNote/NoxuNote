@@ -60,7 +60,8 @@ const elts = {
 		allMatNotesCount: document.getElementById('allMatNotesCount'),
 		matList: document.getElementById('matList'),
 		filesList: document.getElementById('filesList'),
-		fileLookup: document.getElementById('fileLookup')
+		fileLookup: document.getElementById('fileLookup'),
+		fileTextSearch: <HTMLInputElement>document.getElementById('fileTextSearch')
 	},
 	toDo: {
 		triggers: [document.getElementById('triggerTodo'), document.getElementById('triggerTodo2')],

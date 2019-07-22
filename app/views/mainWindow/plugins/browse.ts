@@ -10,7 +10,8 @@ export type BrowseElements = {
   allMatNotesCount: HTMLElement,
   matList: HTMLElement,
   filesList: HTMLElement,
-  fileLookup: HTMLElement
+  fileLookup: HTMLElement,
+  fileTextSearch: HTMLInputElement,
 }
 
 export class BrowsePlugin implements NoxunotePlugin {
@@ -52,6 +53,8 @@ export class BrowsePlugin implements NoxunotePlugin {
     }
     this.renderFiles()
     this.renderMatieres()
+    // Lors de la modification du champ de recherche de fichier, MAJ l'affichage
+    this.elts.fileTextSearch.addEventListener('keyup', ()=>this.renderFiles())
   }
 
   loadNote(id: string) {
@@ -68,15 +71,19 @@ export class BrowsePlugin implements NoxunotePlugin {
   renderFiles(updateNoteList: boolean = false, selectedMatiereId?: string, orderBy?: string) {
     console.debug('Génération de la liste des notes (Browse)')
     if (updateNoteList) this.noteList = this.ipc.sendSync('db_notes_getNoteList')
-    // clean allfiles node
+    // clean allfiles node on document
     var child = this.elts.filesList.lastElementChild;  
     while (child) { 
         this.elts.filesList.removeChild(child); 
         child = this.elts.filesList.lastElementChild;  
     } 
+    // Filter notes to display
+    let displayedNotes: NoteMetadata[] = this.noteList.filter(n=>
+      n.title.toLowerCase().includes(this.elts.fileTextSearch.value.toLowerCase())
+    )
     // create node for each filesList
-    console.debug(`Génération d'un élément HTML pour la liste de notes ${JSON.stringify(this.noteList.map(n=>n.title))}`)
-    this.noteList.forEach( (n: NoteMetadata) => {
+    console.debug(`Génération d'un élément HTML pour la liste de notes ${JSON.stringify(displayedNotes.map(n=>n.title))}`)
+    displayedNotes.forEach( (n: NoteMetadata) => {
       this.elts.filesList.appendChild(this.generateFileElement(n))
     })
   }
