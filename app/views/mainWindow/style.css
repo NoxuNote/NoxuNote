@@ -364,8 +364,9 @@ em {
 }
 .leftPannelClose {
 	position: absolute; 
-	right:5px; 
-	top:5px; 
+	z-index: 2;
+	right: 5px; 
+	top: 5px; 
 	color: #C05351;
 	cursor: pointer;
 }

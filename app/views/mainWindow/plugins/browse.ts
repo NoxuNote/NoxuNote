@@ -30,6 +30,11 @@ export class BrowsePlugin implements NoxunotePlugin {
    * ID de la note visible dans "Aperçu" sur laquelle on vient de cliquer dans l'arborescence
    */
   private clickedNoteId: string;
+
+  /**
+   * ID de la matiere a filtrer dans les notes
+   */
+  private clickedMatiereId: string;
   
   constructor(public elts: BrowseElements, public ipc: IpcRenderer) {
     this.init()
@@ -51,10 +56,16 @@ export class BrowsePlugin implements NoxunotePlugin {
       this.clickedNoteId = null
       this.elts.fileLookup.innerHTML = ""
     }
-    this.renderFiles()
-    this.renderMatieres()
     // Lors de la modification du champ de recherche de fichier, MAJ l'affichage
     this.elts.fileTextSearch.addEventListener('keyup', ()=>this.renderFiles())
+    // Lors du clic sur "Toutes les notes", reset le filtre de matiere
+    this.elts.allMat.addEventListener('click', ()=>{
+      this.clickedMatiereId = null
+      this.renderMatieres()
+      this.renderFiles()
+    })
+    this.renderFiles()
+    this.renderMatieres()
   }
 
   loadNote(id: string) {
@@ -78,9 +89,11 @@ export class BrowsePlugin implements NoxunotePlugin {
         child = this.elts.filesList.lastElementChild;  
     } 
     // Filter notes to display
-    let displayedNotes: NoteMetadata[] = this.noteList.filter(n=>
-      n.title.toLowerCase().includes(this.elts.fileTextSearch.value.toLowerCase())
-    )
+    let displayedNotes: NoteMetadata[] = this.noteList.filter(n=> {
+      let titleCondition = n.title.toLowerCase().includes(this.elts.fileTextSearch.value.toLowerCase())
+      let matiereCondition = this.clickedMatiereId==null? true : n.matiere==this.clickedMatiereId
+      return titleCondition && matiereCondition
+    })
     // create node for each filesList
     console.debug(`Génération d'un élément HTML pour la liste de notes ${JSON.stringify(displayedNotes.map(n=>n.title))}`)
     displayedNotes.forEach( (n: NoteMetadata) => {
@@ -345,6 +358,9 @@ export class BrowsePlugin implements NoxunotePlugin {
     })
     // set allMatNoteCount to number of notes
     this.elts.allMatNotesCount.innerText = `(${this.noteList.length})`
+    // Si aucune matiere n'est sélectionnée, on sélectionne "toutes les notes"
+    if (!this.clickedMatiereId) this.elts.allMat.classList.add('matiere-selected')
+    else this.elts.allMat.classList.remove('matiere-selected')
   }
 
   /**
@@ -354,19 +370,24 @@ export class BrowsePlugin implements NoxunotePlugin {
   private generateMatiereElement(m: Matiere): HTMLDivElement {
     let el = document.createElement('div')
     el.classList.add('matiere')
+    if (m.id == this.clickedMatiereId) el.classList.add('matiere-selected')
     let subEl = document.createElement('i')
     subEl.classList.add('fa', 'fa-folder-open')
     subEl.style.color = m.color
     el.appendChild(subEl)
     el.appendChild(document.createTextNode(' ' + m.name))
     // Note counter
-    const noteCount: string = this.noteList.filter((n:NoteMetadata) => {
-      return n.matiere? n.matiere==m.id : false
-    }).length.toString()
+    const noteCount: string = this.noteList.filter(n => n.matiere==m.id).length.toString()
     let noteCountElement = document.createElement('div')
     noteCountElement.classList.add('float-right')
     noteCountElement.innerText = `(${noteCount})`
     el.appendChild(noteCountElement)
+    // onClick
+    el.addEventListener('click', ()=>{
+      this.clickedMatiereId = m.id
+      this.renderMatieres()
+      this.renderFiles()
+    })
     return el
   }
 
