@@ -33,6 +33,6 @@
     "summernote": "^0.8.11"
   },
   "devDependencies": {
-    "electron": "^4.0.0"
+    "electron": "^6.0.0"
   }
 }
