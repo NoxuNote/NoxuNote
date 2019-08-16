@@ -34,47 +34,51 @@
 }
 
 */
-class ColorPicker extends HTMLElement {
-    constructor(colors, id, parent) {
+import { Matiere } from '../../types'
+
+export class ColorPicker {
+    public parent: HTMLElement
+    public element: HTMLElement
+    constructor(colors: string[], mat: Matiere, parent: HTMLElement) {
         // Inisialisation
-        super()
-        this.className = "colorpicker"
-        this.parent = parent
-        this.id = id
+        this.element = document.createElement('div')
+        this.element.className = "colorpicker"
         // Ajout d'une flèche en haut
         var arrow = document.createElement('div')
         arrow.className = "arrow-up"
-        this.appendChild(arrow)
+        this.element.appendChild(arrow)
         // Ajout des carrés de couleur
-        for (var i = 0; i < colors.length; i++) {
-            var cb = document.createElement('button')
+        colors.forEach(color => {
+            let cb = document.createElement('button')
             cb.className = 'colorbutton'
-            cb.style.backgroundColor = colors[i]
+            cb.style.backgroundColor = color
             // Quand on cliquera sur une case, créee un Event 'colorClicked' contenant la couleur
             cb.addEventListener('click', (event)=>{
-                var detail = {  // On créee un objet détail qui contient la couleur
-                    detail: {  // et l'id de l'objet qui est modifié
-                        "color" : event.target.style.backgroundColor,
-                        "id" : event.target.parentNode.id
+                let detail;
+                if (event.target instanceof HTMLElement) {
+                    detail = {  // On créee un objet détail qui contient la couleur
+                        detail: {  // et l'id de l'objet qui est modifié
+                            "color" : color,
+                            "matiereId" : mat.id
+                        }
                     }
                 }
-                this.dispatchEvent(
+                this.element.dispatchEvent(
                     new CustomEvent('colorClicked', detail)
                 )
             })
-            this.appendChild(cb)
-        }
+            this.element.appendChild(cb)
+        })
         setImmediate(()=>{ // Après que le navigateur ait terminé l'affichage de l'élément
             var that = this // On stoque l'objet dans une autre variable pour ne pas interférer
             document.addEventListener('click', function _colorPicker(event) {
-                if (that !== event.target) { // Si le clic n'est pas sur cet élément, on le supprime
-                    that.parent.removeChild(that)
+                if (that.element !== event.target) { // Si le clic n'est pas sur cet élément, on le supprime
+                    that.element.parentElement.removeChild(that.element)
                     document.removeEventListener('click', _colorPicker) // On supprime le listener
                 }
             })
-        })        
+        })   
+        parent.appendChild(this.element)
     }
-}
 
-// When importing this class you need to register noxu-input as a new HTMLElement.
-window.customElements.define('color-picker', ColorPicker)
+}

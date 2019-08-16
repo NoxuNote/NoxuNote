@@ -12,6 +12,7 @@ export type BrowseElements = {
   filesList: HTMLElement,
   fileLookup: HTMLElement,
   fileTextSearch: HTMLInputElement,
+  
 }
 
 export class BrowsePlugin implements NoxunotePlugin {

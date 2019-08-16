@@ -433,7 +433,7 @@ ipcMain.on('db_matieres_setProperty', (event: any, property: string, value: (str
 	event.returnValue = noxuApp.db.matieres.setProperty(property, value, id)
 })
 
-ipcMain.on('openSettings', (event: any, key: any) => { noxuApp.createSettingsWindow(key) })
+ipcMain.on('openSettings', (event: any, key: string) => { noxuApp.createSettingsWindow(key) })
 /***************************************************************************************************
  *                               RÉCUPÉRATION D'INFORMATIONS TIERCES                               *
  ***************************************************************************************************/

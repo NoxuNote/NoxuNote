@@ -109,12 +109,7 @@ class SettingsWindow implements INoxunoteWindow, ISettingsWindow {
         this.browserWindow = new BrowserWindow({
             width: 1024,
             height: 600,
-            titleBarStyle: "default",
-            movable: true,
-            frame: true,
-            backgroundColor: '#1E232A',
-            //resizable: false,
-            autoHideMenuBar: true
+
         })
         this.browserWindow.loadURL(`file://${__dirname}/views/settingsWindow/settings.html`)
     }
@@ -206,7 +201,7 @@ export class NoxuNoteApp {
     closeMainOutputWindow() {
         this.mainOutputWindow.browserWindow.close()
     }
-    createSettingsWindow(key: any) {
+    createSettingsWindow(key: string) {
         if (!this.settingsWindow) {
             this.settingsWindow = new SettingsWindow()
             this.settingsWindow.browserWindow.webContents.on('did-finish-load', () => {

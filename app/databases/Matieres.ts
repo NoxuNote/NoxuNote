@@ -118,7 +118,7 @@ export class Matieres extends JSONDataBase {
         }
         // edit metadata property
         let mat: Matiere = this.parsedJson.find((m:Matiere)=>m.id===id)
-        Object.defineProperty(mat, property, value)
+        Object.defineProperty(mat, property, {value: value, writable: true, configurable: true})
         return mat
     }
 }
