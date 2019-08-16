@@ -5,6 +5,11 @@ const eprompt = require('electron-prompt')
 const homedir = require('os').homedir();
 import { ColorPicker } from './ColorPicker'
 import { Matiere } from '../../types';
+import { StringPrompt } from '../../components/StringPrompt';
+import { ConfirmationPrompt } from '../../components/ConfirmationPrompt';
+import * as $ from "jquery";
+import { stringify } from 'querystring';
+
 
 // Mise a jour du contenu de la page lors du clic sur une catégorie
 var page = document.getElementById("page")
@@ -33,20 +38,14 @@ let matList: Matiere[];
 let colors: string[] = ipcRenderer.sendSync('db_getColors')
 
 function editMatName(mat: Matiere) {
-  eprompt.prompt({
-    title: 'Modifier "' +mat.name + '"',
-    label: 'Nouveau nom :',
-    value: mat.name,
-    inputAttrs: { // attrs to be set if using 'input'
-      type: 'text'
-    },
+  let sp = new StringPrompt("Changer le nom", "", {label: "Nom", placeholder: "Ma matière", value: mat.name})
+  sp.getPromise().then(r=>{
+    let trimmed = r.trim()
+    if (trimmed.length>0) {
+      matList = ipcRenderer.sendSync('db_matieres_setProperty', 'name', r, mat.id)
+      loadTableMatieres()
+    }
   })
-    .then((r: string) => {
-      if (r && r.trim().length) {
-        matList = ipcRenderer.sendSync('db_matieres_setProperty', 'name', r, mat.id)
-        loadTableMatieres()
-      }
-    })
 }
 
 /**
@@ -69,22 +68,12 @@ function editMatColor(event: MouseEvent, target: HTMLElement, mat: Matiere) {
   target.appendChild(colorPicker)
 }
 
-function deleteMat(i: number) {
-  eprompt.prompt({
-    title: 'Confirmation',
-    label: 'Supprimer définitivement ' + matList[i].name + ' ?',
-    type: 'select', // 'select' or 'input, defaults to 'input'
-    selectOptions: { // select options if using 'select' type
-      '1': 'Supprimer et conserver les notes',
-      '3': 'Ne rien faire',
-    }
+function deleteMat(mat: Matiere) {
+  let cp = new ConfirmationPrompt('Supprimer une matière', `Êtes vous sûr de vouloir supprimer <b>${mat.name}</b>`)
+  cp.getPromise().then(()=>{
+    matList = ipcRenderer.sendSync('db_matieres_removeMat', mat.id)
+    loadTableMatieres()
   })
-    .then((r: string) => {
-      if (r && r != "3") {
-        matList = ipcRenderer.sendSync('db_matieres_removeMat', matList[i].id)
-        loadTableMatieres()
-      }
-    })
 }
 
 function loadTableMatieres() {
@@ -124,7 +113,7 @@ function loadTableMatieres() {
     innerTD3.className = "editable large"
     innerTD3.innerHTML = "<center><i id='" + i + "' class='fas fa-trash red clicable'></i></center>"
     innerTD3.addEventListener("click", function (e) {
-      deleteMat(i)
+      deleteMat(matiere)
     }, false)
 
     innerTR.appendChild(innerTD1)
@@ -139,20 +128,14 @@ function loadTableMatieres() {
 }
 
 function ajouterMatiere() {
-  eprompt.prompt({
-    title: 'Ajouter une matière',
-    label: 'Nom :',
-    value: '',
-    inputAttrs: { // attrs to be set if using 'input'
-      type: 'text'
-    },
+  let sp = new StringPrompt('Ajouter une matière', '', {label: 'Nom', placeholder: 'Physique'})
+  sp.getPromise().then(r => {
+    let trimmed = r.trim()
+    if (trimmed.length>0) {
+      matList = ipcRenderer.sendSync('db_matieres_addMat', trimmed, 'grey')
+      loadTableMatieres()
+    }
   })
-    .then((r: string) => {
-      if (r && r.trim().length) {
-        matList = ipcRenderer.sendSync('db_matieres_addMat', r, 'grey')
-        loadTableMatieres()
-      }
-    })
 }
 
 /***************************************************************************************************
@@ -160,22 +143,12 @@ function ajouterMatiere() {
  ***************************************************************************************************/
 var assoc = ipcRenderer.sendSync('db_getAssocList')
 
-function deleteAssoc(id: number) {
-  eprompt.prompt({
-    title: 'Confirmation',
-    label: 'Supprimer définitivement ' + assoc[id]['input'] + ' ?',
-    type: 'select', // 'select' or 'input, defaults to 'input'
-    selectOptions: { // select options if using 'select' type
-      '1': 'Supprimer',
-      '2': 'Ne rien faire',
-    }
+function deleteAssoc(mot: string) {
+  let cp = new ConfirmationPrompt('Supprimer un raccourci', `Êtes vous sûr de vouloir supprimer le raccourci <b>${mot}</b>`)
+  cp.getPromise().then(()=>{
+    assoc = ipcRenderer.sendSync('db_removeAssoc', mot)
+    loadTableAssoc()
   })
-    .then((r: string) => {
-      if (r && r != "2") {
-        assoc = ipcRenderer.sendSync('db_removeAssoc', assoc[id]['input'])
-        loadTableAssoc()
-      }
-    })
 }
 
 function loadTableAssoc() {
@@ -188,60 +161,34 @@ function loadTableAssoc() {
     noTRs = tableAssoc.childNodes
   }
   // Complétion du tableau
-  for (var i = 0; i < assoc.length; i++) {
+  assoc.forEach( (assoc: {input:string, output: string})=>{
     var innerTR = document.createElement('tr')
-    var innerTD1 = document.createElement('td')
     var innerTD2 = document.createElement('td')
     var innerTD3 = document.createElement('td')
 
     // Plus besoin de raccourci depuis la maj summernote
     // innerTD1.innerHTML = assoc[i].input
-    innerTD1.innerHTML = "(Aucun)"
-    innerTD2.innerHTML = assoc[i].output
+    innerTD2.innerHTML = assoc.input
     innerTD3.className = "editable large"
-    innerTD3.innerHTML = "<center><i id='" + i + "' class='fas fa-trash red clicable'></i></center>"
+    innerTD3.innerHTML = "<center><i class='fas fa-trash red clicable'></i></center>"
     innerTD3.addEventListener("click", () => {
-      deleteAssoc(i)
+      deleteAssoc(assoc.input)
     }, false)
 
-    innerTR.appendChild(innerTD1)
     innerTR.appendChild(innerTD2)
     innerTR.appendChild(innerTD3)
     tableAssoc.appendChild(innerTR)
-
-  }
+  })
 }
 
 function ajouterAssoc() {
-
-  // Plus besoin de prompt r1 depuis la maj summernote
-  const r1 = "(Aucun)"
-
-  // prompt({
-  //     title: 'Ajouter une abbréviation',
-  //     label: 'Abbréviation :',
-  //     value: '',
-  //     inputAttrs: { // attrs to be set if using 'input'
-  //         type: 'text'
-  //     },
-  // })
-  //     .then((r1) => {
-  if (r1 && r1.trim().length) {
-    eprompt.prompt({
-      title: 'Ajouter une abbréviation',
-      label: 'Mot original :',
-      value: '',
-      inputAttrs: { // attrs to be set if using 'input'
-        type: 'text'
-      },
-    })
-      .then((r2: string) => {
-        if (r2 && r2.trim().length) {
-          assoc = ipcRenderer.sendSync('db_addAssoc', r1, r2)
-          loadTableAssoc()
-        }
-      })
-  }
-  // })
+  let sp = new StringPrompt('Ajouter un mot raccourci', '', {label: 'Mot', placeholder: 'Anticonstitution'})
+  sp.getPromise().then(r => {
+    let trimmed = r.trim()
+    if (trimmed.length>0) {
+      assoc = ipcRenderer.sendSync('db_addAssoc', trimmed, trimmed) // Pour l'instant, le mot est associé à lui même.
+      loadTableAssoc()
+    }
+  })
 }
 

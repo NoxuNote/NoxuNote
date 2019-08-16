@@ -4,6 +4,7 @@ import { JSONDataBase } from '../types'
 /***************************************************************************************************
  *                                          DACTYLOGRAPHIE                                         *
  ***************************************************************************************************/
+// JSON TYPE : {input: string, output: string}[]
 export class Dactylo extends JSONDataBase {
     constructor() {
         let path: string = homedir + "/NoxuNote/dactylo.json";
@@ -28,7 +29,7 @@ export class Dactylo extends JSONDataBase {
      * @param {string} input Le mot raccourci
      * @param {string} output Le mot normal
      */
-    addAssoc(input: any, output: any) {
+    addAssoc(input: string, output: string) {
         this.rawJson.push({ 'input': input, 'output': output });
         return this.rawJson;
     }
@@ -36,11 +37,11 @@ export class Dactylo extends JSONDataBase {
      * Supprime une entrée dans la table
      * @param {string} input Le mot raccourci à supprimer
      */
-    removeAssoc(input: any) {
+    removeAssoc(input: string) {
         this.rawJson.splice(this.findIndexAssoc(input), 1);
         return this.rawJson;
     }
     findIndexAssoc(input: any) {
-        return this.rawJson.findIndex((e: { [x: string]: any; }) => e['input'] == input);
+        return this.rawJson.findIndex((e: {input: string, output: string}) => e.input == input);
     }
 }

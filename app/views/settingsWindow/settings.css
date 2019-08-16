@@ -34,23 +34,25 @@
 
 html {
     background-color: #1E232A;
-    margin: -8px;
-    color: #DDDDDD;
     font-family: Arial;
     overflow: hidden;
     cursor: default;
 }
 h2 {
     display: inline-block;
-    margin-left: 10px;
+    margin-left: 8px;
+    padding-top: 19px;
     font-family: FlatBold;
-    font-size: 0.9em;
+    /* font-size: 2em; */
+    color: #d6d6d6;
+    /* text-align: center; */
+    /* width: 100%; */
 }
 div.leftPart {
     float: left;
     width: 20%;
     height: 100%;
-    background-color: rgb(49, 56, 66)
+    background-color: rgb(49, 56, 66);
 }
 div.rightPart {
     float: left;

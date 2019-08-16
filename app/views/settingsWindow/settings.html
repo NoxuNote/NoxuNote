@@ -4,8 +4,9 @@
     <title>
         Réglages
     </title>
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="settings.css">
-	<link rel="stylesheet" type="text/css" href="../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
 </head>
 
 <body>
@@ -49,9 +50,11 @@
                 </tr>
             </table>
             <br>
-            <button class="btn alignRight" onClick="ajouterMatiere()">Ajouter
-                <i class="fas fa-plus"></i>
-            </button>
+            <div style="height: 30px;">
+                <button class="btn alignRight" onClick="ajouterMatiere()">Ajouter
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
         </div>
         <div id="Dactylographie">
             <h3>Raccourcis de mots</h3>
@@ -61,14 +64,15 @@
             <table id="tableAssoc">
                 <tr style="background-color: #CCCCCC">
                     <th class="large">Abréviation</th>
-                    <th class="large">Mot complet</th>
                     <th class="large">Suppr.</th>
                 </tr>
             </table>
             <br>
-            <button class="btn alignRight" onClick="ajouterAssoc()">Ajouter
-                <i class="fas fa-plus"></i>
-            </button>
+            <div style="height: 30px;">
+                <button class="btn alignRight" onClick="ajouterAssoc()">Ajouter
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -76,6 +80,8 @@
 
 <footer>
     <script>var exports = {"__esModule": true};</script>
+    <script src="../../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="ColorPicker.js"></script>
     <script src="./settings.js"></script>
 </footer>
