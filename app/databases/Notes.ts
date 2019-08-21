@@ -1,6 +1,7 @@
 import fs = require('fs-extra');
 const homedir = require('os').homedir();
-import { JSONDataBase, Note, NoteMetadata } from '../types'
+import { JSONDataBase, Note, NoteMetadata, INoxunoteApp } from '../types'
+import { NoxuNoteApp } from '../Browsers';
 /***************************************************************************************************
  *                                         TABLE DES NOTES                                         *
  ***************************************************************************************************/
@@ -16,10 +17,13 @@ export class Notes extends JSONDataBase {
     
     private parsedJson: NoteMetadata[];
 
-    constructor() {
+    private app: INoxunoteApp;
+
+    constructor(app: INoxunoteApp) {
         let path: string = homedir + "/NoxuNote/user_notes.json"
         let defaultJson: Object = []
         super(path, defaultJson)
+        this.app = app
     }
 
     public saveJson(): void { // Override default method
@@ -156,10 +160,9 @@ export class Notes extends JSONDataBase {
             title: title,
             filename: options && options.filename ? options.filename : Notes.dotTxt(generatedId),
             lastedit: Notes.getDate(),
-            isfavorite: options.isfavorite!=undefined ? options.isfavorite : false,
+            isfavorite: options && options.isfavorite!=undefined ? options.isfavorite : false,
             matiere: options && options.matiere ? options.matiere : ''
         }
-        if (options.matiere) metadata.matiere = options.matiere
         let newNote: Note = {
             meta: metadata,
             content: content
@@ -235,6 +238,8 @@ export class Notes extends JSONDataBase {
         if (!meta) throw Error(`Aucune note trouvée avec l'id ${id}`)
         Object.defineProperty(meta, property, {value: value, writable: true, configurable: true})
         // let newObj = Object.assign(meta)
+        // On informe mainWindow que la note à été mise à jour
+        this.app.mainWindow.browserWindow.webContents.send('updatedNoteMetadata', meta)
         return meta
     }
 

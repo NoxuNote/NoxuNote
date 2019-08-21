@@ -12,20 +12,15 @@
 // Importing and creating electron aliases
 const ipc = require('electron').ipcRenderer
 const { ipcRenderer } = require('electron')
-const shell = require('electron').shell
-const { dialog } = require('electron').remote
-const homedir = require('os').homedir()
-const fs = require("fs")
 const os = require("os")
-const math = require("mathjs")
 const ModalManager = require("./ModalManager.js")
-const NotificationService = require("./NotificationService.js")
 const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
 
 import * as $ from "jquery";
+import { NotificationService } from "./NotificationService"
 import { CalcPlugin } from './plugins/calc';
-import { NoxunotePlugin, Matiere, Note } from "../../types";
+import { NoxunotePlugin, Matiere, Note, NoteMetadata } from "../../types";
 import { TodoPlugin } from "./plugins/todo";
 import { BrowsePlugin } from "./plugins/browse";
 
@@ -37,6 +32,7 @@ const editor = $('#summernote')
 const elts = {
 	header: {
 		titrePrincipal: document.getElementById("TitrePrincipal"),
+		matiere: document.getElementById('matiere'),
 		modified: document.getElementById('isModified')
 	},
 	calc: {
@@ -82,13 +78,47 @@ var plugins: NoxunotePlugin[] = [
  * - Objet Note issu de la BDD (en cours d'édition)
  * Il doit toujours être à jour par rapport au contenu
  * en BDD.
- * - Vaut undefined si on travaille sur une nouvelle Note.
+ * - Vaut undefined ou null si on travaille sur une nouvelle Note.
  * Au moment de la sauvegarde, prend la valeur de la note sauvegardée en BDD.
  */
 let loadedNote: Note = undefined;
+
+/**
+ * Définit la note actuellement chargée et met à jour l'affichage
+ * @param note Note a afficher | null pour reset
+ */
 function setLoadedNote(note: Note): void {
-	loadedNote = note;
-	(<BrowsePlugin>plugins.find(p=>p instanceof BrowsePlugin)).setLoadedNote(note)
+	// Browseplugin
+	let browser: BrowsePlugin =(<BrowsePlugin>plugins.find(p=>p instanceof BrowsePlugin))
+	// En cas de reset
+	if (note == null) {
+		editor.summernote('reset')
+		setIsFileModified(false)
+		browser.init() // Met a jour l'affichage des fichiers
+	}
+	// Si on charge une nouvelle note
+	if (loadedNote && note && loadedNote.meta.id != note.meta.id) {
+		// On met à jour l'éditeur
+		setNoteContent(note.content)
+	}
+	loadedNote = note; // Mise à jour de la var locale.
+	browser.setLoadedNote(note)
+	// Mise à jour de l'affichage
+	if (note) {
+		elts.header.titrePrincipal.innerText = note.meta.title
+		// Si une matière est précisée
+		let mat: Matiere = browser.matieres.find(m=>m.id==note.meta.matiere)
+		if (mat) {
+			elts.header.matiere.innerText = mat.name
+			elts.header.matiere.style.display = "inline-block"
+			elts.header.matiere.style.backgroundColor = mat.color
+		} else {
+			elts.header.matiere.style.display = "none"
+		}
+	} else {
+		elts.header.titrePrincipal.innerText = "(Cliquez pour nommer la note)"
+		elts.header.matiere.style.display = "none"
+	}
 }
 
 // CTRL on windows, CMD on mac
@@ -118,7 +148,7 @@ let saveConfirmationModalAction: Function = function () {}
 
 // Manageur de modales
 const modalManager = new ModalManager()
-const notificationService = new NotificationService()
+const notificationService: NotificationService = new NotificationService()
 const equationManager = new EquationManager(modalManager, editor)
 
 /***************************************************************************************************
@@ -164,45 +194,6 @@ function save_as_noxunote() {
 	plugins.find(p => p instanceof BrowsePlugin).init()
 }
 
-
-// /**
-// * Fonction appelée quand on entre un caractère dans le titre.
-// * met à jour la variable title et le titre du document (en haut)
-// */
-// function onTypeOnTitle() {
-// 	setTimeout(() => {
-// 		title = elts.menuGaucheSauver.sauverInput.value.replace(/[><\/\\.]/g, "")
-// 		elts.header.titrePrincipal.innerHTML = title
-// 		if (title == "") {
-// 			elts.header.titrePrincipal.innerHTML = "(Cliquez pour nommer la note)"
-// 			title = "(Sans titre)";
-// 		}
-// 	}, 20)
-// }
-
-// function setNoteTitle(newtitle: string) {
-// 	// Définition du titre
-// 	title = newtitle
-// 	if (newtitle == "") {
-// 		elts.header.titrePrincipal.innerHTML = "(Cliquez pour nommer la note)";
-// 		title = "(Sans titre)"
-// 	} else {
-// 		elts.header.titrePrincipal.innerHTML = title;
-// 	}
-// }
-
-// /**
-//  * Renvoie la matière sélectionnée
-//  */
-// function getMat() {
-// 	var form = elts.menuGaucheSauver.matieres.childNodes
-// 	for (let i = 0; i < form.length; i++) {
-// 		let firstChild: HTMLInputElement = (<HTMLInputElement>form[i].firstChild);
-// 		if (firstChild.checked) return firstChild.value
-// 	}
-// 	return ""
-// }
-
 /**
  * Appelle le module d'exportation html avec le code actuel de la summernote
  */
@@ -216,25 +207,15 @@ function openExport() {
 //
 
 /**
- * Reset l'interface sans avertissement
- */
-function forceReset() {
-	setLoadedNote(null);
-	editor.summernote('reset')
-	setIsFileModified(false)
-	plugins.find(p=>p instanceof BrowsePlugin).init() // Met a jour l'affichage des fichiers
-}
-/**
  * Commande de création d'une nouvelle note
  * de manière douce
  */
 function newFile() {
-
 	if (isFileModified) {
-		saveConfirmationModalAction = forceReset // On définit l'action de confirmation
+		saveConfirmationModalAction = ()=>setLoadedNote(null) // On définit l'action de confirmation
 		modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
 	} else { // Si aucune modification actuellement, on charge directement la note
-		forceReset()
+		setLoadedNote(null)
 	}	
 }
 
@@ -242,24 +223,6 @@ function newFile() {
 function openSettings(key: any) {
 	ipc.send('openSettings', key)
 }
-
-// /**
-//  * Définit une matière cochée par défaut dans le menu de sauvegarde, sinon coche neutre
-//  * @param {string} matiere La matière à cocher
-//  */
-// function setNoteMatiere(matiere: any) {
-// 	let list = elts.menuGaucheSauver.matieres
-// 	let found = false
-// 	list.childNodes.forEach(e => {
-// 		let firstChild = <HTMLInputElement>e.firstChild
-// 		if (firstChild.value === matiere) {
-// 			firstChild.checked = true
-// 			found = true
-// 		}
-// 		else firstChild.checked = false
-// 	})
-// 	if (!found) elts.matieres.matNeutre.checked = true
-// }
 
 /**
  * Insère l'image donnée par l'url
@@ -558,6 +521,14 @@ function setNoteContent(content: string) {
 
 $('#editorRoot').click(() => { editor.summernote('focus') })
 
+function triggerSaveEdit() {
+	// Si une note est déjà en cours d'édition
+	if (!loadedNote) {
+		save_as_noxunote()
+	}
+	(<BrowsePlugin>plugins.find(p=>p instanceof BrowsePlugin)).focusOnNoteTitle()
+}
+
 /**
  * Met à jour le dictionnaire de mots suggerés par summernote en fonction de la BDD.
  */
@@ -577,12 +548,10 @@ function loadNote(note: Note) {
 		modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
 	} else { // Si aucune modification actuellement, on charge directement la note
 		setLoadedNote(note);
-		setNoteContent(note.content)
 	}
 	setIsFileModified(false)
 	plugins.find(p=>p instanceof BrowsePlugin).init() // Met a jour l'affichage des fichiers
 }
-ipcRenderer.on('loadNote', (event: any, note: Note) => loadNote(note))
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/
@@ -593,13 +562,18 @@ notificationService.showNotification("Bienvenue dans NoxuNote", `version ${ipcRe
  ***************************************************************************************************/
 // ipcRenderer.on('setNoteTitle', (event: any, title: any) => setNoteTitle(title))
 // ipcRenderer.on('setNoteMatiere', (event: any, matiere: any) => setNoteMatiere(matiere))
+ipcRenderer.on('loadNote', (event: any, note: Note) => loadNote(note))
 ipcRenderer.on('callSaveAsNoxuNote', (event: any) => save_as_noxunote())
 ipcRenderer.on('resetIsFileModified', (event: any) => setIsFileModified(false))
-ipcRenderer.on('updateDb', (event: any) => { plugins.find(p=>p instanceof BrowsePlugin).init(); refreshDictionnary() })
-ipcRenderer.on('setNoteContent', (event: any, note: any) => setNoteContent(note))
+ipcRenderer.on('updateDb', (event: any) => { 
+	plugins.find(p=>p instanceof BrowsePlugin).init()
+	refreshDictionnary()
+	if (loadedNote) 
+		setLoadedNote(ipcRenderer.sendSync('db_notes_getNote', loadedNote.meta.id))
+})
 ipcRenderer.on('insertDrawing', (event: any, url: any) => insertImg(url))
 ipcRenderer.on('refreshImg', (event: any, url: any) => refreshImg(url))
-ipcRenderer.on('forceReset', (event:any) => forceReset())
+ipcRenderer.on('forceReset', (event:any) => setLoadedNote(null))
 ipcRenderer.on('electron_request_close', (event: any) => closeWindow()) // Permet de gérer graphiquement l'alerte de sauvegarde
 ipcRenderer.on('showNotification', (event: any, notification: string)=>{
 	// On reçoit un objet Notification serialisé, il faut le transformer en objet
@@ -615,4 +589,19 @@ ipcRenderer.on('showNotification', (event: any, notification: string)=>{
 		notifArgs.b2Text,
 		notifArgs.b2Action
 	)
+})
+ipcRenderer.on('updatedNoteMetadata', (event: any, meta: NoteMetadata) => {
+	// Si la note mise à jour correspond à la note actuellement chargée
+	if (loadedNote && loadedNote.meta.id == meta.id) {
+		notificationService.showNotification(
+			"Changements effectués 👍",
+			"Les données de la note ont été éditées !",
+			2000
+		)
+		// On charge les nouvelles données
+		setLoadedNote({
+			content: loadedNote.content, 	// Contenu actuel (inchangé)
+			meta: meta 										// nouvelle métadata
+		})
+	}
 })

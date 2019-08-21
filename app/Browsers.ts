@@ -145,7 +145,7 @@ class PrePrintWindow implements INoxunoteWindow {
     }
 }
 
-export class NoxuNoteApp {
+export class NoxuNoteApp implements INoxunoteApp {
     licence: Licence;
     mainWindow: INoxunoteWindow;
     db: DataBase;
@@ -169,7 +169,7 @@ export class NoxuNoteApp {
         process.exit(1)
     }
     createDb() {
-        this.db = new DataBase()
+        this.db = new DataBase(this)
     }
     createMainWindow() {
         this.mainWindow = new MainWindow()

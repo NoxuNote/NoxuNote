@@ -28,8 +28,8 @@
 	<div id="barre_haut">
 		<div id="windowTitle"></div>
 		<div id="windowTitleText">
-			<img src="../../images/noxunote.png" height="12px"/> NoxuNote - 
-			<div id="TitrePrincipal" onClick='boutonMenuGaucheSauver()'>(Cliquez pour nommer la note)</div>
+			<div id="TitrePrincipal" onClick='triggerSaveEdit()'>(Cliquez pour nommer la note)</div>
+			<div id="matiere" onClick='triggerSaveEdit()' style="display: none"></div>
 			<i id="isModified" class="fas fa-save" data-tooltip="Enregistrer (Ctrl/CMD + S)" data-tooltip-stickto="right" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin" onclick="
 			save_as_noxunote()"></i>
 		</div>
@@ -43,29 +43,6 @@
 		<i id="triggerTodo2" class="fas fa-times leftPannelClose" style="top: 5px"></i>
 		<div id="toDoBlockheader" class="toDoTitle">À faire</div>
 		<textarea name="toDoContent" id="toDoContent" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
-	</div>
-
-	<div id="menuGaucheSauver" class="mlateral mlateral-gauche">
-		<i class="fas fa-times leftPannelClose" onClick="boutonMenuGaucheSauver()"></i>
-		<div id="menuNote">
-			<div class="formSave">
-				<span style="font-size: 1.2em;">
-					<i class="fas fa-pencil-ruler"></i>
-				</span>
-				<input id="menuGaucheSauverInput" type="text" name="nom" placeholder="Ma note" onKeyDown="onTypeOnTitle();"></p>
-				<input style="margin-top: -30px;" id="terminee" type="checkbox">
-				<label for="terminee">Favori (en développement)</label>
-				<div class="savebutton" onClick="save_as_noxunote()">Sauvegarder</div>
-			</div>
-		</div>
-		<div style="font-size: 2.5em; text-align: center; margin: 5px"><i class="fas fa-arrow-down"></i></div>
-		<form>
-			<div id="matiere" style="background: #FFFFFF;"><input id="matneutre" type="radio" name="mat" value="">Non triée</div>
-			<div id="matieres">
-			<!---<div id="matiere" style="background-color: #D8DBDB">(A trier)</i></div>-->
-			</div>
-		</form>
-		<div id="matiere" onClick="openSettings('Matières')"><i class="fas fa-plus-circle"></i></div>
 	</div>
 
 	<div id="menuGaucheOuvrir" class="mlateral mlateral-gauche p-0">
@@ -118,25 +95,25 @@
 			<img src="../../images/LOGO_SVG.svg" class="multimenu_logo">
 		</a>
 		<ul>
-			<li class="multimenu_btn" onclick="openSettings()"><a class="btn-floating red" data-tooltip="Réglages" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="openSettings()"><a class="btn-floating red" data-tooltip="⚙️ Réglages" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-cog"></i>
 			</a></li>
-			<li id="triggerTodo" class="multimenu_btn"><a class="btn-floating orange darken-1" data-tooltip="Block notes" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li id="triggerTodo" class="multimenu_btn"><a class="btn-floating orange darken-1" data-tooltip="📒 Block notes" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-sticky-note"></i>
 			</a></li>
-			<li id="triggerCalc" class="multimenu_btn"><a class="btn-floating yellow darken-1" data-tooltip="Calculatrice" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li id="triggerCalc" class="multimenu_btn"><a class="btn-floating yellow darken-1" data-tooltip="➗ Calculatrice" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-calculator"></i>
 			</a></li>
-			<li class="multimenu_btn" onclick="openExport()"><a class="btn-floating green" data-tooltip="Exporter la note" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="openExport()"><a class="btn-floating green" data-tooltip="🖨️ Exporter la note" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-file-export"></i>
 			</a></li>
-			<li class="multimenu_btn" onclick="boutonMenuGaucheOuvrir()"><a class="btn-floating blue" data-tooltip="Ouvrir" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="boutonMenuGaucheOuvrir()"><a class="btn-floating blue" data-tooltip="📂 Ouvrir" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-folder-open"></i>
 			</a></li>
-			<li class="multimenu_btn" onclick="boutonMenuGaucheSauver()"><a class="btn-floating indigo" data-tooltip="Enregistrer" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="save_as_noxunote();triggerSaveEdit()"><a class="btn-floating indigo" data-tooltip="💾 Enregistrer" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-save"></i>
 			</a></li>
-			<li class="multimenu_btn" onclick="newFile()"><a class="btn-floating purple" data-tooltip="Nouvelle note" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
+			<li class="multimenu_btn" onclick="newFile()"><a class="btn-floating purple" data-tooltip="✏️ Nouvelle note" data-tooltip-stickto="left" data-tooltip-delay="0s" data-tooltip-color="slate" data-tooltip-animate-function="foldin">
 				<i class="fas fa-plus"></i>
 			</a></li>
 		</ul>

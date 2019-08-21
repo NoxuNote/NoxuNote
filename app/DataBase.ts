@@ -1,4 +1,4 @@
-import { JSONDataBase } from "./types";
+import { JSONDataBase, INoxunoteApp } from "./types";
 import { Notes } from "./databases/Notes";
 import { Matieres } from "./databases/Matieres";
 import { Dactylo } from "./databases/Dactylo"
@@ -25,12 +25,14 @@ export class DataBase {
     public notes: Notes;
     public dactylo: Dactylo;
 
-    constructor() {
+    private app: INoxunoteApp;
+
+    constructor(app: INoxunoteApp) {
         this.createNoxuNoteFolder()
         this.notesFolder = homedir + '/NoxuNote/notes/'
         this.matieres = new Matieres()
         this.colors = new Colors()
-        this.notes = new Notes()
+        this.notes = new Notes(app)
         this.dactylo = new Dactylo()
     }
     /**

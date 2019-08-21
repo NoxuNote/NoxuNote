@@ -47,16 +47,6 @@ export class BrowsePlugin implements NoxunotePlugin {
   init() {
     // Mise a jour de la liste des notes
     this.noteList = this.ipc.sendSync('db_notes_getNoteList')
-    // Si un note est cliquée dans l'arborescence et qu'elle éxiste encore dans la liste des notes
-    // /!\ Suppose que this.noteList est à jour avec la BDD.
-    if (this.clickedNoteId && this.noteList.map(nl=>nl.id).includes(this.clickedNoteId)) {
-      // On met a jour l'affichage lookup sur les données de cette note
-      this.renderLookup(this.clickedNoteId)
-    } else {
-      // Sinon on n'affiche rien
-      this.clickedNoteId = null
-      this.elts.fileLookup.innerHTML = ""
-    }
     // Lors de la modification du champ de recherche de fichier, MAJ l'affichage
     this.elts.fileTextSearch.addEventListener('keyup', ()=>this.renderFiles())
     // Lors du clic sur "Toutes les notes", reset le filtre de matiere
@@ -65,8 +55,21 @@ export class BrowsePlugin implements NoxunotePlugin {
       this.renderMatieres()
       this.renderFiles()
     })
+    // ### RENDU DES FICHIERS
     this.renderFiles()
+    // ### RENDU DES MATIERES
     this.renderMatieres()
+    // ### RENDU DE L'APERCU DE LA NOTE
+    // Si un note est cliquée dans l'arborescence et qu'elle éxiste encore dans la liste des notes
+    // /!\ Suppose que this.noteList est à jour avec la BDD.
+    if (this.clickedNoteId && this.noteList.map(nl=>nl.id).includes(this.clickedNoteId)) {
+      // On met a jour l'affichage lookup sur les données de cette note
+      this.renderLookup()
+    } else {
+      // Sinon on n'affiche rien
+      this.clickedNoteId = null
+      this.elts.fileLookup.innerHTML = ""
+    }
   }
 
   toggle() {
@@ -79,6 +82,16 @@ export class BrowsePlugin implements NoxunotePlugin {
 
   hide() {
     this.elts.menu.classList.remove("appear");
+  }
+
+  focusOnNoteTitle() {
+    this.show()
+    this.clickedNoteId = this.loadedNote.meta.id
+    this.renderFiles()
+    this.renderLookup()
+    let title = <HTMLInputElement> document.getElementById('fileTitleInput')
+    if (title) title.focus()
+      else console.warn('Input #fileTitleInput non trouvé.')
   }
 
   loadNote(id: string) {
@@ -116,9 +129,9 @@ export class BrowsePlugin implements NoxunotePlugin {
 
   /**
    * Génère la vue de l'onglet Aperçu
-   * @param noteId iD de la note à afficher
    */
-  renderLookup(noteId: string) {
+  renderLookup() {
+    let noteId = this.clickedNoteId
     if (!this.noteList.map(nl=>nl.id).includes(noteId)) {
       console.error(`BrowsePlugin.renderLookup(${noteId}) a été call avec l'id ${noteId} qui n'éxiste plus !`)
       return
@@ -258,6 +271,7 @@ export class BrowsePlugin implements NoxunotePlugin {
     mainDiv.classList.add('input-group')
 
     let input = document.createElement('input')
+    input.id = "fileTitleInput"
     input.classList.add('form-control')
     input.value = meta.title
     input.type = "text"
@@ -341,7 +355,7 @@ export class BrowsePlugin implements NoxunotePlugin {
     el.addEventListener('click', (event: MouseEvent) => {
       this.clickedNoteId = meta.id
       this.renderFiles(true)
-      this.renderLookup(meta.id)
+      this.renderLookup()
     })
     // Bouton ouvrir
     let button = document.createElement('button')

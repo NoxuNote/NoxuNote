@@ -65,6 +65,7 @@ body {
 	background-color: #282F37;
 	padding: -20px;
 	color: #DDE0E0;
+	overflow-x: hidden;
 }
 #editorRoot {
 	height: 100vh;
@@ -72,12 +73,12 @@ body {
 div#windowTitle {
 	width: 100%;
 	-webkit-user-select: none;
-    -webkit-app-region: drag;
-    color: #6d6d6d;
-    text-align: center;
-    font-size: 0.7em;
-    font-family: FlatBold;
-    height: 20px;
+	-webkit-app-region: drag;
+	color: #6d6d6d;
+	text-align: center;
+	font-size: 0.7em;
+	font-family: FlatBold;
+	height: 30px;
 }
 div#windowTitleText {
     position: absolute;
@@ -96,8 +97,8 @@ div#barre_haut {
     /* animation: apparitionHaut 1.0s forwards; */
     z-index: 10;
     margin-top: -22px;
-    margin-right: -8px;
-    padding-top: 27px;
+    /* margin-right: -8px; */
+    padding-top: 20px;
     /* min-height: 37px; */
     min-width: 350px;
     user-select: none;
@@ -314,13 +315,12 @@ em {
  ***************************************************************************************************/
 .mlateral {
 	position: fixed;
-    background-color: #36404c;
-    color: #232525;
+	background-color: #36404c;
+	color: #232525;
 	padding-top: 3px;
 	padding-bottom: 10px;
 	padding-left: 14px;
 	padding-right: 14px;
-	visibility: hidden;
 	opacity: 0;
 	overflow-y: scroll;
 	overflow-x: hidden;
@@ -337,7 +337,6 @@ em {
     -webkit-transform: translateX(-100%);
 }
 .mlateral-gauche.appear {
-	visibility: visible;
 	opacity: 0.97;
 
 	transform: translateX(0);
@@ -356,7 +355,6 @@ em {
 	-webkit-transform: translateX(100%);
 }
 .mlateral-droit.appear {
-	visibility: visible;
 	opacity: 0.97;
 	
 	transform: translateX(0);
@@ -391,12 +389,22 @@ input#menuGaucheSauverInput {
 	color: #252626;
 }
 div#matiere {
-	background-color: #F2FEFA;
+	/* background-color: #F2FEFA; */
 	cursor: pointer;
-	border-radius: 15px;
-	padding: 5px;
+	border-radius: 5.5px;
 	text-align: center;
-	margin: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	background-color: rgb(161, 237, 132);
+	-webkit-app-region: no-drag;
+	display: inline-block;
+	color: black;
+	font-size: 0.8em;
+	font-family: sans-serif;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 1px;
+	padding-bottom: 1px;
 }
 
 /***************************************************************************************************
