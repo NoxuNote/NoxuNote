@@ -69,6 +69,18 @@ export class BrowsePlugin implements NoxunotePlugin {
     this.renderMatieres()
   }
 
+  toggle() {
+    this.elts.menu.classList.toggle("appear");
+  }
+
+  show() {
+    this.elts.menu.classList.add("appear");
+  }
+
+  hide() {
+    this.elts.menu.classList.remove("appear");
+  }
+
   loadNote(id: string) {
     let note: Note = this.ipc.sendSync('db_notes_getNote', id)
     this.ipc.send('loadNote', note)
@@ -401,5 +413,5 @@ export class BrowsePlugin implements NoxunotePlugin {
     console.debug(`setLoadedNote(${note})`)
     this.loadedNote = note
   }
-
+  
 }

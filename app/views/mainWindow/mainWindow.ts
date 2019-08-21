@@ -22,7 +22,6 @@ const ModalManager = require("./ModalManager.js")
 const NotificationService = require("./NotificationService.js")
 const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
-var title = "(Sans titre)";
 
 import * as $ from "jquery";
 import { CalcPlugin } from './plugins/calc';
@@ -47,11 +46,6 @@ const elts = {
 		normalOutput: document.getElementById('calcResult'),
 		derivativeInput: <HTMLInputElement>document.getElementById("calcDerivative"),
 		derivativeOutput: document.getElementById('calcResultDerivative')
-	},
-	menuGaucheSauver: {
-		menu: document.getElementById('menuGaucheSauver'),
-		matieres: document.getElementById('matieres'),
-		sauverInput: <HTMLInputElement>document.getElementById('menuGaucheSauverInput')
 	},
 	menuGaucheOuvrir: {
 		menu: document.getElementById('menuGaucheOuvrir'),
@@ -131,47 +125,12 @@ const equationManager = new EquationManager(modalManager, editor)
  *                                    DÉCLARATION DES FONCTIONS                                    *
  ***************************************************************************************************/
 
-/**
-* Affiche/Masque le volet Menu Gauche Sauver
-*/
-var hiddenLeftSave = true;
-var hiddenLeftOpen = true;
-function boutonMenuGaucheSauver() {
-	// Apparaît
-	if (hiddenLeftSave) {
-		hiddenLeftSave = false;
-		elts.menuGaucheSauver.sauverInput.classList.toggle("appear");
-
-		// Si présent, disparait
-		if (!hiddenLeftOpen) {
-			hiddenLeftOpen = true;
-			elts.menuGaucheOuvrir.menu.classList.toggle("appear");
-		}
-
-	} else {
-		hiddenLeftSave = true;
-		elts.menuGaucheSauver.sauverInput.classList.toggle("appear");
-	}
-}
 
 /**
 * Affiche/Masque le volet Menu Gauche Sauver
 */
 function boutonMenuGaucheOuvrir() {
-	// Apparait
-	if (hiddenLeftOpen) {
-		hiddenLeftOpen = false;
-		elts.menuGaucheOuvrir.menu.classList.toggle("appear");
-
-		// Si présent, disparait
-		if (!hiddenLeftSave) {
-			hiddenLeftSave = true;
-			elts.menuGaucheSauver.sauverInput.classList.toggle("appear");
-		}
-	} else {
-		hiddenLeftOpen = true;
-		elts.menuGaucheOuvrir.menu.classList.toggle("appear");
-	}
+	(<BrowsePlugin>plugins.find(p => p instanceof BrowsePlugin)).toggle()
 }
 
 /**
@@ -191,13 +150,14 @@ function save_as_noxunote() {
 		console.debug("Sauvegarde de la note deja existante", loadedNote.meta)
 		// On met a jour le contenu de la note sauvée
 		loadedNote.content = editor.summernote('code').toString()
-		loadedNote.meta.title = title
 		// Et on sauvegarde les changements en BDD
 		setLoadedNote(ipc.sendSync('db_notes_saveNote', loadedNote))
 	} else {
 		console.debug("Sauvegarde d'une nouvelle note", editor.summernote('code'))
 		// On définit la note actuellement editée
-		setLoadedNote(ipc.sendSync('db_notes_saveNewNote', title, editor.summernote('code').toString(), {matiere: getMat()}))
+		setLoadedNote(ipc.sendSync('db_notes_saveNewNote', '(Sans titre)', editor.summernote('code').toString()))
+		// On affiche la note sauvegardée dans la liste des notes.
+		
 	}
 	setIsFileModified(false)
 	// Recharge la liste des notes
@@ -205,154 +165,43 @@ function save_as_noxunote() {
 }
 
 
-/**
-* Fonction appelée quand on entre un caractère dans le titre.
-* met à jour la variable title et le titre du document (en haut)
-*/
-function onTypeOnTitle() {
-	setTimeout(() => {
-		title = elts.menuGaucheSauver.sauverInput.value.replace(/[><\/\\.]/g, "")
-		elts.header.titrePrincipal.innerHTML = title
-		if (title == "") {
-			elts.header.titrePrincipal.innerHTML = "(Cliquez pour nommer la note)"
-			title = "(Sans titre)";
-		}
-	}, 20)
-}
-
-function setNoteTitle(newtitle: string) {
-	// Définition du titre
-	title = newtitle
-	if (newtitle == "") {
-		elts.header.titrePrincipal.innerHTML = "(Cliquez pour nommer la note)";
-		elts.menuGaucheSauver.sauverInput.value = ""
-		title = "(Sans titre)"
-	} else {
-		elts.header.titrePrincipal.innerHTML = title;
-		elts.menuGaucheSauver.sauverInput.value = title
-	}
-}
-
 // /**
-//  * Affichage de la liste des fichiers dans le menu sauver
-//  */
-// function generateFileList() {
-// 	var listFilesDiv = elts.listFiles
-// 	var matieres = ipcRenderer.sendSync('db_getMatList')
-// 	var files = ipcRenderer.sendSync('db_getFileList')
-
-// 	// Nettoyage des fichiers affichés
-// 	while (listFilesDiv.firstChild) {
-// 		listFilesDiv.removeChild(listFilesDiv.firstChild);
-// 	}
-
-// 	// Mémorise les index des fichiers affichés
-// 	let shownFiles: string[] = []
-
-// 	// Ajoute un fichier à la liste des fichiers à ouvrir
-// 	let addFile = (f: any) => {
-// 		// Création de la pastille
-// 		var matDiv = document.createElement('div')
-// 		matDiv.classList.add("pastille")
-// 		matDiv.innerHTML = "•"
-// 		matDiv.style.color = f.color
-// 		listFilesDiv.appendChild(matDiv)
-
-// 		// Création du texte
-// 		var innerDiv = document.createElement('div')
-// 		innerDiv.style.display = "inline"
-// 		innerDiv.id = "file"
-// 		// Ajout du tooltip
-// 		let tooltip: { set: (arg0: { animateFunction: string; color: string; stickDistance: number; contentText: string; stickTo: string; target: HTMLDivElement; }) => void; show: () => void; hide: { (): void; (): void; }; mount: () => void; }
-// 		if (f.lastedit) {
-// 			tooltip = new HTML5TooltipUIComponent;
-// 			tooltip.set({
-// 				animateFunction: "spin",
-// 				color: "slate",
-// 				stickDistance: 20,
-// 				contentText: '<i class="fas fa-clock-o"></i> Dernière modif : ' + f.lastedit,
-// 				stickTo: "right",
-// 				target: innerDiv
-// 			});
-// 			innerDiv.addEventListener('mouseenter', () => tooltip.show());
-// 			innerDiv.addEventListener('mouseleave', () => tooltip.hide());
-// 			innerDiv.addEventListener('click', () => tooltip.hide());
-// 			tooltip.mount();
+// * Fonction appelée quand on entre un caractère dans le titre.
+// * met à jour la variable title et le titre du document (en haut)
+// */
+// function onTypeOnTitle() {
+// 	setTimeout(() => {
+// 		title = elts.menuGaucheSauver.sauverInput.value.replace(/[><\/\\.]/g, "")
+// 		elts.header.titrePrincipal.innerHTML = title
+// 		if (title == "") {
+// 			elts.header.titrePrincipal.innerHTML = "(Cliquez pour nommer la note)"
+// 			title = "(Sans titre)";
 // 		}
-// 		const nomNote = f.nom.replace(".txt", "")
-// 		innerDiv.innerHTML = nomNote
-		
-// 		innerDiv.onclick = () => {
-// 			// Lors d'un clic, définit l'action de la modale de confirmation
-// 			// sur le chargement de la nouvelle note
-// 			if (isFileModified) {
-// 				saveConfirmationModalAction = ()=>load_noxunote(nomNote) // On définit l'action de confirmation
-// 				modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
-// 			} else { // Si aucune modification actuellement, on charge directement la note
-// 				load_noxunote(nomNote)
-// 			}
-// 		}
-
-// 		listFilesDiv.appendChild(innerDiv);
-
-// 		// Ajout d'un br et inscription dans la liste des éléments affichés
-// 		listFilesDiv.appendChild(document.createElement('br'))
-// 		shownFiles.push(f.nom)
-// 	}
-// 	let addCategory = (name: string) => {
-// 		listFilesDiv.appendChild(document.createElement('hr'))
-// 		var innerDiv = document.createElement('h5')
-// 		innerDiv.style.display = "inline"
-// 		innerDiv.title = name
-// 		innerDiv.innerHTML = '<span style="color: #EEEEEE">' + name + '</span>'
-// 		listFilesDiv.appendChild(innerDiv)
-// 		listFilesDiv.appendChild(document.createElement('br'))
-// 	}
-
-// 	// Affichage des matieres
-// 	matieres.forEach((m: { nom: any; }) => {
-// 		addCategory(m.nom)
-// 		files.filter((e: { [x: string]: any; }) => e['matiere'] === m.nom).forEach(addFile)
-// 	})
-
-// 	// Affichage des éléments non inscrits
-// 	addCategory("Non triés")
-// 	files.filter((e: { nom: any; }) => !shownFiles.includes(e.nom)).forEach(addFile)
+// 	}, 20)
 // }
 
-/**
- * Affichage des matières disponibles dans SAUVER
- */
-function generateMatList() {
-	// Suppression du conteneur actuel
-	var matList = elts.menuGaucheSauver.matieres
-	while (matList.firstChild) {
-		matList.removeChild(matList.firstChild)
-	}
+// function setNoteTitle(newtitle: string) {
+// 	// Définition du titre
+// 	title = newtitle
+// 	if (newtitle == "") {
+// 		elts.header.titrePrincipal.innerHTML = "(Cliquez pour nommer la note)";
+// 		title = "(Sans titre)"
+// 	} else {
+// 		elts.header.titrePrincipal.innerHTML = title;
+// 	}
+// }
 
-	// Récupération de la liste des matières
-	var matieres: Matiere[] = ipcRenderer.sendSync('db_matieres_getMatieres')
-	for (var i = 0; i < matieres.length; i++) {
-		var innerDiv = document.createElement('div')
-		innerDiv.id = "matiere"
-		let checkbox: string = "<input type='radio' name='mat' value='" + matieres[i].id + "'>"
-		innerDiv.innerHTML = checkbox + matieres[i].name
-		innerDiv.style.background = matieres[i].color
-		matList.appendChild(innerDiv)
-	}
-}
-
-/**
- * Renvoie la matière sélectionnée
- */
-function getMat() {
-	var form = elts.menuGaucheSauver.matieres.childNodes
-	for (let i = 0; i < form.length; i++) {
-		let firstChild: HTMLInputElement = (<HTMLInputElement>form[i].firstChild);
-		if (firstChild.checked) return firstChild.value
-	}
-	return ""
-}
+// /**
+//  * Renvoie la matière sélectionnée
+//  */
+// function getMat() {
+// 	var form = elts.menuGaucheSauver.matieres.childNodes
+// 	for (let i = 0; i < form.length; i++) {
+// 		let firstChild: HTMLInputElement = (<HTMLInputElement>form[i].firstChild);
+// 		if (firstChild.checked) return firstChild.value
+// 	}
+// 	return ""
+// }
 
 /**
  * Appelle le module d'exportation html avec le code actuel de la summernote
@@ -370,7 +219,6 @@ function openExport() {
  * Reset l'interface sans avertissement
  */
 function forceReset() {
-	setNoteTitle("");
 	setLoadedNote(null);
 	editor.summernote('reset')
 	setIsFileModified(false)
@@ -395,23 +243,23 @@ function openSettings(key: any) {
 	ipc.send('openSettings', key)
 }
 
-/**
- * Définit une matière cochée par défaut dans le menu de sauvegarde, sinon coche neutre
- * @param {string} matiere La matière à cocher
- */
-function setNoteMatiere(matiere: any) {
-	let list = elts.menuGaucheSauver.matieres
-	let found = false
-	list.childNodes.forEach(e => {
-		let firstChild = <HTMLInputElement>e.firstChild
-		if (firstChild.value === matiere) {
-			firstChild.checked = true
-			found = true
-		}
-		else firstChild.checked = false
-	})
-	if (!found) elts.matieres.matNeutre.checked = true
-}
+// /**
+//  * Définit une matière cochée par défaut dans le menu de sauvegarde, sinon coche neutre
+//  * @param {string} matiere La matière à cocher
+//  */
+// function setNoteMatiere(matiere: any) {
+// 	let list = elts.menuGaucheSauver.matieres
+// 	let found = false
+// 	list.childNodes.forEach(e => {
+// 		let firstChild = <HTMLInputElement>e.firstChild
+// 		if (firstChild.value === matiere) {
+// 			firstChild.checked = true
+// 			found = true
+// 		}
+// 		else firstChild.checked = false
+// 	})
+// 	if (!found) elts.matieres.matNeutre.checked = true
+// }
 
 /**
  * Insère l'image donnée par l'url
@@ -422,12 +270,6 @@ function insertImg(url: any) {
 	editor.summernote('insertImage', url, url)
 }
 
-function maximizeWindow() {
-	ipc.send("maximizeWindow");
-}
-function minimizeWindow() {
-	ipc.send("minimizeWindow");
-}
 function closeWindow() {
 	if (isFileModified) {
 		modalManager.openModal('saveConfirmationModal') // Ouvre une modale de confirmation de sauvegarde
@@ -735,8 +577,6 @@ function loadNote(note: Note) {
 		modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
 	} else { // Si aucune modification actuellement, on charge directement la note
 		setLoadedNote(note);
-		setNoteTitle(note.meta.title)
-		setNoteMatiere(note.meta.matiere)
 		setNoteContent(note.content)
 	}
 	setIsFileModified(false)
@@ -746,20 +586,16 @@ ipcRenderer.on('loadNote', (event: any, note: Note) => loadNote(note))
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/
-
-// Enable tab character insertion on default input
-generateMatList()
-
 notificationService.showNotification("Bienvenue dans NoxuNote", `version ${ipcRenderer.sendSync('getVersion')}`, 4000)
 
 /***************************************************************************************************
  *      ASSOCIATION DES ÉVÈNEMENTS DE L'IPC AUX FONCTIONS DU PROCESSUS GRAPHIQUE (AU DESSUS).      *
  ***************************************************************************************************/
-ipcRenderer.on('setNoteTitle', (event: any, title: any) => setNoteTitle(title))
-ipcRenderer.on('setNoteMatiere', (event: any, matiere: any) => setNoteMatiere(matiere))
+// ipcRenderer.on('setNoteTitle', (event: any, title: any) => setNoteTitle(title))
+// ipcRenderer.on('setNoteMatiere', (event: any, matiere: any) => setNoteMatiere(matiere))
 ipcRenderer.on('callSaveAsNoxuNote', (event: any) => save_as_noxunote())
 ipcRenderer.on('resetIsFileModified', (event: any) => setIsFileModified(false))
-ipcRenderer.on('updateDb', (event: any) => { plugins.find(p=>p instanceof BrowsePlugin).init(); generateMatList(); refreshDictionnary() })
+ipcRenderer.on('updateDb', (event: any) => { plugins.find(p=>p instanceof BrowsePlugin).init(); refreshDictionnary() })
 ipcRenderer.on('setNoteContent', (event: any, note: any) => setNoteContent(note))
 ipcRenderer.on('insertDrawing', (event: any, url: any) => insertImg(url))
 ipcRenderer.on('refreshImg', (event: any, url: any) => refreshImg(url))

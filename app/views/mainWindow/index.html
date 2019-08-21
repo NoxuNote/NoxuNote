@@ -34,8 +34,8 @@
 			save_as_noxunote()"></i>
 		</div>
 		<div id="trayButtons">
-			<i onClick="minimizeWindow()" class="fas fa-window-minimize pointable" style="color: rgb(100, 129, 184); font-size: 1.1em; margin-right: 5px;"></i>
-			<i id="maximizeButton" onClick="maximizeWindow()" class="fas fa-window-maximize pointable" style="color: rgb(184, 150, 100); font-size: 1.1em; margin-right: 5px"></i>
+			<i onClick="ipc.send('minimizeWindow')" class="fas fa-window-minimize pointable" style="color: rgb(100, 129, 184); font-size: 1.1em; margin-right: 5px;"></i>
+			<i id="maximizeButton" onClick="ipc.send('maximizeWindow')" class="fas fa-window-maximize pointable" style="color: rgb(184, 150, 100); font-size: 1.1em; margin-right: 5px"></i>
 			<i onClick="closeWindow()" class="fas fa-times pointable" style="color: rgb(169, 71, 71); font-size: 1.3em"></i>
 		</div>
 	</div>
@@ -68,7 +68,7 @@
 		<div id="matiere" onClick="openSettings('Matières')"><i class="fas fa-plus-circle"></i></div>
 	</div>
 
-	<div id="menuGaucheOuvrir" class="mlateral mlateral-gauche appear p-0">
+	<div id="menuGaucheOuvrir" class="mlateral mlateral-gauche p-0">
 		<i id="menuGaucheOuvrirTrigger" class="fas fa-times leftPannelClose" onclick="boutonMenuGaucheOuvrir()"></i>
 		<div class="container-fluid h-100">
 			<div class="row h-100">
@@ -97,59 +97,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- <div id="menuDroitAide" class="mlateral mlateral-droit" style="color: #FFFFFF;">
-		<i class="fas fa-times rightPannelClose" onClick="boutonAide()"></i>
-		<div class="savebutton" onclick="showTutorial()">Afficher le tutoriel</div>
-		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Mise en page</h2>
-		### <span style="color:rgb(180, 180, 180);">Titre principal</span><br>
-		## <span style="color:rgb(180, 180, 180);">Titre</span><br>
-		# <span style="color:rgb(180, 180, 180);">Sous Titre</span><br>
-		[ <span style="color:rgb(180, 180, 180);">Encadré</span><br>
-		! <span style="color:rgb(180, 180, 180);">Exclamation</span><br>
-		( <span style="color:rgb(180, 180, 180);">texte marginal</span><br>
-		> <span style="color:rgb(180, 180, 180);">Code (HTML, Java etc.)</span><br>
-		img = <span style="color:rgb(180, 180, 180);">http://monurl.com/image.JPG</span><br>
-		<br>
-		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Balises</h2>
-		** <span style="color:rgb(180, 180, 180);">Surligné</span> **<br>
-		++ <span style="color:rgb(180, 180, 180);">Gras</span> ++<br>
-		__ <span style="color:rgb(180, 180, 180);">Souligné</span> __<br>
-		:: <span style="color:rgb(180, 180, 180);">Italique</span> ::<br>
-		<br>
-		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Formules</h2>
-		$$ <span style="color:rgb(180, 180, 180);">alpha/2</span> $$<br> 
-		$$ <span style="color:rgb(180, 180, 180);">[[a,b],[c,d]]</span> $$<br> 
-		$$ <span style="color:rgb(180, 180, 180);">norm( vecx )</span> $$<br>
-		$$ <span style="color:rgb(180, 180, 180);">forall x in RR</span> $$<br>
-		$$ <span style="color:rgb(180, 180, 180);">int_0^1 f(x)dx</span> $$<br> 
-		$$ <span style="color:rgb(180, 180, 180);">exists x (approx z</span> $$<br>
-		$$ <span style="color:rgb(180, 180, 180);">sum_(i=3)^(6) n*i</span> $$<br> 
-		$$ <span style="color:rgb(180, 180, 180);">lim_(x->oo) f(x) = +oo</span> $$<br>
-		$$ <span style="color:rgb(180, 180, 180);">(sin(x)d^2) / dx^2 = -sin(x)</span> $$<br>
-		<div class="savebutton" onclick="showAsciiMathHelp()">Voir +</div>
-		<p>(Nécessite internet)</p>
-		<br>
-		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Calculatrice</h2>
-		<span style="color:rgb(180, 180, 180);">Exemple d'expressions</span><br>
-		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">1.2 * (2 + 4.5)</span><br>
-		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">4m - 32cm</span><br>
-		&nbsp;<span style="color:rgb(180, 180, 180);">12.7 cm to inch</span><br>
-		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">sin(45 deg) ^ 2</span><br>
-		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">9 / 3 + 2i</span><br>
-		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">det([-1, 2; 3, 1])</span><br>
-		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">[[0, 1], [2, 3], [4, 5]] * [1, 2]</span><br>
-		<br>
-		<span style="color:rgb(180, 180, 180);">Dérivateur</span><br>
-		&nbsp;&nbsp;<span style="color:rgb(180, 180, 180);">x^2</span><br>
-		<br>
-		<h2 style="color: #242626; margin-top: 5px; margin-bottom: 5px; font-size: 1.8em">Tableaux</h2>
-		<span style="color:rgb(180, 180, 180);">Commencer la ligne par une / <br>et séparer les cellules avec /</span><br><br>
-		/<span style="color:rgb(180, 180, 180);"> C1 </span>/<span style="color:rgb(180, 180, 180);"> C2 </span>/<span style="color:rgb(180, 180, 180);"> C3 </span>/<br>
-		<br>
-		<span style="color:rgb(180, 180, 180);">Pour fusionner des cellules,<br> mettre plusieurs /</span><br><br>
-		/<span style="color:rgb(180, 180, 180);"> C1 C2 </span>//<span style="color:rgb(180, 180, 180);"> C3 </span>/<br>
-
-	</div> -->
 
 	<div id="menuBasCalc">
 		<div style="float: left; margin-top: 1px;  margin-bottom: 1px;">
