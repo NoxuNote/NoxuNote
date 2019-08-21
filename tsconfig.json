@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "lib": ["es2016", "dom"],
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "types": [
+      "jquery",
+      "summernote",
+      "mathjax",
+      "electron",
+      "node",
+      "mathjs",
+      "fs-extra"
+    ]
+  },
+  "include": [
+    "app/**/*"
+  ]
+}

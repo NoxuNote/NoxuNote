@@ -1,0 +1,89 @@
+<html>
+
+<head>
+    <title>
+        Réglages
+    </title>
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="settings.css">
+</head>
+
+<body>
+
+    <div class="leftPart">
+        <h2>Réglages</h2>
+        <div class="cat" onClick="show(this.innerHTML)">
+            Général
+        </div>
+        <div class="cat" onClick="show(this.innerHTML)">
+            Matières
+        </div>
+        <div class="cat" onClick="show(this.innerHTML)">
+            Dactylographie
+        </div>
+    </div>
+
+    <div class="rightPart">
+        <div id="page">
+            <!-- ICI LE CONTENU DE LA PAGE -->
+            <p>Cliquez sur une catégorie pour atteindre</p>
+            <div id="tui-color-picker-conatiner"></div>
+        </div>
+    </div>
+
+    <div style="visibility: hidden">
+        <div id="Général">
+            <h3>Réglages Généraux</h3>
+            <p>Dossier de stockage des notes et réglages :</p>
+            <code id="path"></code>
+
+        </div>
+        <div id="Matières">
+            <h3>Gérer les matières</h3>
+            <p>Ajoutez et supprimer les matières dans lesquelles sont rangées vos notes.</p>
+            <table id="tableMatieres">
+                <tr style="background-color: #CCCCCC">
+                    <th class="large">Matière</th>
+                    <th class="large"></th>
+                    <th class="large">Suppr.</th>
+                </tr>
+            </table>
+            <br>
+            <div style="height: 30px;">
+                <button class="btn alignRight" onClick="ajouterMatiere()">Ajouter
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div id="Dactylographie">
+            <h3>Raccourcis de mots</h3>
+            <p>Associez des abbréviations aux mots que vous utilisez le plus souvent.</p>
+            <p>Ajoutez une abbréviation et précisez le mot original, dès que vous taperez 
+                l'abbréviation et presserez ESPACE, elle sera remplacée par le mot original.</p>
+            <table id="tableAssoc">
+                <tr style="background-color: #CCCCCC">
+                    <th class="large">Abréviation</th>
+                    <th class="large">Suppr.</th>
+                </tr>
+            </table>
+            <br>
+            <div style="height: 30px;">
+                <button class="btn alignRight" onClick="ajouterAssoc()">Ajouter
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<footer>
+    <script>var exports = {"__esModule": true};</script>
+    <script src="../../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="ColorPicker.js"></script>
+    <script src="./settings.js"></script>
+</footer>
+
+</html>

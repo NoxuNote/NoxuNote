@@ -8,12 +8,17 @@
   },
   "main": "main.js",
   "scripts": {
-    "start": "node_modules/.bin/electron ."
+    "electron:run": "./node_modules/.bin/electron ./dist/main.js",
+    "tsc": "./node_modules/.bin/tsc",
+    "build": "npm run tsc && npm run buildassets",
+    "start": "npm run build && npm run electron:run",
+    "buildassets": "copyfiles -u 1 \"./app/**/*\" \"./dist/\""
   },
   "author": "Léo Rolland",
   "license": "GPL-3.0",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
+    "@types/mathjs": "^5.0.1",
     "ContentTools": "^1.6.10",
     "bootstrap": "^4.2.1",
     "code-prettify": "^0.1.0",
@@ -26,13 +31,20 @@
     "jquery": "^3.3.1",
     "materialize-css": "^1.0.0-beta",
     "mathjax": "^2.7.4",
-    "mathjs": "^5.1.0",
+    "mathjs": "^5.10.3",
     "os": "^0.1.1",
     "popper.js": "^1.14.6",
     "querystring": "^0.2.0",
     "summernote": "^0.8.11"
   },
   "devDependencies": {
+    "@types/electron": "^1.6.10",
+    "@types/fs-extra": "^8.0.0",
+    "@types/jquery": "^3.3.30",
+    "@types/mathjax": "0.0.35",
+    "@types/node": "^12.0.10",
+    "@types/summernote": "^0.8.0",
+    "copyfiles": "^2.1.0",
     "electron": "^4.0.0"
   }
 }

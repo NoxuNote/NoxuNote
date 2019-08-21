@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Aperçu de l'exportation</title>
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/materialize-css/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="../../../node_modules/summernote/dist/summernote.css">
+    <link rel="stylesheet" type="text/css" href="preprint.css">
+</head>
+
+<body>
+    <div id="leftPart">
+        <center>
+            <a id="exportButton" class="waves-effect waves-light btn" onClick="makeExport()">Exporter</a>
+            <a class="waves-effect waves-light red btn" onClick="window.close()">Annuler</a>
+            <br>
+            <br>
+            <div class="input-field col s12" style="width: 260px">
+                <select id='presetList'>
+                    <option value="PDF" selected disabled>Non disponible</option>
+                </select>
+                <label>Preset</label>
+            </div>
+        </center>
+        <ul class="collapsible">
+            <li>
+                <div class="collapsible-header">
+                    <i class="fas fa-save"></i> Fichier</div>
+                <div class="collapsible-body">
+                    <h2 class="form">Format du fichier</h2>
+                    <p>Le format du fichier dans lequel sera formatté le document.</p>
+                    <div class="input-field col s12">
+                        <select id='format' onchange="onFormChange()">
+                            <option value="PDF" selected>PDF</option>
+                            <option value="HTML" disabled>HTML</option>
+                            <option value="NoxuNote" disabled>NoxuNote</option>
+                        </select>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    <i class="fas fa-sticky-note"></i> Page</div>
+                <div class="collapsible-body">
+                    <p>Marge en haut</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="pagePaddingTop" min="0" max="120" />
+                        </p>
+                    </form>
+                    <p>Marge à gauche</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="pagePaddingLeft" min="0" max="120" />
+                        </p>
+                    </form>
+                    <p>Marge à droite</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="pagePaddingRight" min="0" max="120" />
+                        </p>
+                    </form>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    <i class="fas fa-flag"></i> Titres</div>
+                <div class="collapsible-body">
+
+                    <div>
+                        <ul class="collapsible">
+                            <li class="carte">
+                                <div class="collapsible-header carte carte-header">
+                                    <span class="leftT2">Titre ###</span>
+                                </div>
+                                <div class="carte carte-body collapsible-body">
+                                    <p>Police de caractère</p>
+                                    <div class="input-field col s12">
+                                        <select id="policeTitre1" class="browser-default fontSelector" onchange="onFormChange()">
+                                            <option value="Arial" selected>Arial</option>
+                                            <option value="sans-serif">Sans serif</option>
+                                            <option value="FlatLight">FlatLight</option>
+                                            <option value="FlatBold">FlatBold</option>
+                                        </select>
+                                    </div>
+                                    <p>Alignement</p>
+                                    <div class="input-field col s12">
+                                        <select id="alignTitre1" onchange="onFormChange()">
+                                            <option value="left" selected>Gauche</option>
+                                            <option value="center">Centré</option>
+                                            <option value="right">Droite</option>
+                                        </select>
+                                    </div>
+                                    <p>Taille de police</p>
+                                    <form action="#">
+                                        <p class="range-field">
+                                            <input type="range" id="sizeTitre1" min="5" max="70" />
+                                        </p>
+                                    </form>
+                                    <p>Marge à gauche</p>
+                                    <form action="#">
+                                        <p class="range-field">
+                                            <input type="range" id="marginLeftTitre1" min="0" max="60" />
+                                        </p>
+                                    </form>
+                                    <p>Marge en haut</p>
+                                    <form action="#">
+                                        <p class="range-field">
+                                            <input type="range" id="marginTopTitre1" min="0" max="20" />
+                                        </p>
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="collapsible">
+                            <li class="carte">
+                                <div class="collapsible-header carte carte-header">
+                                    <span class="leftT2">Titre ##</span>
+                                </div>
+                                <div class="carte carte-body collapsible-body">
+                                    <p>Police de caractère</p>
+                                    <div class="input-field col s12">
+                                        <select id="policeTitre2" class="browser-default fontSelector" onchange="onFormChange()">
+                                            <option value="Arial" selected>Arial</option>
+                                            <option value="sans-serif">Sans serif</option>
+                                            <option value="FlatLight">FlatLight</option>
+                                            <option value="FlatBold">FlatBold</option>
+                                        </select>
+                                    </div>
+                                    <p>Alignement</p>
+                                    <div class="input-field col s12">
+                                        <select id="alignTitre2" onchange="onFormChange()">
+                                            <option value="left" selected>Gauche</option>
+                                            <option value="center">Centré</option>
+                                            <option value="right">Droite</option>
+                                        </select>
+                                    </div>
+                                    <p>Taille de police</p>
+                                    <form action="#">
+                                        <p class="range-field">
+                                            <input type="range" id="sizeTitre2" min="5" max="70" />
+                                        </p>
+                                    </form>
+                                    <p>Marge à gauche</p>
+                                    <form action="#">
+                                        <p class="range-field">
+                                            <input type="range" id="marginLeftTitre2" min="0" max="60" />
+                                        </p>
+                                    </form>
+                                    <p>Marge en haut</p>
+                                    <form action="#">
+                                        <p class="range-field">
+                                            <input type="range" id="marginTopTitre2" min="0" max="20" />
+                                        </p>
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="collapsible">
+                            <li class="carte">
+                                <div class="collapsible-header carte carte-header">
+                                    <span class="leftT2">Titre #</span>
+                                </div>
+                                <div class="carte carte-body collapsible-body">
+                                    <p>Police de caractère</p>
+                                    <div class="input-field col s12">
+                                        <select id="policeTitre3" class="browser-default fontSelector" onchange="onFormChange()">
+                                            <option value="Arial" selected>Arial</option>
+                                            <option value="sans-serif">Sans serif</option>
+                                            <option value="FlatLight">FlatLight</option>
+                                            <option value="FlatBold">FlatBold</option>
+                                        </select>
+                                    </div>
+                                    <p>Alignement</p>
+                                    <div class="input-field col s12">
+                                        <select id="alignTitre3" onchange="onFormChange()">
+                                            <option value="left" selected>Gauche</option>
+                                            <option value="center">Centré</option>
+                                            <option value="right">Droite</option>
+                                        </select>
+                                    </div>
+                                    <p>Taille de police</p>
+                                    <form action="#">
+                                        <p class="range-field">
+                                            <input type="range" id="sizeTitre3" min="5" max="70" />
+                                        </p>
+                                    </form>
+                                    <p>Marge à gauche</p>
+                                    <form action="#">
+                                        <p class="range-field">
+                                            <input type="range" id="marginLeftTitre2" min="0" max="60" />
+                                        </p>
+                                    </form>
+                                    <p>Marge en haut</p>
+                                    <form action="#">
+                                        <p class="range-field">
+                                            <input type="range" id="marginTopTitre2" min="0" max="20" />
+                                        </p>
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    <i class="fas fa-paragraph"></i> Corps</div>
+                <div class="collapsible-body">
+                    <span class="leftT2">Lignes de texte</span>
+                    <p>Police de caractère</p>
+                    <div class="input-field col s12">
+                        <select id="policeCorps" class="browser-default fontSelector" onchange="onFormChange()">
+                            <option value="Arial" selected>Arial</option>
+                            <option value="sans-serif">Sans serif</option>
+                            <option value="FlatLight">FlatLight</option>
+                            <option value="FlatBold">FlatBold</option>
+                        </select>
+                    </div>
+                    <p>Alignement</p>
+                    <div class="input-field col s12">
+                        <select id="alignCorps" onchange="onFormChange()">
+                            <option value="left" selected>Gauche</option>
+                            <option value="center">Centré</option>
+                            <option value="right">Droite</option>
+                        </select>
+                    </div>
+                    <p>Taille de police</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="sizeCorps" min="5" max="70" />
+                        </p>
+                    </form>
+                    <p>Marge à gauche (mm)</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginLeftCorps" min="0" max="60" />
+                        </p>
+                    </form>
+                    <p>Marge à droite (mm)</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginRightCorps" min="0" max="60" />
+                        </p>
+                    </form>
+                    <p>Marge en haut (mm)</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginTopCorps" min="0" max="20" />
+                        </p>
+                    </form>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header">
+                    <i class="fas fa-table"></i> Tableaux</div>
+                <div class="collapsible-body">
+                    <span class="leftT2">Cellules</span>
+                    <p>Police de caractère</p>
+                    <div class="input-field col s12">
+                        <select id="policeTableau" class="browser-default fontSelector" onchange="onFormChange()">
+                            <option value="Arial" selected>Arial</option>
+                            <option value="sans-serif">Sans serif</option>
+                            <option value="FlatLight">FlatLight</option>
+                            <option value="FlatBold">FlatBold</option>
+                        </select>
+                    </div>
+                    <p>Alignement</p>
+                    <div class="input-field col s12">
+                        <select id="alignCellulesTableau" onchange="onFormChange()">
+                            <option value="left" selected>Gauche</option>
+                            <option value="center">Centré</option>
+                            <option value="right">Droite</option>
+                        </select>
+                    </div>
+                    <p>Taille de police</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="sizeTableau" min="5" max="70" />
+                        </p>
+                    </form>
+                    <br>
+                    <p>Taille des cellules</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="paddingCellulesTableau" min="0" max="30" />
+                        </p>
+                    </form>
+                    <p>Épaisseur des lignes</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="epaisseurLignesTableau" min="0" max="30" />
+                        </p>
+                    </form>
+
+                    <br>
+                    <br>
+                    <span class="leftT2">Positionnement</span>
+                    <!--<p>Alignement du tableau</p>
+                        <div class="input-field col s12">
+                            <select id="alignTableau" onchange="onFormChange()">
+                                <option value="left" selected>Gauche</option>
+                                <option value="center">Centré</option>
+                                <option value="right">Droite</option>
+                            </select>
+                        </div>-->
+                    <p>Marge à gauche du tableau</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginLeftTableau" min="0" max="70" />
+                        </p>
+                    </form>
+                    <p>Marge en haut du tableau</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginTopTableau" min="0" max="70" />
+                        </p>
+                    </form>
+                    <p>Marge en bas du tableau</p>
+                    <form action="#">
+                        <p class="range-field">
+                            <input type="range" id="marginBottomTableau" min="0" max="70" />
+                        </p>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div id="rightPart">
+        <style id="customStyle"></style>
+        <div class="z-depth-3" id="page">
+            <div id="content"></div>
+        </div>
+    </div>
+</body>
+<footer>
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <script src="../../../node_modules/code-prettify/loader/run_prettify.js?skin=default"></script>
+    <script src="../../../node_modules/jquery/dist/jquery.min.js" onload=""></script>
+    <script src="../../../node_modules/materialize-css/dist/js/materialize.min.js" onload=""></script>
+    <script src="../../../node_modules/summernote/dist/summernote.min.js"></script>
+    <script> M.AutoInit() </script>
+    <script src="preprint.js"></script>
+</footer>
+
+</html>

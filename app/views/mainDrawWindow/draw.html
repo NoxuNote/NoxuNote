@@ -1,0 +1,170 @@
+<html>
+    <header>
+        <title>NoxuNote - Dessin</title> 
+        <link rel="stylesheet" type="text/css" href="draw.css">
+        <link rel="stylesheet" type="text/css" href="../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.css">
+        <link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
+    </header>
+    <body id="body" onkeydown="bodyKeyDown(event)" onkeyup="bodyKeyUp(event)">
+        <div class="header">
+            <div class="colorpicker">
+                <div class="coloritem" style="background:white" id="white" onclick="color(this)"></div>
+                <div class="coloritem" style="background:green;" id="green" onclick="color(this)"></div>
+                <div class="coloritem" style="background:blue;" id="blue" onclick="color(this)"></div>
+                <div class="coloritem" style="background:red;" id="red" onclick="color(this)"></div>
+                <div class="coloritem" style="background:yellow;" id="yellow" onclick="color(this)"></div>
+                <div class="coloritem" style="background:orange;" id="orange" onclick="color(this)"></div>
+                <div class="coloritem" style="background:grey;" id="grey" onclick="color(this)"></div>
+                <div class="coloritem" style="background:purple" id="purple" onclick="color(this)"></div>
+                <div class="coloritem" style="background:black;" id="black" onclick="color(this)"></div>
+                <div class="coloritem" style="background:lightgreen;" id="lightgreen" onclick="color(this)"></div>
+                <div class="coloritem" style="background:lightblue;" id="lightblue" onclick="color(this)"></div>
+                <div class="coloritem" style="background:pink;" id="pink" onclick="color(this)"></div>
+                <div class="coloritem" style="background:lightyellow;" id="lightyellow" onclick="color(this)"></div>
+                <div class="coloritem" style="background:#804000;" id="#804000" onclick="color(this)"></div>
+                <div class="coloritem" style="background:#87E850;" id="#87E850" onclick="color(this)"></div>
+                <div class="coloritem" style="background:#75E2E8;" id="#75E2E8" onclick="color(this)"></div>
+            </div>
+
+            <div data-tooltip-delay=50 data-tooltip="Texte" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="text()">
+                <i class="fas fa-font"></i>
+            </div>
+            <div data-tooltip-delay=50 data-tooltip="Image" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="insertImg()">
+                <i class="fas fa-image"></i>
+            </div>
+            <div data-tooltip-delay=50 data-tooltip="Gomme" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="gomme()">
+                <i class="fas fa-eraser"></i>
+            </div>
+            <div data-tooltip-delay=50 data-tooltip="Annuler l'action" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="rgba(0,0,0,0)" onclick="restoreCanvas()">
+                <i class="fas fa-undo"></i>
+            </div>
+            <div data-tooltip-delay=50 data-tooltip="Sauver" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="#282F37" onclick="save()">
+                <i class="fas fa-save"></i>
+            </div>
+            <div data-tooltip-delay=50 data-tooltip="Réinitialiser l'image" data-tooltip-color="slate" data-tooltip-animate-function="foldin" class="eraser" id="#282F37" onclick="clearDraw()">
+                <i class="fas fa-trash"></i>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn">Générateur 
+                    <i class="fas fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <div class="boutonDrop" id="#282F37" onclick="loadPattern(0)">
+                        <i class="fas fa-th-large"></i> Petite Grille
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="loadPattern(4)">
+                        <i class="fas fa-th-large"></i> Grande Grille
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="loadPattern(2)">
+                        <i class="fas fa-chart-line"></i> Repère
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="loadPattern(1)">
+                        <i class="fas fa-chart-line"></i> Repère Positif
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="drawFunction(1)">
+                        <i class="fas fa-circle"></i> Sinusoïde
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="drawFunction(2)">
+                        <i class="fas fa-circle-notch"></i> Cosinus
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="drawFunction(3)">
+                        <i class="fas fa-square"></i> Carré
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="mathFunction()">
+                        <i class="fas fa-calculator"></i> Expression
+                    </div>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn">Modèles 
+                    <i class="fas fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <h3>Divers</h3>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('divers', 1)">
+                        <img class="imageDrop" src="./patterns/divers/1.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('divers', 2)">
+                        <img class="imageDrop" src="./patterns/divers/2.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('divers', 3)">
+                        <img class="imageDrop" src="./patterns/divers/3.png">
+                    </div>
+                    <h3>Électronique</h3>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('electronique', 1)">
+                        <img class="imageDrop" src="./patterns/electronique/1.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('electronique', 2)">
+                        <img class="imageDrop" src="./patterns/electronique/2.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('electronique', 3)">
+                        <img class="imageDrop" src="./patterns/electronique/3.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('electronique', 4)">
+                        <img class="imageDrop" src="./patterns/electronique/4.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('electronique', 5)">
+                        <img class="imageDrop" src="./patterns/electronique/5.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('electronique', 6)">
+                        <img class="imageDrop" src="./patterns/electronique/6.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('electronique', 7)">
+                        <img class="imageDrop" src="./patterns/electronique/7.png">
+                    </div>
+                    <h3>Logique</h3>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('logique', 1)">
+                        <img class="imageDrop" src="./patterns/logique/1.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('logique', 2)">
+                        <img class="imageDrop" src="./patterns/logique/2.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('logique', 3)">
+                        <img class="imageDrop" src="./patterns/logique/3.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('logique', 4)">
+                        <img class="imageDrop" src="./patterns/logique/4.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('logique', 5)">
+                        <img class="imageDrop" src="./patterns/logique/5.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('logique', 6)">
+                        <img class="imageDrop" src="./patterns/logique/6.png">
+                    </div>
+                    <div class="boutonDrop" id="#282F37" onclick="patternImage('logique', 7)">
+                        <img class="imageDrop" src="./patterns/logique/7.png">
+                    </div>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn">Aide 
+                    <i class="fas fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <div style="margin: 6px">
+                        <h2>Raccourcis clavier</h2>
+                        <p><span style="color: rgb(133, 202, 248)">SHIFT</span> (maintenir) - Tracer un segment droit</p>
+                        <p><span style="color: rgb(133, 202, 248)">Cmd/Ctrl + Z</span> - Annuler l'action</p>
+                        <p><span style="color: rgb(133, 202, 248)">R</span> - Pivoter l'image</p>
+                        <p><span style="color: rgb(133, 202, 248)">T</span> - Rétrécir</p>
+                        <p><span style="color: rgb(133, 202, 248)">G</span> - Agrandir</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <canvas id="can" width=950 height=560></canvas>
+        <div id="canlayers">
+        </div>
+        <canvas id="canTop" width=950 height=560 style="z-index:5"></canvas>
+
+    </body>
+    <script>
+        document.getElementById("body").addEventListener('scroll', (e)=>bodyScroll(e))
+    </script>
+    <footer>
+        <script src="mainDrawWindow.js"></script>
+        <script src="../../../node_modules/html5tooltipsjs/html5tooltips.js"></script>
+    </footer>
+</html>
