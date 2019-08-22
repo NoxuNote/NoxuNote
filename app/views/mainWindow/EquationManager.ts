@@ -1,6 +1,16 @@
-class EquationManager {
+import { ModalManager } from "./ModalManager"
 
-  constructor(modalManager, editor) {
+export class EquationManager {
+  equationPreviewNode: HTMLElement;
+  $historyNode: JQuery<HTMLElement>;
+  $equationValueNode: JQuery<HTMLElement>;
+  $equationPreset: JQuery<HTMLElement>;
+  modalManager: ModalManager;
+  editor: JQuery<HTMLElement>;
+  history: any[];
+  presets: { key: string; code: string; }[];
+
+  constructor(modalManager: ModalManager, editor: JQuery) {
     var equationHistory = []
     this.equationPreviewNode = document.getElementById('equation¨Preview')
     this.$historyNode = $('#equationHistory')
@@ -54,12 +64,12 @@ class EquationManager {
     ]
   }
 
-  onKeyUp($event) {
+  onKeyUp($event: KeyboardEvent) {
     if ($event.keyCode === 13) this.insertEquation()
     else this.updateEquationPreview()
   }
 
-  chosenModel(event) {
+  chosenModel(event: any) {
     this.setEquationInput(this.presets.find(e=>this.$equationPreset.val()==e.key).code)
   }
 
@@ -76,14 +86,14 @@ class EquationManager {
    * Ajoute l'équation du modal "Insérer une équation" dans l'éditeur.
    */
   insertEquation() {
-    const field = document.getElementById("equationValue");
+    const field = <HTMLInputElement> document.getElementById("equationValue");
     if (field.value.trim().length === 0) return
     this.editor.summernote('restoreRange')
     this.editor.summernote('focus')
     // Création de l'élément HTML
     var node = document.createElement('span')
     node.style.display = 'inline'
-    node.contentEditable = true
+    node.contentEditable = 'true'
     node.innerHTML = "`" + field.value + "`"
     this.editor.summernote('insertNode', node);
     this.editor.summernote('editor.pasteHTML', '&zwnj;')
@@ -96,7 +106,7 @@ class EquationManager {
       })
     }
     // Close and clean modal
-    modalManager.closeAllModal()
+    this.modalManager.closeAllModal()
     field.value = ""
     // Call MatJax
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, node])
@@ -109,7 +119,7 @@ class EquationManager {
    * Met à jour l'équation en cours d'adition dans la modale
    * @param {string} code La nouvelle équation 
    */
-  setEquationInput(code) {
+  setEquationInput(code: string) {
     this.$equationValueNode.val(code)
     this.updateEquationPreview()
   }
@@ -147,5 +157,3 @@ class EquationManager {
   }
 
 }
-
-module.exports = EquationManager

@@ -13,8 +13,6 @@
 const ipc = require('electron').ipcRenderer
 const { ipcRenderer } = require('electron')
 const os = require("os")
-const ModalManager = require("./ModalManager.js")
-const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
 
 import * as $ from "jquery";
@@ -23,6 +21,8 @@ import { CalcPlugin } from './plugins/calc';
 import { NoxunotePlugin, Matiere, Note, NoteMetadata } from "../../types";
 import { TodoPlugin } from "./plugins/todo";
 import { BrowsePlugin } from "./plugins/browse";
+import { ModalManager } from "./ModalManager";
+import { EquationManager } from "./EquationManager";
 
 
 declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
