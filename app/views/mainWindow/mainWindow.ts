@@ -13,8 +13,6 @@
 const ipc = require('electron').ipcRenderer
 const { ipcRenderer } = require('electron')
 const os = require("os")
-const ModalManager = require("./ModalManager.js")
-const EquationManager = require('./EquationManager.js')
 const toNewFormat = require("./migration")
 
 import * as $ from "jquery";
@@ -23,6 +21,8 @@ import { CalcPlugin } from './plugins/calc';
 import { NoxunotePlugin, Matiere, Note, NoteMetadata } from "../../types";
 import { TodoPlugin } from "./plugins/todo";
 import { BrowsePlugin } from "./plugins/browse";
+import { ModalManager } from "./ModalManager";
+import { EquationManager } from "./EquationManager";
 
 
 declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
@@ -94,15 +94,19 @@ function setLoadedNote(note: Note): void {
 	if (note == null) {
 		editor.summernote('reset')
 		setIsFileModified(false)
-		browser.init() // Met a jour l'affichage des fichiers
 	}
+	browser.setLoadedNote(note)
+	browser.init() // Met a jour l'affichage des fichiers
 	// Si on charge une nouvelle note
-	if (loadedNote && note && loadedNote.meta.id != note.meta.id) {
+	let assert1 = (loadedNote && note && loadedNote.meta.id != note.meta.id) 			// Une note est déjà ouverte, mais on veut en charger une AUTRE
+	let assert2 = (!loadedNote && note)																						// Aucune note n'est déjà ouverte, mais on veut en charger une
+	// Dans tous les autres cas, on ne touche pas à l'éditeur
+	if ( assert1 || assert2 ) {
 		// On met à jour l'éditeur
 		setNoteContent(note.content)
+		setIsFileModified(false)
 	}
 	loadedNote = note; // Mise à jour de la var locale.
-	browser.setLoadedNote(note)
 	// Mise à jour de l'affichage
 	if (note) {
 		elts.header.titrePrincipal.innerText = note.meta.title
@@ -544,12 +548,11 @@ function loadNote(note: Note) {
 	// Lors d'un clic, définit l'action de la modale de confirmation
 	// sur le chargement de la nouvelle note
 	if (isFileModified) {
-		saveConfirmationModalAction = ()=>loadNote(note) // On définit l'action de confirmation
+		saveConfirmationModalAction = ()=>setLoadedNote(note) // On définit l'action de confirmation
 		modalManager.openModal('saveConfirmationModal') // Ouvre la modale de confirmation
 	} else { // Si aucune modification actuellement, on charge directement la note
 		setLoadedNote(note);
 	}
-	setIsFileModified(false)
 	plugins.find(p=>p instanceof BrowsePlugin).init() // Met a jour l'affichage des fichiers
 }
 /***************************************************************************************************

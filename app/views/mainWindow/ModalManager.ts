@@ -1,4 +1,5 @@
-class ModalManager {
+export class ModalManager {
+    modals: any;
 
     constructor() {
         this.modals = new Object()
@@ -17,18 +18,18 @@ class ModalManager {
         })
     }
 
-    closeModal(modalId) {
+    closeModal(modalId: string) {
         this.modals[modalId].modal('hide')
     }
 
-    openModal(modalId) {
+    openModal(modalId: string) {
         // Fermeture des autres modales
         this.closeAllModal()
         // Ouverture de la modale voulue
         this.modals[modalId].modal('show')
     }
 
-    toggleModal(modalId) {
+    toggleModal(modalId: string) {
         this.modals[modalId].modal('toggle')
     }
 
@@ -39,5 +40,3 @@ class ModalManager {
     }
 
 }
-
-module.exports = ModalManager
