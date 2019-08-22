@@ -55,10 +55,10 @@ export class BrowsePlugin implements NoxunotePlugin {
       this.renderMatieres()
       this.renderFiles()
     })
-    // ### RENDU DES FICHIERS
-    this.renderFiles()
     // ### RENDU DES MATIERES
     this.renderMatieres()
+    // ### RENDU DES FICHIERS
+    this.renderFiles()
     // ### RENDU DE L'APERCU DE LA NOTE
     // Si un note est cliquée dans l'arborescence et qu'elle éxiste encore dans la liste des notes
     // /!\ Suppose que this.noteList est à jour avec la BDD.
@@ -344,8 +344,16 @@ export class BrowsePlugin implements NoxunotePlugin {
       el.classList.add('file-clicked')
     }
     let title = document.createElement('div')
+    let mat: Matiere = this.matieres.find(m=>m.id==meta.matiere)
+    let badge_matiere: HTMLSpanElement
+    if (mat) {
+      let badge_matiere = document.createElement('span')
+      badge_matiere.classList.add('badge_matiere')
+      badge_matiere.innerText = mat.name.charAt(0)
+      badge_matiere.style.backgroundColor = mat.color
+    }
     let star:string = meta.isfavorite ? '<i class="fas fa-star" style="color:#ffd767"></i> ' : ''
-    title.innerHTML = star + meta.title
+    title.innerHTML = badge_matiere ? badge_matiere.outerHTML : '' + star + meta.title
     el.appendChild(title)
     let subEl = document.createElement('div')
     subEl.classList.add('lastEdit')
