@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/leorolland/NoxuNote.git"
   },
-  "main": "main.js",
+  "main": "./dist/main.js",
   "scripts": {
     "electron:run": "./node_modules/.bin/electron ./dist/main.js",
     "tsc": "./node_modules/.bin/tsc",
