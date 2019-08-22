@@ -7,7 +7,7 @@ export class EquationManager {
   $equationPreset: JQuery<HTMLElement>;
   modalManager: ModalManager;
   editor: JQuery<HTMLElement>;
-  history: any[];
+  history: { code: string, node: Node }[];
   presets: { key: string; code: string; }[];
 
   constructor(modalManager: ModalManager, editor: JQuery) {
@@ -86,28 +86,28 @@ export class EquationManager {
    * Ajoute l'équation du modal "Insérer une équation" dans l'éditeur.
    */
   insertEquation() {
-    const field = <HTMLInputElement> document.getElementById("equationValue");
-    if (field.value.trim().length === 0) return
+    const inputVal: string = this.$equationValueNode.val().toString()
+    if (inputVal.length === 0) return
     this.editor.summernote('restoreRange')
     this.editor.summernote('focus')
     // Création de l'élément HTML
-    var node = document.createElement('span')
+    var node = document.createElement('div')
     node.style.display = 'inline'
-    node.contentEditable = 'true'
-    node.innerHTML = "`" + field.value + "`"
+    node.contentEditable = 'false'
+    node.innerHTML = '`' + inputVal + '`'
     this.editor.summernote('insertNode', node);
     this.editor.summernote('editor.pasteHTML', '&zwnj;')
     // Add equation to history
-    if (this.history.filter(h=>h.code == field.value).length == 0) {
+    if (this.history.filter(h=>h.code == inputVal).length == 0) {
       if (this.history.length > 10) this.history.shift()
       this.history.push({
-        'code': field.value,
+        'code': inputVal,
         'node': node.cloneNode(true)
       })
     }
     // Close and clean modal
     this.modalManager.closeAllModal()
-    field.value = ""
+    this.$equationValueNode.val('')
     // Call MatJax
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, node])
     // Clean the preview window
