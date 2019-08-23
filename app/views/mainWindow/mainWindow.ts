@@ -520,7 +520,7 @@ function setNoteContent(content: string) {
 	editor.summernote('reset')
 	editor.summernote('code', content)
 	const editorContent = document.getElementsByClassName("note-editable")[0]
-	MathJax.Hub.Queue(["Typeset", MathJax.Hub, editorContent]);
+	// MathJax.Hub.Queue(["Typeset", MathJax.Hub, editorContent]);
 }
 
 $('#editorRoot').click(() => { editor.summernote('focus') })

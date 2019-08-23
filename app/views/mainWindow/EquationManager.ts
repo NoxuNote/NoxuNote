@@ -91,25 +91,43 @@ export class EquationManager {
     this.editor.summernote('restoreRange')
     this.editor.summernote('focus')
     // Création de l'élément HTML
-    var node = document.createElement('div')
-    node.style.display = 'inline'
-    node.contentEditable = 'false'
-    node.innerHTML = '`' + inputVal + '`'
-    this.editor.summernote('insertNode', node);
-    this.editor.summernote('editor.pasteHTML', '&zwnj;')
+    let wrapperNode = document.createElement('span')
+    wrapperNode.contentEditable = 'true'
+
+    // Insertion d'un caractère après la formule pour aider le curseur à se repérer
+    // let beforeNode = document.createElement('span')
+    // beforeNode.innerHTML = '&zwnj;'
+    // wrapperNode.appendChild(beforeNode)
+    
+    // Insertion de la formule dans l'élement
+    let mathNode = document.createElement('div')
+    mathNode.contentEditable = 'false'
+    mathNode.style.display = 'inline-block'
+    mathNode.innerHTML = "`" + inputVal + "`"
+    wrapperNode.appendChild(mathNode)
+
+    // Insertion d'un caractère après la formule pour aider le curseur à se repérer
+    let afterNode = document.createElement('span')
+    afterNode.innerHTML = '&zwnj;'
+    wrapperNode.appendChild(afterNode)
+
+    // Add wrappernode to document
+    this.editor.summernote('restoreRange')
+    this.editor.summernote('pasteHTML', wrapperNode);
+    // this.editor.summernote('editor.pasteHTML', '&zwnj;')
     // Add equation to history
     if (this.history.filter(h=>h.code == inputVal).length == 0) {
       if (this.history.length > 10) this.history.shift()
       this.history.push({
         'code': inputVal,
-        'node': node.cloneNode(true)
+        'node': wrapperNode.cloneNode(true)
       })
     }
     // Close and clean modal
     this.modalManager.closeAllModal()
     this.$equationValueNode.val('')
     // Call MatJax
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub, node])
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, mathNode])
     // Clean the preview window
     this.equationPreviewNode.innerHTML = ""
     this.editor.summernote('focus')
