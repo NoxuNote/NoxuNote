@@ -18,7 +18,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
-    "@types/mathjs": "^5.0.1",
+    "@types/mathjs": "^6.0.1",
     "ContentTools": "^1.6.10",
     "bootstrap": "^4.2.1",
     "code-prettify": "^0.1.0",
