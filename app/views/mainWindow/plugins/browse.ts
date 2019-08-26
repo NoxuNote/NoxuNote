@@ -55,10 +55,10 @@ export class BrowsePlugin implements NoxunotePlugin {
       this.renderMatieres()
       this.renderFiles()
     })
-    // ### RENDU DES FICHIERS
-    this.renderFiles()
     // ### RENDU DES MATIERES
     this.renderMatieres()
+    // ### RENDU DES FICHIERS
+    this.renderFiles()
     // ### RENDU DE L'APERCU DE LA NOTE
     // Si un note est cliquée dans l'arborescence et qu'elle éxiste encore dans la liste des notes
     // /!\ Suppose que this.noteList est à jour avec la BDD.
@@ -344,12 +344,27 @@ export class BrowsePlugin implements NoxunotePlugin {
       el.classList.add('file-clicked')
     }
     let title = document.createElement('div')
-    let star:string = meta.isfavorite ? '<i class="fas fa-star" style="color:#ffd767"></i> ' : ''
-    title.innerHTML = star + meta.title
+    let mat: Matiere = this.matieres.find(m=>m.id==meta.matiere)
+    if (meta.isfavorite) {
+      let star = document.createElement('i')
+      star.className = 'fas fa-star'
+      star.style.color = '#ffd767'
+      title.appendChild(star)
+    }
+    
+    title.append(' ' + meta.title)
+    // title.innerHTML = title.innerHTML + star + meta.title
     el.appendChild(title)
     let subEl = document.createElement('div')
     subEl.classList.add('lastEdit')
     subEl.innerText = meta.lastedit
+    if (mat) {
+      let badge_matiere = document.createElement('span')
+      badge_matiere.classList.add('badge_matiere')
+      badge_matiere.innerText = mat.name.substr(0, 4)
+      badge_matiere.style.backgroundColor = mat.color
+      subEl.appendChild(badge_matiere)
+    }
     el.appendChild(subEl)
     // Handle click
     el.addEventListener('click', (event: MouseEvent) => {
