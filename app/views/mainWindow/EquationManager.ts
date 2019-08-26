@@ -138,7 +138,7 @@ export class EquationManager {
         'node': mathNode.cloneNode(true)  
       })
     }
-    // Close and clean modal
+    // update, Close and clean modal
     this.modalManager.closeAllModal()
     this.$equationValueNode.val('')
     // Call MatJax
@@ -189,6 +189,7 @@ export class EquationManager {
   }
 
   editMathNode(mathNode: HTMLElement) {
+    this.refreshHistory()
     this.editingMathNode = mathNode
     this.modalManager.openModal("equationModal")
     let math: string = (<HTMLSpanElement>mathNode.querySelector('span.equationScript')).innerText
