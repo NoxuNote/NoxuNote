@@ -129,20 +129,22 @@ export class EquationManager {
 
     // Delete older equation if necessary 
     if (this.editingMathNode) {
-      let nextEle = this.editingMathNode.nextSibling 
-      this.editingMathNode.parentNode.removeChild(this.editingMathNode)
-      // Replace cursor after deleted node
-      if (nextEle) {
-        var r = document.createRange();
-        r.setStart(nextEle, 1);
-        r.setEnd(nextEle, 1);
-        var s = window.getSelection();
-        s.removeAllRanges();
-        s.addRange(r);
-      }
+      // let nextEle = this.editingMathNode.nextSibling 
+      // this.editingMathNode.parentNode.removeChild(this.editingMathNode)
+      // // Replace cursor after deleted node
+      // if (nextEle) {
+      //   var r = document.createRange();
+      //   r.setStart(nextEle, 1);
+      //   r.setEnd(nextEle, 1);
+      //   var s = window.getSelection();
+      //   s.removeAllRanges();
+      //   s.addRange(r);
+      // }
+      this.editingMathNode.parentElement.replaceChild(mathNode, this.editingMathNode)
     } else {
       this.editor.summernote('restoreRange')
     }
+    this.editor.summernote('restoreRange')
 
     // Add wrappernode to document
     this.editor.summernote('pasteHTML', wrapperNode);
