@@ -25,24 +25,22 @@
     color: #383838;
     cursor: pointer;
     display: inline-block;
-    /* Le parent est déclaré en position relative, ce qui n'a aucune influence sur lui */
-    /* Son enfant sera donc positionné relativement à celui-ci */
+    /* Le parent est dÃ©clarÃ© en position relative, ce qui n'a aucune influence sur lui */
+    /* Son enfant sera donc positionnÃ© relativement Ã  celui-ci */
     position: relative;
 }
 .historyDeleteButton {
     color: #c66565;
-    display: block;
+    /* display: block; */
     background-color: #dcdcdc;
     width: 17px;
     height: 17px;
     border-radius: 20px;
-    line-height: 0px;
-    /* transform: translate(13px, -13px); */
-    box-shadow: 0 0 2px 0px #00000091;
-    margin-left: auto;
+    line-height: 0;
     /* IMPORTANT : Pour que la position absolue de l'enfant .historyDeleteButton soit relative
-     * au parent, on doit déclarer le parent en position relative. */
+     * au parent, on doit dÃ©clarer le parent en position relative. */
     position: absolute;
     top: -9px;
     right: -10px;
+    padding-top: 1px;
 }
