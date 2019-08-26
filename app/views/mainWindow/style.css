@@ -745,3 +745,15 @@ div.pastille {
 	width: 70%;
 	transition: opacity 0.2s, width 0.3s cubic-bezier(0, 0, 0, 1);
 }
+
+.mathNode {
+	/* border: 1px solid #5d5d5d; */
+	/* padding: 2px; */
+	cursor: pointer;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border-radius: 3px;
+}
+.mathNode:hover {
+	background-color: #b3e3ff80;
+}

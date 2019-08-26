@@ -417,6 +417,9 @@ function initializeSummernote() {
 						}
 					}
 				}
+			},
+			onPaste: function () {
+				setTimeout(()=>reattachEventListeners(), 0)
 			}
 		}
 	})
@@ -519,8 +522,23 @@ function setNoteContent(content: string) {
 	}
 	editor.summernote('reset')
 	editor.summernote('code', content)
+	// reattach all EventListeners to content
+	reattachEventListeners()
 	const editorContent = document.getElementsByClassName("note-editable")[0]
 	// MathJax.Hub.Queue(["Typeset", MathJax.Hub, editorContent]);
+}
+
+/**
+ * Search for particular content in note and re-addEventListener to these.
+ */
+function reattachEventListeners() {
+	// MathNodes
+	$('span.mathNode').get().forEach( (e: HTMLSpanElement) => {
+		e.onclick = (ec: MouseEvent)=> {
+			ec.stopPropagation()
+			equationManager.editMathNode(e)
+		}
+	})
 }
 
 $('#editorRoot').click(() => { editor.summernote('focus') })

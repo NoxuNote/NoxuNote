@@ -298,8 +298,8 @@
 							</div>
 						</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" onClick="equationManager.insertEquation()">Importer</button>
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+						<button type="button" class="btn btn-primary" onClick="equationManager.insertEquation();equationManager.disableEditingMode()">Importer</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="equationManager.disableEditingMode()">Fermer</button>
 					</div>
 				</div>
 			</div>

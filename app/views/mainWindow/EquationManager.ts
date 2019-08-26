@@ -10,6 +10,8 @@ export class EquationManager {
   history: { code: string, node: Node }[];
   presets: { key: string; code: string; }[];
 
+  editingMathNode: HTMLSpanElement;
+
   constructor(modalManager: ModalManager, editor: JQuery) {
     var equationHistory = []
     this.equationPreviewNode = document.getElementById('equation¨Preview')
@@ -73,6 +75,10 @@ export class EquationManager {
     this.setEquationInput(this.presets.find(e=>this.$equationPreset.val()==e.key).code)
   }
 
+  disableEditingMode() {
+    this.editingMathNode = null
+  }
+
   /**
    * Met a jour l'affichage de preview d'équation en fonction des données entrées
    * dans le champ du modal "Insérer une équation"
@@ -100,10 +106,15 @@ export class EquationManager {
     // wrapperNode.appendChild(beforeNode)
     
     // Insertion de la formule dans l'élement
-    let mathNode = document.createElement('div')
+    let mathNode = document.createElement('span')
+    mathNode.classList.add('mathNode')
     mathNode.contentEditable = 'false'
     mathNode.style.display = 'inline-block'
     mathNode.innerHTML = "`" + inputVal + "`"
+    mathNode.addEventListener('click', (e: MouseEvent) => {
+      this.editMathNode(<HTMLElement> mathNode)
+      e.stopPropagation()
+    })
     wrapperNode.appendChild(mathNode)
 
     // Insertion d'un caractère après la formule pour aider le curseur à se repérer
@@ -111,8 +122,24 @@ export class EquationManager {
     afterNode.innerHTML = '&zwnj;'
     wrapperNode.appendChild(afterNode)
 
+    // Delete older equation if necessary 
+    if (this.editingMathNode) {
+      let nextEle = this.editingMathNode.nextElementSibling 
+      this.editingMathNode.parentNode.removeChild(this.editingMathNode)
+      // Replace cursor after deleted node
+      if (nextEle) {
+        var r = document.createRange();
+        r.setStart(nextEle.childNodes[0], 1);
+        r.setEnd(nextEle.childNodes[0], 1);
+        var s = window.getSelection();
+        s.removeAllRanges();
+        s.addRange(r);
+      }
+    } else {
+      this.editor.summernote('restoreRange')
+    }
+
     // Add wrappernode to document
-    this.editor.summernote('restoreRange')
     this.editor.summernote('pasteHTML', wrapperNode);
     // this.editor.summernote('editor.pasteHTML', '&zwnj;')
     // Add equation to history
@@ -172,6 +199,14 @@ export class EquationManager {
     })
     // Call MatJax to render the node
     MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.$historyNode.get()])
+  }
+
+  editMathNode(mathNode: HTMLElement) {
+    this.editingMathNode = mathNode
+    this.modalManager.openModal("equationModal")
+    let math: string = mathNode.querySelector('script').innerText
+    this.$equationValueNode.val(math)
+    this.updateEquationPreview()
   }
 
 }
