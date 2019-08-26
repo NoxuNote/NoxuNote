@@ -94,7 +94,6 @@ export class EquationManager {
   insertEquation() {
     const inputVal: string = this.$equationValueNode.val().toString()
     if (inputVal.length === 0) return
-    this.editor.summernote('restoreRange')
     this.editor.summernote('focus')
     // Création de l'élément HTML
     let wrapperNode = document.createElement('span')
@@ -104,6 +103,11 @@ export class EquationManager {
     // let beforeNode = document.createElement('span')
     // beforeNode.innerHTML = '&zwnj;'
     // wrapperNode.appendChild(beforeNode)
+    let equationScriptNode = document.createElement('span')
+    equationScriptNode.style.opacity = '0'
+    equationScriptNode.style.fontSize = '0em' // can't hide element or not copied to clipboard (chrome optimisation probably)
+    equationScriptNode.classList.add('equationScript')
+    equationScriptNode.innerText = inputVal
     
     // Insertion de la formule dans l'élement
     let mathNode = document.createElement('span')
@@ -111,6 +115,7 @@ export class EquationManager {
     mathNode.contentEditable = 'false'
     mathNode.style.display = 'inline-block'
     mathNode.innerHTML = "`" + inputVal + "`"
+    mathNode.appendChild(equationScriptNode)
     mathNode.addEventListener('click', (e: MouseEvent) => {
       this.editMathNode(<HTMLElement> mathNode)
       e.stopPropagation()
@@ -204,7 +209,7 @@ export class EquationManager {
   editMathNode(mathNode: HTMLElement) {
     this.editingMathNode = mathNode
     this.modalManager.openModal("equationModal")
-    let math: string = mathNode.querySelector('script').innerText
+    let math: string = (<HTMLSpanElement>mathNode.querySelector('span.equationScript')).innerText
     this.$equationValueNode.val(math)
     this.updateEquationPreview()
   }
