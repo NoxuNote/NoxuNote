@@ -99,11 +99,8 @@ export class EquationManager {
     let wrapperNode = document.createElement('span')
     wrapperNode.contentEditable = 'true'
 
-    // Insertion d'un caractère après la formule pour aider le curseur à se repérer
-    // let beforeNode = document.createElement('span')
-    // beforeNode.innerHTML = '&zwnj;'
-    // wrapperNode.appendChild(beforeNode)
-    let equationScriptNode = document.createElement('span')
+    // stoque la formule brute au format texte.
+    let equationScriptNode = document.createElement('span') 
     equationScriptNode.style.opacity = '0'
     equationScriptNode.style.fontSize = '0em' // can't hide element or not copied to clipboard (chrome optimisation probably)
     equationScriptNode.classList.add('equationScript')
@@ -127,34 +124,18 @@ export class EquationManager {
     afterNode.innerHTML = '&zwnj;'
     wrapperNode.appendChild(afterNode)
 
-    // Delete older equation if necessary 
-    if (this.editingMathNode) {
-      // let nextEle = this.editingMathNode.nextSibling 
-      // this.editingMathNode.parentNode.removeChild(this.editingMathNode)
-      // // Replace cursor after deleted node
-      // if (nextEle) {
-      //   var r = document.createRange();
-      //   r.setStart(nextEle, 1);
-      //   r.setEnd(nextEle, 1);
-      //   var s = window.getSelection();
-      //   s.removeAllRanges();
-      //   s.addRange(r);
-      // }
-      this.editingMathNode.parentElement.replaceChild(mathNode, this.editingMathNode)
-    } else {
-      this.editor.summernote('restoreRange')
-    }
     this.editor.summernote('restoreRange')
-
-    // Add wrappernode to document
-    this.editor.summernote('pasteHTML', wrapperNode);
-    // this.editor.summernote('editor.pasteHTML', '&zwnj;')
+    // Insert generated to document
+    if (this.editingMathNode)
+      this.editingMathNode.parentElement.replaceChild(mathNode, this.editingMathNode)
+    else
+      this.editor.summernote('pasteHTML', wrapperNode);
     // Add equation to history
     if (this.history.filter(h=>h.code == inputVal).length == 0) {
       if (this.history.length > 10) this.history.shift()
       this.history.push({
         'code': inputVal,
-        'node': wrapperNode.cloneNode(true)
+        'node': mathNode.cloneNode(true)  
       })
     }
     // Close and clean modal
@@ -180,27 +161,26 @@ export class EquationManager {
    * Regénère l'historique des équations tapées dans la modale
    */
   refreshHistory() {
-    var that = this
     this.$historyNode.empty()
     this.history.forEach(h=>{
       // Création du bouton suppression historique
       var del = document.createElement('div')
       del.classList.add('historyDeleteButton')
       del.innerHTML = '<i class="fas fa-times"></i>'
-      del.addEventListener('click', (($event)=>{
-        $event.stopPropagation()
+      del.addEventListener('click', ((e: MouseEvent)=>{
+        e.stopPropagation()
         // Delete element from list
-        var index = that.history.indexOf(h);
-        if (index !== -1) that.history.splice(index, 1);
+        var index = this.history.indexOf(h);
+        if (index !== -1) this.history.splice(index, 1);
         // Refresh history
-        that.refreshHistory()
+        this.refreshHistory()
       }))
       // Création de l'élément d'historique
       var el = document.createElement('div')
       el.appendChild(del)
       el.appendChild(h.node)
       el.classList.add('historyEquation') 
-      el.addEventListener('click', (()=>that.setEquationInput(h.code)))
+      el.addEventListener('click', (()=>this.setEquationInput(h.code)))
       // Ajout de l'élément d'historique à l'historique
       this.$historyNode.append(el)
     })
