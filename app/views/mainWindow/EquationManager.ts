@@ -129,13 +129,13 @@ export class EquationManager {
 
     // Delete older equation if necessary 
     if (this.editingMathNode) {
-      let nextEle = this.editingMathNode.nextElementSibling 
+      let nextEle = this.editingMathNode.nextSibling 
       this.editingMathNode.parentNode.removeChild(this.editingMathNode)
       // Replace cursor after deleted node
       if (nextEle) {
         var r = document.createRange();
-        r.setStart(nextEle.childNodes[0], 1);
-        r.setEnd(nextEle.childNodes[0], 1);
+        r.setStart(nextEle, 1);
+        r.setEnd(nextEle, 1);
         var s = window.getSelection();
         s.removeAllRanges();
         s.addRange(r);
