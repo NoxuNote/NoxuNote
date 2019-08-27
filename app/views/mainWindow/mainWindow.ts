@@ -341,8 +341,8 @@ function initializeSummernote() {
 			['create', ['schemaCreation']],
 			['fontsize', ['fontname', 'fontsize', 'color']],
 			['style', ['bold', 'italic', 'underline']],
-			['para', ['ul', 'ol', 'paragraph']],
-			['font', ['superscript', 'subscript', 'codeview']],
+			['para', ['ol', 'paragraph']],
+			['font', ['superscript', 'subscript']],
 			['insert', ['media', 'equation', 'table']]
 		],
 		/**

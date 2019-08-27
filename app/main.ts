@@ -20,7 +20,6 @@ const DEBUG = true
 const { Menu, dialog, app, BrowserWindow, ipcMain  } = require('electron')
 // Importing NoxuNote librairies
 import { NoxuNoteApp } from "./Browsers";
-import { fileURLToPath } from "url";
 // Importing external modules
 const fs				= require('fs-extra')
 const homedir		= require('os').homedir()
