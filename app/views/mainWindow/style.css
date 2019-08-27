@@ -539,10 +539,11 @@ td:hover {
 .toDoTitle {
 	margin: 0;
 	height: 50px;
-	font-size: 1.5em; 
-	text-align:center; 
+	font-size: 1.5em;
+	text-align:center;
 	line-height: 200%;
 	cursor: move;
+	color: #756f6f;
 }
 textarea#toDoContent {
 	margin: 0;
