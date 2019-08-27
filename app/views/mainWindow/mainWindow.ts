@@ -556,6 +556,21 @@ function triggerSaveEdit() {
  */
 function refreshDictionnary() {
 	// TODO
+	// const wordsDictionnary = ipcRenderer.sendSync('db_getAssocList').map((element: { output: any; }) => element.output)
+	// editor.summernote({
+	// 	/**
+	// 	 * Suggestion automatique de mots
+	// 	 */
+	// 	hint: {
+	// 		words: wordsDictionnary,
+	// 		match: /\b(\w{1,})$/,
+	// 		search: function (keyword: any, callback: (arg0: any) => void) {
+	// 			callback($.grep(this.words, function (item: { indexOf: (arg0: any) => number; }) {
+	// 				return item.indexOf(keyword) === 0;
+	// 			}))
+	// 		}
+	// 	},
+	// })
 }
 
 /**

@@ -22,6 +22,9 @@
         <div class="cat" onClick="show(this.innerHTML)">
             Dactylographie
         </div>
+        <div class="cat" onClick="show(this.innerHTML)">
+            Sauvegarde
+        </div>
     </div>
 
     <div class="rightPart">
@@ -36,8 +39,7 @@
         <div id="Général">
             <h3>Réglages Généraux</h3>
             <p>Dossier de stockage des notes et réglages :</p>
-            <code id="path"></code>
-
+            <code id="path"></code>&nbsp;&nbsp;<button id="openNoxuFolder" class="btn btn-primary btn-sm">Ouvrir</button>
         </div>
         <div id="Matières">
             <h3>Gérer les matières</h3>
@@ -51,16 +53,18 @@
             </table>
             <br>
             <div style="height: 30px;">
-                <button class="btn alignRight" onClick="ajouterMatiere()">Ajouter
+                <button class="btn btn-primary alignRight" onClick="ajouterMatiere()">Ajouter
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
         </div>
         <div id="Dactylographie">
             <h3>Raccourcis de mots</h3>
-            <p>Associez des abbréviations aux mots que vous utilisez le plus souvent.</p>
-            <p>Ajoutez une abbréviation et précisez le mot original, dès que vous taperez 
-                l'abbréviation et presserez ESPACE, elle sera remplacée par le mot original.</p>
+            <p>Indiquez les mots que vous utilisez le plus souvent. Ils vous seront suggerés dès que vous commencerez à les taper dans l'éditeur.</p>
+            <p>Pressez alors ENTRÉE pour insérer le mot complet.</p>
+            <div class="alert alert-warning" role="alert">
+                Vous devez redémarrer NoxuNote pour que vos changements soient pris en compte.
+            </div>
             <table id="tableAssoc">
                 <tr style="background-color: #CCCCCC">
                     <th class="large">Abréviation</th>
@@ -69,10 +73,15 @@
             </table>
             <br>
             <div style="height: 30px;">
-                <button class="btn alignRight" onClick="ajouterAssoc()">Ajouter
+                <button class="btn btn-primary alignRight" onClick="ajouterAssoc()">Ajouter
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
+        </div>
+        <div id="Sauvegarde">
+            <h3>Sauvegarde</h3>
+            <p>Créez une archive contenant vos notes, images, et matières.</p>
+            <button class="btn btn-primary" id="createSave">Créer</button>
         </div>
     </div>
 

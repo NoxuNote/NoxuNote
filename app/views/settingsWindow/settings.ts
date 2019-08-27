@@ -1,14 +1,14 @@
 
 // Importation des librairies electron du processus de rendu
 const { ipcRenderer } = require('electron')
-const eprompt = require('electron-prompt')
-const homedir = require('os').homedir();
+const os = require('os')
+const homedir = os.homedir();
+const openExplorer = require('open-file-explorer');
 import { ColorPicker } from './ColorPicker'
 import { Matiere } from '../../types';
 import { StringPrompt } from '../../components/StringPrompt';
 import { ConfirmationPrompt } from '../../components/ConfirmationPrompt';
 import * as $ from "jquery";
-import { stringify } from 'querystring';
 
 
 // Mise a jour du contenu de la page lors du clic sur une catégorie
@@ -16,16 +16,40 @@ var page = document.getElementById("page")
 function show(content: string) {
   page.innerHTML = document.getElementById(content.trim()).innerHTML
   switch (content.trim()) {
+    case "Général":
+      loadGeneral()
+      break
     case "Matières":
       loadTableMatieres()
       break
     case "Dactylographie":
       loadTableAssoc()
       break
+    case "Sauvegarde":
+      loadSauvegarde()
+      break
   }
 }
 
-document.getElementById("path").innerHTML = homedir + '/NoxuNote/'
+/***************************************************************************************************
+ *                                             GENERAL                                             *
+ ***************************************************************************************************/
+
+function loadGeneral() {
+  let path: string;
+  if (process.platform == 'win32')
+    path = homedir + '\\NoxuNote\\'
+  else
+    path = homedir + '/NoxuNote/'
+  document.getElementById("path").innerHTML = path
+  document.getElementById('openNoxuFolder').onclick = () => {
+    openExplorer(path, (err: any) => {
+      if(err) {
+          console.log(err);
+      }
+  });
+  }
+}
 
 // Réception des ordres de l'IPC qui demandent de switch vers un onglet (key)
 ipcRenderer.on('switch', (event: any, key: string) => show(key))
@@ -192,3 +216,11 @@ function ajouterAssoc() {
   })
 }
 
+/***************************************************************************************************
+ *                                           SAUVEGARDE                                            *
+ ***************************************************************************************************/
+function loadSauvegarde() {
+  document.getElementById('createSave').onclick = () => {
+    ipcRenderer.send('createBackup')
+  }
+}

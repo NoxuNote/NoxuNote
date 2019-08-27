@@ -148,11 +148,6 @@ th {
     top: -8px;
     left: 48px;
 }
-button.btn {
-    border: none;
-    background-color: #cccccc;
-    padding: 5px;
-}
 .alignRight {
     display: block;
     float: right;

@@ -1,4 +1,6 @@
 import { INoxunoteApp, Note } from "./types";
+import * as AdmZip from "adm-zip"
+const openExplorer = require('open-file-explorer');
 
 export {};
 /**
@@ -345,6 +347,40 @@ function promptImage() {
 ipcMain.on('insertLocalImageDrawer', (event: { returnValue: string; }) => {
 	event.returnValue = promptImage()
 })
+
+/***************************************************************************************************
+ *                                            SAUVEGARE                                            *
+ ***************************************************************************************************/
+
+ ipcMain.on('createBackup', ()=>{
+		let date: Date = new Date()
+		let strDate = date.getDate() + '-' + (date.getMonth()+1)
+		let defaultPath = homedir + '/Desktop/save_noxu-' + strDate + '.zip'
+		let path = dialog.showSaveDialog(
+		{
+			title: "Sauvegarde des notes",
+			defaultPath: defaultPath,
+			filters: [
+				{name: 'ZIP', extensions: ['zip']}
+			]
+		}
+	)
+	if (path) {
+		try {
+			let zip = new AdmZip()
+			zip.addLocalFolder(homedir + '/NoxuNote')
+			zip.writeZip(path)
+			openExplorer(path, (err: any) => {
+				if(err) {
+						console.log(err);
+				}
+			})
+		} catch (e) {
+			console.error(e)
+		}
+	}
+ })
+
 
 /***************************************************************************************************
  *                                        COPIE DE FICHIER                                         *
