@@ -94,7 +94,6 @@ export class EquationManager {
   insertEquation() {
     const inputVal: string = this.$equationValueNode.val().toString()
     if (inputVal.length === 0) return
-    this.editor.summernote('focus')
     // Création de l'élément HTML
     let wrapperNode = document.createElement('span')
     wrapperNode.contentEditable = 'true'
