@@ -516,16 +516,19 @@ function refreshImg(url: any) {
  */
 function setNoteContent(content: string) {
 	// Conversion des anciens formats de noxunote en HTML (ne gère pas les tableaux)
-	if (content.includes("@NOXUNOTE_BEGIN")) {
+	let oldVersion: boolean = content.includes("@NOXUNOTE_BEGIN")
+	if (oldVersion) {
 		console.log("Ancien format détecté, formattage ...")
 		content = toNewFormat(content)
 	}
 	editor.summernote('reset')
 	editor.summernote('code', content)
-	// reattach all EventListeners to content
+	if (oldVersion) {
+		const editorContent = document.getElementsByClassName("note-editable")[0]
+		MathJax.Hub.Queue(["Typeset", MathJax.Hub, editorContent])
+		alert('Attention, vous avez chargé une note provenant d\'une ancienne version,\n par soucis de compatibilité, évitez de la modifier. \n\nCréez une nouvelle note.')
+	}
 	reattachEventListeners()
-	const editorContent = document.getElementsByClassName("note-editable")[0]
-	// MathJax.Hub.Queue(["Typeset", MathJax.Hub, editorContent]);
 }
 
 /**

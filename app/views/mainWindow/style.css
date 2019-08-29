@@ -104,7 +104,6 @@ div#barre_haut {
     user-select: none;
     width: 100%;
     background-color: #36404c;
-    opacity: 0.97;
     top: 0px;
     position: fixed;
     /* -webkit-box-shadow: 2px -2px 19px -3px rgba(0, 0, 0, 0.12); */
@@ -321,7 +320,6 @@ em {
 	padding-bottom: 10px;
 	padding-left: 14px;
 	padding-right: 14px;
-	opacity: 0;
 	overflow-y: scroll;
 	overflow-x: hidden;
 	z-index: 5;
@@ -337,15 +335,13 @@ em {
     -webkit-transform: translateX(-100%);
 }
 .mlateral-gauche.appear {
-	opacity: 0.97;
-
 	transform: translateX(0);
 	-webkit-transform: translateX(0);
 }
 #menuGaucheOuvrir {
 	width: 90vw;
 	padding-top: 0px;
-	background-color: #40464e;
+	/* background-color: #40464e; */
 }
 /* MENU DROITE */
 .mlateral-droit {
@@ -354,9 +350,7 @@ em {
 	transform: translateX(100%);
 	-webkit-transform: translateX(100%);
 }
-.mlateral-droit.appear {
-	opacity: 0.97;
-	
+.mlateral-droit.appear {	
 	transform: translateX(0);
 	-webkit-transform: translateX(0);
 }
@@ -420,7 +414,6 @@ div#menuBasCalc {
 	z-index: 4;
 	box-shadow: 1px 1px 12px #222;
 	visibility: hidden;
-	opacity: 0.97;
 	padding: 5px;
 	
 	transition: 0.6s;
