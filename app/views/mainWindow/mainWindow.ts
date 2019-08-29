@@ -536,7 +536,7 @@ function setNoteContent(content: string) {
  */
 function reattachEventListeners() {
 	// MathNodes
-	$('span.mathNode').get().forEach( (e: HTMLSpanElement) => {
+	$('.note-editable').find('span.mathNode').get().forEach( (e: HTMLSpanElement) => {
 		e.onclick = (ec: MouseEvent)=> {
 			ec.stopPropagation()
 			equationManager.editMathNode(e)
