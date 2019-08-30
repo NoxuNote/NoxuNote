@@ -41,7 +41,11 @@ export class EquationManager {
       },
       {
         key: "vector",
-        code: "( (a), (b) ) "
+        code: "vec u"
+      },
+      {
+        key: "columnvector",
+        code: "( (u_1), (u_2) ) "
       },
       {
         key: "matrix2x2",
