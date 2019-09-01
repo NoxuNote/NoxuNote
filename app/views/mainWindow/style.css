@@ -529,6 +529,7 @@ td:hover {
 	-webkit-transform: translateY(0);
 }
 
+
 .toDoTitle {
 	margin: 0;
 	height: 50px;
@@ -750,4 +751,23 @@ div.pastille {
 }
 .mathNode:hover {
 	background-color: #b3e3ff80;
+}
+/***************************************************************************************************
+ *                                           BLOCK INFO                                            *
+ ***************************************************************************************************/
+ div#infoBlock {
+	position: fixed;
+	right: 0px;
+	top: 84px;
+	width: 354px;
+	max-height: 60vh;
+	background-color: #171721;
+	z-index: 5;
+	padding: 10px;
+	opacity: 0.8;
+	display: none;
+	overflow-y: scroll;
+}
+div#infoBlock.appear {
+	display: block;
 }

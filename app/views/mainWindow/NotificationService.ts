@@ -17,10 +17,10 @@ export class NotificationService {
   showNotification(title: string, content: string, timeout: number, b1Text?: string, b1Action?: Function, b2Text?: string, b2Action?: Function) {
     this.hideNotification()
     this.element.classList.add('displayed')
-    this.title.innerText = title
-    this.content.innerText = content
+    this.title.innerHTML = title
+    this.content.innerHTML = content
     if (b1Text && b1Action) {
-      this.b1.innerText = b1Text
+      this.b1.innerHTML = b1Text
       this.b1Action = ()=>{this.hideNotification();b1Action()}
       this.b1.addEventListener('click', ()=>this.b1Action())
       this.b1.style.display = "block"
@@ -28,7 +28,7 @@ export class NotificationService {
       this.b1.style.display = "none"
     }
     if (b2Text && b2Action) {
-      this.b2.innerText = b2Text
+      this.b2.innerHTML = b2Text
       this.b2Action = ()=>{this.hideNotification();b2Action()}
       this.b2.addEventListener('click', ()=>this.b2Action())
       this.b2.style.display = "block"

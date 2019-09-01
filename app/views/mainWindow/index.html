@@ -44,6 +44,25 @@
 		<div id="toDoBlockheader" class="toDoTitle">À faire</div>
 		<textarea name="toDoContent" id="toDoContent" placeholder="(Tout ce que vous notez ici est sauvegardé et conservé, ce calepin vous suivra sur toutes vos notes)"></textarea>
 	</div>
+	<div id="infoBlock">
+		<i id="triggerInfoBlock" class="fas fa-times leftPannelClose" style="top: 5px"></i>
+		<h2>Aide</h2>
+		<hr>
+		<h3>Raccourcis</h3>
+		<p>Tapez l'un des caractères mis en gras suivants pour utiliser le raccourci associé.</p>
+		<ul>
+			<li><b>#</b> Petit titre</li>
+			<li><b>##</b> Moyen titre</li>
+			<li><b>###</b> Grand titre</li>
+		</ul>
+		<p>CTRL/CMD + E - Insérer une formule</p>
+		<hr>
+		<h3>Signaler un bug</h3>
+		<p>
+			Envoyez un message sur le support. Vérifiez que votre bug n'a pas été déjà signalé.
+		</p>
+		<button class="btn btn-primary" onclick="shell.openExternal('https:\/\/community.noxunote.fr/t/support')">Accéder au support</button>
+	</div>
 
 	<div id="menuGaucheOuvrir" class="mlateral mlateral-gauche p-0">
 		<i id="menuGaucheOuvrirTrigger" class="fas fa-times leftPannelClose" onclick="boutonMenuGaucheOuvrir()"></i>

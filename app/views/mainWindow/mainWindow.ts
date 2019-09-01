@@ -11,7 +11,7 @@
 
 // Importing and creating electron aliases
 const ipc = require('electron').ipcRenderer
-const { ipcRenderer } = require('electron')
+const { ipcRenderer, shell } = require('electron')
 const os = require("os")
 const toNewFormat = require("./migration")
 
@@ -23,6 +23,7 @@ import { TodoPlugin } from "./plugins/todo";
 import { BrowsePlugin } from "./plugins/browse";
 import { ModalManager } from "./ModalManager";
 import { EquationManager } from "./EquationManager";
+import { InfoPlugin } from "./plugins/info";
 
 
 declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
@@ -58,6 +59,10 @@ const elts = {
 		menu: document.getElementById('toDoBlock'),
 		content: <HTMLInputElement>document.getElementById("toDoContent")
 	},
+	info: {
+		triggers: [document.getElementById('triggerInfoBlock')],
+		element: document.getElementById('infoBlock')
+	},
 	matieres: {
 		matNeutre: <HTMLInputElement>document.getElementById('matneutre')
 	},
@@ -71,7 +76,8 @@ const elts = {
 var plugins: NoxunotePlugin[] = [
 	new CalcPlugin(elts.calc),
 	new TodoPlugin(elts.toDo),
-	new BrowsePlugin(elts.menuGaucheOuvrir, ipc)
+	new BrowsePlugin(elts.menuGaucheOuvrir, ipc),
+	new InfoPlugin(elts.info)
 ]
 
 /**
@@ -290,10 +296,10 @@ var SchemaCreationButton = function (context: any) {
 	return button.render();   // return button as jquery object
 }
 
-var SchemaEditionButton = function (context: any) {
-	var ui = ($ as any).summernote.ui;
+let SchemaEditionButton = function (context: any) {
+	let ui = ($ as any).summernote.ui;
 	// create button
-	var button = ui.button({
+	let button = ui.button({
 		contents: '<i class="fas fa-pencil-ruler"></i>',
 		tooltip: 'Modifier l\'image',
 		click: () => {
@@ -307,6 +313,19 @@ var SchemaEditionButton = function (context: any) {
 				console.log('edition du fichier : ', extractUrlFromSrc(url))
 				dessiner(extractUrlFromSrc(url))
 			}
+		}
+	});
+	return button.render();   // return button as jquery object
+}
+
+var InformationButton = function (context: any) {
+	var ui = ($ as any).summernote.ui;
+	// create button
+	var button = ui.button({
+		contents: '<i class="fas fa-info-circle"></i>',
+		tooltip: 'Astuces / Signaler un bug',
+		click: () => {
+			(<InfoPlugin>plugins.find(p=>p instanceof InfoPlugin)).toggle()
 		}
 	});
 	return button.render();   // return button as jquery object
@@ -337,6 +356,7 @@ function initializeSummernote() {
 		 * Boutons proposés dans la toolbar en haut de l'éditeur
 		 */
 		toolbar: [
+			['info', ['informations']],
 			['magic', ['style', 'specialChar']],
 			['create', ['schemaCreation']],
 			['fontsize', ['fontname', 'fontsize', 'color']],
@@ -370,7 +390,8 @@ function initializeSummernote() {
 			media: MediaButton,
 			equation: EquationButton,
 			schemaCreation: SchemaCreationButton,
-			schemaEdition: SchemaEditionButton
+			schemaEdition: SchemaEditionButton,
+			informations: InformationButton
 		},
 		/**
 		 * Evenements de sortie de summernote
@@ -594,7 +615,7 @@ function loadNote(note: Note) {
 /***************************************************************************************************
  *                                    INITIALISATION DU SCRIPT                                     *
  ***************************************************************************************************/
-notificationService.showNotification("Bienvenue dans NoxuNote", `version ${ipcRenderer.sendSync('getVersion')}`, 4000)
+notificationService.showNotification("Bienvenue dans NoxuNote", `version ${ipcRenderer.sendSync('getVersion')}<br>Si vous rencontrez un bug,<br>cliquez sur le premier bouton de la barre d'outils !`, 6000)
 
 /***************************************************************************************************
  *      ASSOCIATION DES ÉVÈNEMENTS DE L'IPC AUX FONCTIONS DU PROCESSUS GRAPHIQUE (AU DESSUS).      *
