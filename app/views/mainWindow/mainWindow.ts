@@ -536,6 +536,8 @@ function refreshImg(url: any) {
  * @param {String} content Contenu de la note à charger (code html)
  */
 function setNoteContent(content: string) {
+	// On cache le menu d'ouverture de fichier
+	(<BrowsePlugin>plugins.find(p=>p instanceof BrowsePlugin)).hide()
 	// Conversion des anciens formats de noxunote en HTML (ne gère pas les tableaux)
 	let oldVersion: boolean = content.includes("@NOXUNOTE_BEGIN")
 	if (oldVersion) {

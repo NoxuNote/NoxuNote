@@ -180,13 +180,19 @@ export class BrowsePlugin implements NoxunotePlugin {
     this.elts.fileLookup.appendChild(preview)
     // Load button
     let button = document.createElement('button')
-    button.classList.add("btn", "btn-secondary", "float-right", "mt-0")
+    button.classList.add("btn", "btn-secondary", "float-right", "mt-0", "ml-2")
     button.innerHTML = '<i class="fas fa-pen"></i> Ouvrir'
     button.addEventListener('click', ()=>this.ipc.send('loadNote', note))
     this.elts.fileLookup.appendChild(button)
+    // Export button
+    let exportButton = document.createElement('button')
+    exportButton.classList.add("btn", "btn-secondary", "float-right", "mt-0", "ml-2")
+    exportButton.innerHTML = '<i class="fas fa-share-square"></i> Partager'
+    exportButton.addEventListener('click', ()=>alert('Fonctionnalité en cours de développement.'))
+    this.elts.fileLookup.appendChild(exportButton)
     // Delete button
     let deleteButton = document.createElement('button')
-    deleteButton.classList.add("btn", "btn-danger", "float-right", "mt-0")
+    deleteButton.classList.add("btn", "btn-danger", "float-right", "mt-0", "ml-2")
     deleteButton.innerHTML = '<i class="fas fa-pen"></i> Supprimer'
     deleteButton.addEventListener('click', ()=>{
       if (confirm('Voulez vous vraiment supprimer cette note ?')) {
