@@ -372,6 +372,24 @@ ipcMain.on('backupNote', (event: any, noteId: string) => {
 	noxuApp.db.notes.backupNote(noteId, path)
 })
 
+ipcMain.on('importBackupNote', (event: any, noteId: string) => {
+	// Récupération du titre de la note
+	let defaultPath = `${homedir}/Desktop/`
+	let path = dialog.showOpenDialog({
+		title: "Importer une note",
+		defaultPath: defaultPath,
+		filters: [
+			{ name: 'Archive ZIP', extensions: ['zip'] }
+		]
+	})
+	if (path.length>0) {
+		noxuApp.db.notes.importBackupNote(path[0])
+		noxuApp.mainWindow.browserWindow.webContents.send('updateDb')
+	}
+})
+
+
+
 /***************************************************************************************************
  *                                        COPIE DE FICHIER                                         *
  ***************************************************************************************************/

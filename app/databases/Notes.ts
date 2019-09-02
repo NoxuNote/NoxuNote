@@ -289,12 +289,20 @@ export class Notes extends JSONDataBase {
         fs.emptyDirSync(temp)
         // copie de la note dans le dossier de travail
         let notePath = homedir +'/NoxuNote/notes/' + note.meta.filename
-        fs.copyFileSync(notePath, `${temp}/note.txt`)
+        fs.copyFileSync(notePath, `${temp}note.txt`)
         // copie des images dans le dossier de travail
         this.getLocalImagePaths(note).forEach(path => {
             let imageFileName: string = /[^\/]+$/g.exec(path)[0]
-            if (imageFileName) fs.copyFileSync(path, `${temp}/${imageFileName}`)
+            if (imageFileName) fs.copyFileSync(path, `${temp}${imageFileName}`)
         })
+        // Dans le fichier .txt, les sources des images correspondent a l'ancien path de l'émetteur
+        // Par exemple C:/users/blacky/NoxuNote/created_images/x.jpg
+        // Remplacons 'C:/users/blacky/NoxuNote/created_images/' par '$IMAGESDIR' pour obtenir $IMAGESDIRx.jpg
+        // Ainsi celui qui reçoit la sauvegarde n'aura qu'à remplacer $IMAGESDIR par son propre chemin d'accès aux images
+        let imagedir = `${homedir}/NoxuNote/created_images/`
+        let content = fs.readFileSync(`${temp}note.txt`, 'utf-8')
+        content = content.replace(imagedir, '$IMAGESDIR')
+        fs.writeFileSync(`${temp}note.txt`, content)
         // création d'un zip
         let zip = new AdmZip()
         zip.addLocalFolder(temp)
@@ -302,4 +310,36 @@ export class Notes extends JSONDataBase {
         // suppression du dossier de travail temporaire
         fs.removeSync(temp)
     }
+
+    public importBackupNote(zipPath: string) {
+        // Lecture du zip
+        let zip = new AdmZip(zipPath)
+        // Vérification du contenu du zip
+        let entries: string[] = zip.getEntries().map(e=>e.entryName)
+        if (entries.includes('note.txt')) {
+            // création du dossier de travail temporaire
+            let temp: string = homedir + '/NoxuNote/temp/'
+            fs.emptyDirSync(temp)
+            // Extraction du zip
+            zip.extractAllTo(temp)
+            // Copie des images dans homedir/NoxuNote/created_images/
+            let files: string[] = fs.readdirSync(temp)
+            files.forEach(f=>{
+                if (f.toLowerCase().includes('.png') || f.toLowerCase().includes('.jpg')) {
+                    fs.copyFileSync(`${temp}${f}`, `${homedir}/NoxuNote/created_images/${f}`)
+                }
+            })
+            // Remplacement des $IMAGESDIR vers le nouveau path des images
+            let imagedir = `${homedir}/NoxuNote/created_images/`
+            let noteContent = fs.readFileSync(`${temp}note.txt`, 'utf8')
+            noteContent = noteContent.replace('$IMAGESDIR', imagedir)
+            // Copie de la note modifiée dans le répertoire des notes
+            fs.writeFileSync(`${homedir}/NoxuNote/notes/import${new Date().getTime()}.txt`, noteContent)
+            // suppression du dossier de travail temporaire
+            fs.removeSync(temp)
+            // Regénération du json
+            this.loadJson()
+        }
+    }
+
 }
