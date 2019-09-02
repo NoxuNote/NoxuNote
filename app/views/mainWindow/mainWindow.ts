@@ -510,6 +510,7 @@ function insertImageFromFile() {
  * @param {String} src HTMLImageElement.src - Source de l'image
  */
 function extractUrlFromSrc(src: string) {
+	// TODO peut être amélioré en 1 regex.
 	if (src.includes("?")) {
 		return /^[\s\S]*\?/.exec(src)[0].replace('?', '')
 	} else {

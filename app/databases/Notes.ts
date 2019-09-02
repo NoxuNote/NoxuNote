@@ -1,7 +1,9 @@
 import fs = require('fs-extra');
 const homedir = require('os').homedir();
 import { JSONDataBase, Note, NoteMetadata, INoxunoteApp } from '../types'
-import { NoxuNoteApp } from '../Browsers';
+import * as AdmZip from "adm-zip"
+const openExplorer = require('open-file-explorer');
+
 /***************************************************************************************************
  *                                         TABLE DES NOTES                                         *
  ***************************************************************************************************/
@@ -259,5 +261,45 @@ export class Notes extends JSONDataBase {
         this.saveJson()
         console.debug(`Element supprimé de this.parsedJson > ${JSON.stringify(deleted)}`)
         return this.parsedJson;
+    }
+
+    /**
+     * Renvoie les url locales (C:/Users/.../x.png) des images d'une note
+     * @param noteId Id de la note
+     */
+    private getLocalImagePaths(note: Note): string[] {
+        let output: string[] = []
+        // Récupère tous les sources des images du document (en ignorant file:/// si présent au début)
+        let regex: RegExp = /src=(?:"|')(?:file:\/\/\/)?([\s\S]*?)(?:\?[a-zA-Z0-9]*)?(?:"|')/g
+        let array: RegExpExecArray;
+        while ((array = regex.exec(note.content)) != null) {
+            let match: string = array[1]
+            // TODO attention, une image peut etre sur un serveur sans avoir de 'http(s)' en préfixe !
+            // Une solution plus élégante doit être trouvée.
+            if (!match.includes('http')) output.push(array[1])
+        }
+        return output
+    }
+
+    public backupNote(noteId: string, path: string) {
+        let temp: string = homedir + '/NoxuNote/temp/'
+        // Récupération de la note
+        let note: Note = this.getNote(noteId)
+        // création du dossier de travail temporaire
+        fs.emptyDirSync(temp)
+        // copie de la note dans le dossier de travail
+        let notePath = homedir +'/NoxuNote/notes/' + note.meta.filename
+        fs.copyFileSync(notePath, `${temp}/note.txt`)
+        // copie des images dans le dossier de travail
+        this.getLocalImagePaths(note).forEach(path => {
+            let imageFileName: string = /[^\/]+$/g.exec(path)[0]
+            if (imageFileName) fs.copyFileSync(path, `${temp}/${imageFileName}`)
+        })
+        // création d'un zip
+        let zip = new AdmZip()
+        zip.addLocalFolder(temp)
+        zip.writeZip(path)
+        // suppression du dossier de travail temporaire
+        fs.removeSync(temp)
     }
 }

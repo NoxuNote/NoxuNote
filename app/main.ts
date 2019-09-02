@@ -20,6 +20,7 @@ const DEBUG = true
 const { Menu, dialog, app, BrowserWindow, ipcMain  } = require('electron')
 // Importing NoxuNote librairies
 import { NoxuNoteApp } from "./Browsers";
+import { ipcRenderer } from "electron";
 // Importing external modules
 const fs				= require('fs-extra')
 const homedir		= require('os').homedir()
@@ -172,27 +173,6 @@ app.on('window-all-closed', () => {
 
 ipcMain.on('getVersion', (event: any)=>event.returnValue = noxuApp.licence.getVersion())
 
-/** 
- * Créee un fichier au format NoxuNote (.txt) 
- * @param title le nom du fichier
- */
-function save_as_noxunote(title: string, matiere: any, content: any) {
-	// On détermine un nom par défaut.
-	var date = new Date()
-	var hour
-	if (date.getMinutes() < 10) hour = date.getHours() + "h0" + date.getMinutes()
-	else hour = date.getHours() + "h" + date.getMinutes()
-	const mois = new Intl.DateTimeFormat('fr-FR', { month: 'long'}).format(date)
-	let now = hour + " le " + date.getDate() + " " + mois + " " + date.getFullYear()
-	if (title == "(Sans titre)") title = "Note " + now
-	var path = homedir + '/NoxuNote/notes/' + title + '.txt';
-	try { fs.writeFileSync(path, content) }
-	catch (e) { console.log('Failed to save the file !' + e) }
-	// Ajout de la matière dans la base de données
-	noxuApp.db.notes.setProperty('matiere', matiere, title)
-	noxuApp.db.notes.setProperty('lastedit', now, title)
-}
-
 
 // Génère une fenêtre de dessin, appelé quand on appuis sur "Dessiner".
 ipcMain.on('dessiner', (event: any, url: any) => {
@@ -208,8 +188,6 @@ ipcMain.on('refreshImg', (event: any, filename: any) => {
 	noxuApp.mainDrawWindow.browserWindow.close()
 	noxuApp.mainWindow.browserWindow.webContents.send('refreshImg', filename)
 })
-
-ipcMain.on('save_as_noxunote', (event: { returnValue: void; }, title: string, matiere: any, content: any) => event.returnValue=save_as_noxunote(title, matiere, content));
 
 /***************************************************************************************************
  *                                            PRINTING                                             *
@@ -351,16 +329,16 @@ ipcMain.on('insertLocalImageDrawer', (event: { returnValue: string; }) => {
  *                                            SAUVEGARE                                            *
  ***************************************************************************************************/
 
- ipcMain.on('createBackup', ()=>{
-		let date: Date = new Date()
-		let strDate = date.getDate() + '-' + (date.getMonth()+1)
-		let defaultPath = homedir + '/Desktop/save_noxu-' + strDate + '.zip'
-		let path = dialog.showSaveDialog(
+ipcMain.on('createBackup', () => {
+	let date: Date = new Date()
+	let strDate = date.getDate() + '-' + (date.getMonth() + 1)
+	let defaultPath = homedir + '/Desktop/save_noxu-' + strDate + '.zip'
+	let path = dialog.showSaveDialog(
 		{
 			title: "Sauvegarde des notes",
 			defaultPath: defaultPath,
 			filters: [
-				{name: 'ZIP', extensions: ['zip']}
+				{ name: 'ZIP', extensions: ['zip'] }
 			]
 		}
 	)
@@ -370,16 +348,29 @@ ipcMain.on('insertLocalImageDrawer', (event: { returnValue: string; }) => {
 			zip.addLocalFolder(homedir + '/NoxuNote')
 			zip.writeZip(path)
 			openExplorer(path, (err: any) => {
-				if(err) {
-						console.log(err);
+				if (err) {
+					console.log(err);
 				}
 			})
 		} catch (e) {
 			console.error(e)
 		}
 	}
- })
+})
 
+ipcMain.on('backupNote', (event: any, noteId: string) => {
+	// Récupération du titre de la note
+	let title: string = noxuApp.db.notes.getNote(noteId).meta.title 
+	let defaultPath = `${homedir}/Desktop/${title}.zip`
+	let path = dialog.showSaveDialog({
+		title: "Exporter la note",
+		defaultPath: defaultPath,
+		filters: [
+			{name: 'ZIP', extensions: ['zip']}
+		]
+	})
+	noxuApp.db.notes.backupNote(noteId, path)
+})
 
 /***************************************************************************************************
  *                                        COPIE DE FICHIER                                         *

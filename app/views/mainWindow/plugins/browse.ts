@@ -188,7 +188,10 @@ export class BrowsePlugin implements NoxunotePlugin {
     let exportButton = document.createElement('button')
     exportButton.classList.add("btn", "btn-secondary", "float-right", "mt-0", "ml-2")
     exportButton.innerHTML = '<i class="fas fa-share-square"></i> Partager'
-    exportButton.addEventListener('click', ()=>alert('Fonctionnalité en cours de développement.'))
+    let avertMsg = `Avertissement :\n
+    Cette fonctionnalité n'a pas encore été pleinement testée.\n
+    Ne transmettez vos notes qu'à titre expérimental, et à des personnes que vous connaissez.`
+    exportButton.addEventListener('click', ()=>{alert(avertMsg);this.ipc.send('backupNote', note.meta.id)})
     this.elts.fileLookup.appendChild(exportButton)
     // Delete button
     let deleteButton = document.createElement('button')
