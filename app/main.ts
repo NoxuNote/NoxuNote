@@ -382,7 +382,7 @@ ipcMain.on('importBackupNote', (event: any, noteId: string) => {
 			{ name: 'Archive ZIP', extensions: ['zip'] }
 		]
 	})
-	if (path.length>0) {
+	if (path && path.length>0) {
 		noxuApp.db.notes.importBackupNote(path[0])
 		noxuApp.mainWindow.browserWindow.webContents.send('updateDb')
 	}
