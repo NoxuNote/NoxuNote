@@ -37,7 +37,7 @@
     "os": "^0.1.1",
     "popper.js": "^1.14.6",
     "querystring": "^0.2.0",
-    "summernote": "^0.8.11"
+    "summernote": "0.8.11"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.4.32",
