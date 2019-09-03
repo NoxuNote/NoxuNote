@@ -5,15 +5,17 @@ NoxuNote est une application de note pour étudiants et professionnels fonctionn
 ### Aperçu
 ![Aperçu](http://noxunote.fr/prototype/assets/img/2.gif)
 
-- Réalisez entièrement votre mise en page sans utiliser la souris !
-
-- Importez des images, créez des schémas, graphes, et éditez les directement dans votre note.
-
-- Dérivez, évaluez, et modélisez vos fonctions mathématiques complexes et notez les aussi facilement que sur votre calculatrice !
-
-- Créez des tableaux 2D simplement en intégrant des "/" dans votre texte.
-
-- Gérez, triez, et exportez directement vos notes depuis l'application.
+- Noter ses cours plus vite en devinant les mots compliqués
+- Tri par matières (UE), enregistrement, et gestion des notes integré.
+- Insertion de formules mathématiques en langage humain et intuitif.
+- Créer des dessins, courbes de fonction, schémas, modifiez des images.
+- Calepin integré qui vous suit toute la journée
+- Créer des tableaux facilement
+- Convertisseur d'unités, dérivateur, calculatrice
+- Glisser-déposé de contenu d'internet vers NoxuNote
+- Import, export, partage et gestion des notes simplifiée
+- Export en PDF avec beaucoup d'options de personnalisation
+- Économiser de la batterie en diminuant les pixels blancs à l'écran
 
 ### Outil de dessin
 ![Dessin](http://noxunote.fr/prototype/assets/img/weprefear.gif)
