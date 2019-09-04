@@ -28,6 +28,7 @@
       "build/"
     ],
     "directories": {
+      "buildRessources": "buildRessources/",
       "output": "dist/"
     },
     "mac": {
