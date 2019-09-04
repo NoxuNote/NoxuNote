@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
-    "@types/mathjs": "^5.0.1",
+    "@types/mathjs": "^6.0.2",
     "ContentTools": "^1.6.10",
     "adm-zip": "^0.4.13",
     "bootstrap": "^4.2.1",
