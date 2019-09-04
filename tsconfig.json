@@ -6,7 +6,7 @@
     "sourceMap": true,
     "allowJs": true,
     "lib": ["es2016", "dom"],
-    "outDir": "dist",
+    "outDir": "build",
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]

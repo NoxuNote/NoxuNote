@@ -1,21 +1,65 @@
 {
   "name": "noxunote",
-  "version": "0.5.2",
+  "version": "1.0.0",
   "description": "www.noxunote.fr",
   "repository": {
     "type": "git",
     "url": "https://github.com/leorolland/NoxuNote.git"
   },
-  "main": "./dist/main.js",
+  "main": "./build/main.js",
   "scripts": {
-    "electron:run": "./node_modules/.bin/electron ./dist/main.js",
+    "electron:run": "./node_modules/.bin/electron ./build/main.js",
     "tsc": "./node_modules/.bin/tsc",
-    "build": "npm run tsc && npm run buildassets",
-    "start": "npm run build && npm run electron:run",
-    "buildassets": "copyfiles -u 1 \"./app/**/*\" \"./dist/\""
+    "compile": "npm run tsc && npm run buildassets",
+    "start": "npm run compile && npm run electron:run",
+    "buildassets": "copyfiles -u 1 \"./app/**/*\" \"./build/\"",
+    "dist": "npm run compile && electron-builder -mwl"
   },
-  "author": "Léo Rolland",
+  "author": {
+    "name": "Léo Rolland",
+    "mail": "leo.rolland@etudiant.univ-rennes1.fr"
+  },
   "license": "GPL-3.0",
+  "build": {
+    "appId": "fr.noxunote.noxunote",
+    "productName": "NoxuNote",
+    "copyright": "Licence GPL-3.0 - Auteur original : Léo Rolland",
+    "files": [
+      "build/"
+    ],
+    "directories": {
+      "output": "dist/"
+    },
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "createDesktopShortcut": "always",
+      "oneClick": "false",
+      "shortcutName": "NoxuNote",
+      "allowToChangeInstallationDirectory": true
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 190
+        },
+        {
+          "x": 400,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "category": "Productivity"
+    }
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
     "@types/mathjs": "^5.0.1",
@@ -41,7 +85,6 @@
   },
   "devDependencies": {
     "@types/adm-zip": "^0.4.32",
-    "@types/electron": "^1.6.10",
     "@types/fs-extra": "^8.0.0",
     "@types/jquery": "^3.3.30",
     "@types/mathjax": "0.0.35",
