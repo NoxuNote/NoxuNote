@@ -75,7 +75,7 @@
     "html5tooltipsjs": "^1.7.3",
     "jquery": "^3.3.1",
     "materialize-css": "^1.0.0-beta",
-    "mathjax": "^2.7.4",
+    "mathjax": "^3.0.0",
     "mathjs": "^5.10.3",
     "open-file-explorer": "^1.0.2",
     "os": "^0.1.1",
