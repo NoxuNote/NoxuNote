@@ -23,7 +23,7 @@
   "build": {
     "appId": "fr.noxunote.noxunote",
     "productName": "NoxuNote",
-    "copyright": "Licence GPL-3.0 - Auteur original : Léo Rolland",
+    "copyright": "Licence GPL-3.0",
     "files": [
       "build/"
     ],

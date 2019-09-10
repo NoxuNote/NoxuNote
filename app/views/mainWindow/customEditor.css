@@ -2,7 +2,7 @@
   background-color: #282F37;
   color: rgb(228, 228, 228);
   /* height: 88vh; */
-  padding: 13px 5vw 0px 5vw;
+  padding: 13px 5vw 75vh 5vw;
 }
 .note-toolbar {
   position: relative;
@@ -53,7 +53,4 @@ FROM BOOTSTRAP */
 .btn i {
   font-size: 1.1rem;
   line-height: inherit;
-}
-.card-btn {
-  
 }
