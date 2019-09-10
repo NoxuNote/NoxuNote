@@ -5,8 +5,11 @@ const ipc = require('electron').ipcRenderer
 const { ipcRenderer } = require('electron')
 const effecteur = require('../mainDrawWindow/Effecter.js')
 const parser = require("../../parser.js")
-const { StylePreset } = require('./StylePreset.js')
 const fontList = require('font-list')
+
+import { StylePreset } from './StylePreset'
+import { CSSPreset } from './CSSPreset';
+type $ = any
 
 const content = document.getElementById("content")
 
@@ -38,11 +41,11 @@ updateDim()
 // Quand le main.js à envoyé tous les éléments de la note, on attend que MathJax ait fini le rendu et on
 // Envoie l'ordre d'imprimer
 function onUploadedContent() {
-    var images = document.querySelectorAll('img')
-    Array.from(images).forEach((image) => {
-        if (image.className != "schema") {
+    let images = document.querySelectorAll('img')
+    Array.from(images).forEach((image: HTMLImageElement) => {
+        if (image.classList.contains('schema')) {
             effecteur.whiteTransformation(image)
-                .then((result) => {
+                .then((result: string) => {
                     image.src = result
                 })
         }
@@ -50,7 +53,7 @@ function onUploadedContent() {
     })
 }
 
-ipcRenderer.on('setNote', (event, note) => {
+ipcRenderer.on('setNote', (event: any, note: string) => {
     content.innerHTML = note
     onUploadedContent()
 })
@@ -58,24 +61,24 @@ ipcRenderer.on('setNote', (event, note) => {
 /***************************************************************************************************
 *                               SYNTHÈSE DES DONNÉES DU FORMULAIRE                                *
 ***************************************************************************************************/
-customStyle = new StylePreset()
+let customStyle: StylePreset = new StylePreset()
 
-function getSelectedValue(query) {
+function getSelectedValue(query: string) {
     return $(query).val()
 }
-function setSelectedValue(query, value) {
+function setSelectedValue(query: string, value: any) {
     // Ancienne méthode
     // $(query).find(`option[value="${value}"]`).prop('selected', true);
-    let el = $(query)
+    let el: any = $(query) // type "any" because formSelect not in jQuery but in MaterializeCSS
     el.val(value)
     el.formSelect()
 }
-function setRangeValue(query, value) {
+function setRangeValue(query: string, value: string | number) {
     $(query).val(value)
 }
 
 
-function loadPreset(preset) {
+function loadPreset(preset: { format: string, jcss: CSSPreset }) {
     let s = preset.jcss
     // Format
     setSelectedValue('#format', preset.format)
@@ -125,50 +128,50 @@ function loadPreset(preset) {
 function onFormChange() {
     let s = customStyle.preset.jcss
     // Format
-    customStyle.preset.format = getSelectedValue('#format')
+    customStyle.preset.format = <string>getSelectedValue('#format')
     // Page
-    s.general.paddingTop = getSelectedValue('#pagePaddingTop')
-    s.general.paddingLeft = getSelectedValue('#pagePaddingLeft')
-    s.general.paddingRight = getSelectedValue('#pagePaddingRight')
+    s.general.paddingTop = <number>getSelectedValue('#pagePaddingTop')
+    s.general.paddingLeft = <number>getSelectedValue('#pagePaddingLeft')
+    s.general.paddingRight = <number>getSelectedValue('#pagePaddingRight')
     // h3
-    s.h3.fontFamily = getSelectedValue('#policeTitre3')
-    s.h3.fontSize = getSelectedValue('#sizeTitre3')
-    s.h3.textAlign = getSelectedValue('#alignTitre3')
-    s.h3.marginLeft = getSelectedValue('#marginLeftTitre3')
-    s.h3.marginTop = getSelectedValue('#marginTopTitre3')
+    s.h3.fontFamily = <string>('#policeTitre3')
+    s.h3.fontSize = <number>getSelectedValue('#sizeTitre3')
+    s.h3.textAlign = <string>getSelectedValue('#alignTitre3')
+    s.h3.marginLeft = <number>getSelectedValue('#marginLeftTitre3')
+    s.h3.marginTop = <number>getSelectedValue('#marginTopTitre3')
     // h2
-    s.h2.fontFamily = getSelectedValue('#policeTitre2')
-    s.h2.fontSize = getSelectedValue('#sizeTitre2')
-    s.h2.textAlign = getSelectedValue('#alignTitre2')
-    s.h2.marginLeft = getSelectedValue('#marginLeftTitre2')
-    s.h2.marginTop = getSelectedValue('#marginTopTitre2')
+    s.h2.fontFamily = <string>getSelectedValue('#policeTitre2')
+    s.h2.fontSize = <number>getSelectedValue('#sizeTitre2')
+    s.h2.textAlign = <string>getSelectedValue('#alignTitre2')
+    s.h2.marginLeft = <number>getSelectedValue('#marginLeftTitre2')
+    s.h2.marginTop = <number>getSelectedValue('#marginTopTitre2')
     // h1
-    s.h1.fontFamily = getSelectedValue('#policeTitre1')
-    s.h1.fontSize = getSelectedValue('#sizeTitre1')
-    s.h1.textAlign = getSelectedValue('#alignTitre1')
-    s.h1.marginLeft = getSelectedValue('#marginLeftTitre1')
-    s.h1.marginTop = getSelectedValue('#marginTopTitre1')
+    s.h1.fontFamily = <string>getSelectedValue('#policeTitre1')
+    s.h1.fontSize = <number>getSelectedValue('#sizeTitre1')
+    s.h1.textAlign = <string>getSelectedValue('#alignTitre1')
+    s.h1.marginLeft = <number>getSelectedValue('#marginLeftTitre1')
+    s.h1.marginTop = <number>getSelectedValue('#marginTopTitre1')
     // Corps de texte
-    s.p.fontFamily = getSelectedValue('#policeCorps')
-    s.p.fontSize = getSelectedValue('#sizeCorps')
-    s.p.textAlign = getSelectedValue('#alignCorps')
-    s.p.marginLeft = getSelectedValue('#marginLeftCorps')
-    s.p.marginTop = getSelectedValue('#marginTopCorps')
-    s.p.marginRight = getSelectedValue('#marginRightCorps')
+    s.p.fontFamily = <string>getSelectedValue('#policeCorps')
+    s.p.fontSize = <number>getSelectedValue('#sizeCorps')
+    s.p.textAlign = <string>getSelectedValue('#alignCorps')
+    s.p.marginLeft = <number>getSelectedValue('#marginLeftCorps')
+    s.p.marginTop = <number>getSelectedValue('#marginTopCorps')
+    s.p.marginRight = <number>getSelectedValue('#marginRightCorps')
     // Tableau
-    s.table.fontFamily = getSelectedValue('#policeTableau')
-    s.table.textAlign = getSelectedValue('#alignCellulesTableau')
-    s.table.fontSize = getSelectedValue('#sizeTableau')
-    s.table.padding = getSelectedValue('#paddingCellulesTableau')
-    s.table.borderLength = getSelectedValue('#epaisseurLignesTableau')
-    s.table.alignTable = getSelectedValue('#alignTableau')
-    s.table.marginLeft = getSelectedValue('#marginLeftTableau')
-    s.table.marginTop = getSelectedValue('#marginTopTableau')
-    s.table.marginBottom = getSelectedValue('#marginBottomTableau')
+    s.table.fontFamily = <string>getSelectedValue('#policeTableau')
+    s.table.textAlign = <string>getSelectedValue('#alignCellulesTableau')
+    s.table.fontSize = <number>getSelectedValue('#sizeTableau')
+    s.table.padding = <number>getSelectedValue('#paddingCellulesTableau')
+    s.table.borderLength = <number>getSelectedValue('#epaisseurLignesTableau')
+    s.table.alignTable = <string>getSelectedValue('#alignTableau')
+    s.table.marginLeft = <number>getSelectedValue('#marginLeftTableau')
+    s.table.marginTop = <number>getSelectedValue('#marginTopTableau')
+    s.table.marginBottom = <number>getSelectedValue('#marginBottomTableau')
     applyRawCss(customStyle.generateCss())
 }
 
-function applyRawCss(css) {
+function applyRawCss(css: string) {
     // On récupère l'élément de style
     let style = document.getElementById('customStyle')
     // On supprime tous les noeuds enfants
@@ -207,7 +210,7 @@ $("#pagePaddingRight").on("input", function () { onFormChange() });
 /***************************************************************************************************
  *                                              FONTS                                              *
  ***************************************************************************************************/
-let fonts = []
+let fonts: string[] = []
 
 function applyFonts() {
     // let idsFormSelectors = ["policeTitre3"]
@@ -227,7 +230,7 @@ function applyFonts() {
     const selectorIds = ['#policeTitre3', '#policeTitre2', '#policeTitre1', '#policeCorps', '#policeTableau']
     const selectors = selectorIds.map(id => $(id))
     fonts.forEach(font => {
-        selectors.forEach(s => {
+        selectors.forEach((s: any) => {
             let $newOpt = $(`<option style='font-family: ${font}; color: black'>`).attr("value", font).text(font.replace(/"/g, ''))
             s.append($newOpt)
             s.formSelect();
@@ -237,11 +240,11 @@ function applyFonts() {
 
 function loadFontList() {
     fontList.getFonts()
-        .then(availableFonts => {
+        .then((availableFonts: string[]) => {
             fonts = availableFonts
             applyFonts()
         })
-        .catch(err => {
+        .catch((err: any) => {
             console.log(err)
         })
 

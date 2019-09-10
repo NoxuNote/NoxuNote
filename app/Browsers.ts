@@ -126,7 +126,7 @@ class PrePrintWindow implements INoxunoteWindow {
     allowClose: boolean;
     browserWindow: BrowserWindow;
     webContents: WebContents;
-    constructor(content: any) {
+    constructor(content: string) {
         this.browserWindow = new BrowserWindow({
             width: 1200,
             height: 720,
@@ -140,7 +140,7 @@ class PrePrintWindow implements INoxunoteWindow {
         this.browserWindow.loadURL(`file://${__dirname}/views/prePrintWindow/preprint.html`)
         if (content) this.browserWindow.webContents.once('dom-ready', () => this.setNote(content));
     }
-    setNote(note: any) {
+    setNote(note: string) {
         this.browserWindow.webContents.send('setNote', note)
     }
 }
@@ -214,7 +214,7 @@ export class NoxuNoteApp implements INoxunoteApp {
             })
         }
     }
-    createPrePrintWindow(content: any) {
+    createPrePrintWindow(content: string) {
         this.prePrintWindow = new PrePrintWindow(content)
         this.prePrintWindow.browserWindow.on('closed', () => {
             this.mainOutputWindow = null;

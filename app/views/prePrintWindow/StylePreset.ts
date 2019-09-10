@@ -1,4 +1,9 @@
-class StylePreset {
+import { CSSPreset } from "./CSSPreset";
+
+export class StylePreset {
+
+    preset: { format: string, jcss: CSSPreset }
+    css: CSSPreset
 
     constructor() {
         this.preset = {
@@ -49,16 +54,18 @@ class StylePreset {
                     alignTable: 'left',
                     marginLeft: 0,
                     marginTop: 0,
-                    marginBottom: 0
+                    marginBottom: 0,
+                    backgroundColor: '#FFFFFF',
+                    color: 'black'
                 }
             }
         }
         this.css = this.preset.jcss
     }
 
-    generateCss() {
+    generateCss(): string {
         let s = this.preset.jcss
-        let css = `
+        return `
             h3 {
                 page-break-inside:avoid; page-break-after:auto;
                 font-family: ${s.h3.fontFamily};
@@ -160,8 +167,7 @@ class StylePreset {
                 background-color: #f8f8f8;
             }
         `
-        return css
-    } 
+    }
 }
 
 module.exports.StylePreset = StylePreset
