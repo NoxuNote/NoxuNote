@@ -266,48 +266,20 @@ export class BrowsePlugin implements NoxunotePlugin {
    * @param meta Métadata de la note
    */
   private generateTitreInput(meta: NoteMetadata): HTMLDivElement {
-    /*
-      <div class="input-group">
-        <input class="form-control" value="TITRE" type="text">
-        <div class="input-group-append">
-          <span class="input-group-button">
-            <button class="btn btn-secondary"><i class="fas fa-save"></i></button>  
-          </span>
-        </div>
-      </div>
-     */
-    let mainDiv = document.createElement('div')
-    mainDiv.classList.add('input-group')
-
     let input = document.createElement('input')
     input.id = "fileTitleInput"
     input.classList.add('form-control')
     input.value = meta.title
     input.type = "text"
-    mainDiv.appendChild(input)
-
-    let subDiv = document.createElement('div')
-    subDiv.classList.add('input-group-append')
-    mainDiv.appendChild(subDiv)
-
-    let span = document.createElement('span')
-    span.classList.add('input-group-button')
-    subDiv.appendChild(span)
-
-    let button = document.createElement('button')
-    button.classList.add('btn', 'btn-secondary')
-    button.innerHTML = `<i class="fas fa-save"></i>`
-    button.onclick = () => {
+    input.addEventListener('blur', () => {
       if (input.value.trim().length > 0) {
         this.ipc.sendSync('db_notes_setProperty', 'title', input.value.trim(), meta.id)
         this.init()
       } else {
         input.value = meta.title
       }
-    }
-    span.appendChild(button)
-
-    return mainDiv
+    })
+    return input
   }
 
   /**
