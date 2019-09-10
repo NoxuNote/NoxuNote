@@ -9,7 +9,6 @@ const fontList = require('font-list')
 
 import { StylePreset } from './StylePreset'
 import { CSSPreset } from './CSSPreset';
-type $ = any
 
 const content = document.getElementById("content")
 

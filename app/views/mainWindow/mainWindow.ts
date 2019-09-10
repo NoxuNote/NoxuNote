@@ -236,11 +236,15 @@ function openSettings(key: any) {
 
 /**
  * Insère l'image donnée par l'url
+ * @param isSchema {boolean} - Détermine s'il s'agit d'un schéma, (les pixels blancs seront changés en noirs)
  */
-function insertImg(url: any) {
+function insertImg(url: any, isSchema:boolean=false) {
 	editor.summernote('restoreRange')
 	editor.summernote('focus')
-	editor.summernote('insertImage', url, url)
+	let img: HTMLImageElement = document.createElement('img')
+	img.src = url
+	if (isSchema) img.classList.add('schema')
+	editor.summernote('pasteHTML', img)
 }
 
 function closeWindow() {
@@ -634,7 +638,7 @@ ipcRenderer.on('updateDb', (event: any) => {
 	if (loadedNote) 
 		setLoadedNote(ipcRenderer.sendSync('db_notes_getNote', loadedNote.meta.id))
 })
-ipcRenderer.on('insertDrawing', (event: any, url: any) => insertImg(url))
+ipcRenderer.on('insertDrawing', (event: any, url: any) => insertImg(url, true))
 ipcRenderer.on('refreshImg', (event: any, url: any) => refreshImg(url))
 ipcRenderer.on('forceReset', (event:any) => setLoadedNote(null))
 ipcRenderer.on('electron_request_close', (event: any) => closeWindow()) // Permet de gérer graphiquement l'alerte de sauvegarde

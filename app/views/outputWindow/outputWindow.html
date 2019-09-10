@@ -55,7 +55,7 @@
 				var images = document.querySelectorAll('img')
 				let transformations = new Array()
 				Array.from(images).forEach((image) => {
-					if (image.className != "schema") {
+					if (image.classList.contains('schema')) {
 						// Pour chaque image du document n'étant pas un schéma
 						let transformation = effecteur.whiteTransformation(image)
 						transformation.then((result) => {

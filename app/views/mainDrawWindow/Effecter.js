@@ -34,8 +34,8 @@ class Effecter {
     static cropCanvas(canvas, x1, y1, x2, y2) {
         var tempCanvas = document.createElement("canvas"),
             tCtx = tempCanvas.getContext("2d");
-        tempCanvas.width = x2 - x1 + 10;
-        tempCanvas.height = y2 - y1 + 10;
+        tempCanvas.width = x2 - x1;
+        tempCanvas.height = y2 - y1;
         tCtx.drawImage(canvas, 0, 0);
         return tempCanvas;
     }

@@ -1,7 +1,13 @@
 {
   "name": "noxunote",
+  "author": {
+    "name": "Léo Rolland",
+    "mail": "leo.rolland@etudiant.univ-rennes1.fr"
+  },
   "version": "1.0.0",
-  "description": "www.noxunote.fr",
+  "license": "GPL-3.0",
+  "description": "Application de note pour étudiants fonctionnant sur Windows, Mac, et Linux.",
+  "homepage": "https://noxunote.fr/",
   "repository": {
     "type": "git",
     "url": "https://github.com/leorolland/NoxuNote.git"
@@ -15,11 +21,6 @@
     "buildassets": "copyfiles -u 1 \"./app/**/*\" \"./build/\"",
     "dist": "npm run compile && electron-builder -mwl"
   },
-  "author": {
-    "name": "Léo Rolland",
-    "mail": "leo.rolland@etudiant.univ-rennes1.fr"
-  },
-  "license": "GPL-3.0",
   "build": {
     "appId": "fr.noxunote.noxunote",
     "productName": "NoxuNote",
