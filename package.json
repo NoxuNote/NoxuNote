@@ -59,7 +59,8 @@
       ]
     },
     "linux": {
-      "category": "Productivity"
+      "category": "Productivity",
+      "target": "zip"
     }
   },
   "dependencies": {
