@@ -3,6 +3,15 @@ Tous les changements notables pour NoxuNote seront documentées dans ce fichier.
 
 Ce format est basé sur [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [1.0.1beta] - 2019-09-12
+### Nouveautés
+- La fin de la note peut remonter en jusqu'en haut de l'écran
+- Changement du titre de la note plus facile (pas besoin de confirmation)
+
+### Corrections<br>
+- Les pixels blancs ne sont plus coloriés en noir pour les photos
+- La page d'exportation prend par défaut la taille d'une page A4
+
 ## [1.0.0] - 2019-09-04
 ### Cassures
 - Les tableaux des anciennes notes ne sont plus pris en charge

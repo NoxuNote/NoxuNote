@@ -18,7 +18,7 @@ export class Licence {
      * @param {boolean} DEBUG NoxuNote en mode debug ou non
      */
     constructor(noxuNoteAppInstance: INoxunoteApp, DEBUG: any) {
-        this.actualVersion = "1.0.0"
+        this.actualVersion = "1.0.1beta"
         this.lastVersion = null
         this.changeLog = null
         this.id = Math.floor(Math.random() * Math.floor(99999))
