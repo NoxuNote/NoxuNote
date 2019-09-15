@@ -1,9 +1,17 @@
-# ![Aperçu](http://noxunote.fr/prototype/assets/img/site-footer-logo.png) NoxuNote
+
+<p align="center">
+  <br><br>
+  <img src="https://noxunote.fr/prototype/assets/img/logo_256.png" width="100"><br><br>
+  <img src="https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Version&query=version&url=https%3A%2F%2Fraw.githubusercontent.com%2Fleorolland%2FNoxuNote%2Fmaster%2Fpackage.json">
+  <img src="https://img.shields.io/badge/dynamic/json?color=blue&label=Licence&query=license&url=https%3A%2F%2Fraw.githubusercontent.com%2Fleorolland%2FNoxuNote%2Fmaster%2Fpackage.json">
+  <img src="https://img.shields.io/badge/dynamic/json?color=blueviolet&label=Utilisateurs%20cette%20semaine&query=stats.byPeriod.lastWeek&url=http%3A%2F%2Fnoxunote.fr%3A35200">
+</p>
+
+#  NoxuNote
 
 NoxuNote est une application de note pour étudiants et professionnels fonctionnant sur Windows, Mac, et Linux. Elle intègre les fonctionnalités de base d'un traiteur de texte, en proposant des outils innovants pour faire exploser votre productivité.
 
-### Aperçu
-![Aperçu](http://noxunote.fr/prototype/assets/img/2.gif)
+## Fonctionnalités
 
 - Noter ses cours plus vite en devinant les mots compliqués
 - Tri par matières (UE), enregistrement, et gestion des notes integré.
@@ -17,33 +25,53 @@ NoxuNote est une application de note pour étudiants et professionnels fonctionn
 - Export en PDF avec beaucoup d'options de personnalisation
 - Économiser de la batterie en diminuant les pixels blancs à l'écran
 
-### Outil de dessin
-![Dessin](http://noxunote.fr/prototype/assets/img/weprefear.gif)
 
 ## Installation
 
-Rendez vous sur le site [http://www.noxunote.fr](http://www.noxunote.fr) pour télécharger l'installeur du projet.
+Rendez vous sur le site, [noxunote.fr](https://www.noxunote.fr) pour télécharger l'installeur du projet.
 
-## Développement
+# Développement
 
-### Requirements
-First you need to install NodeJS and NPM on your system in order to run the project.
+## Compiler et lancer
+1) Installez **NodeJS** et **git**
+2) Clonez le projet : `git clone https://github.com/leorolland/NoxuNote`
+3) Naviguez dans le dossier crée : `cd NoxuNote`
+4) Ouvrez un terminal, et installez TypeScript : `npm i -g typescript` 
+5) Installez les dépendances du projet : `npm install`
+6) Lancez compilez et lancer NoxuNote `npm start`
 
-Then run
-```bash
-npm install
-```
-and
-```bash
-npm start
-```
-Done !
+## Contribuer
+Description de la structure des fichiers : (Les éléments importants sont mis en gras)
 
-**if it doesn't work**, install electron globally :
-```bash
-npm install -g electron
-```
-and run the project
-```bash
-electron .
-```
+- **/app** - La source de l'application
+  - components - Quelques composants dynamiques individuels
+    - ConfirmationPrompt.ts - Pop-up de confirmation
+    - StringPrompt.ts - Pop-up d'entrée de texte
+  - **databases** - Stockage des préférences et des notes
+    - AppSettings.ts - Base de données relative au réglages de l'app
+    - Colors.ts - BDD relative aux couleurs
+    - Dactylo.ts - BDD relative aux raccourcis de mots
+    - Matieres.ts - BDD relative aux matières
+    - **Notes.ts** - BDD relative aux notes 
+  - fonts - Polices de caractère
+  - images - Images
+  - **views** - Contient les fenêtres de NoxuNote
+    - mainDrawWindow - Fenêtre de dessin
+    - **mainWindow** - Fenêtre principale de NoxuNote
+      - plugins 
+        - browse.ts - Navigateur de notes
+        - calc.ts - Calculatrice
+        - info.ts - Volet transparent d'informations
+        - todo.ts - Bloc notes "à faire"
+      - **index.html** - Structure de la fenêtre principale de NoxuNote
+      - **mainWindow.ts** - Script principal de la fenêtre principale
+      - ...
+    - outputWindow - Fenêtre qui génère le pdf
+    - prePrintWindow - Fenêtre de réglages avant impression
+    - settingsWindow - Fe,être des réglages
+  - **Browsers.ts** - Classe principale de l'application (NoxuNoteApp)
+  - DataBase.ts - Classe qui instancie les ./databases comme Notes.ts
+  - Licence.ts - Gère les versions, paquets d'activité, etc.
+  - main.ts - Point de départ et point central de l'IPC (IPCMain)
+  - parser.ts - Gère les anciennes versions de NoxuNote pour la conversion
+  - types.ts - Définit les types
