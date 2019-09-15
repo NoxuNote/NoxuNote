@@ -37,7 +37,7 @@ Rendez vous sur le site, [noxunote.fr](https://www.noxunote.fr) pour télécharg
 3) Naviguez dans le dossier crée : `cd NoxuNote`
 4) Ouvrez un terminal, et installez TypeScript : `npm i -g typescript` 
 5) Installez les dépendances du projet : `npm install`
-6) Lancez compilez et lancer NoxuNote `npm start`
+6) Compilez et lancez NoxuNote `npm start`
 
 ## Contribuer
 Description de la structure des fichiers : (Les éléments importants sont mis en gras)
