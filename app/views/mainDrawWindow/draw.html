@@ -1,18 +1,29 @@
 <html>
-    <header>
-        <title>NoxuNote - Dessin</title>
-        <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="draw.css">
-    </header>
-    <body>
-        <canvas id="canvas"></canvas>
-        <div class="ui ui-topleft">
-            <p class="hidden" id="zoomFactorMessage">Échelle : <span id="zoomFactor"></span></p>
+<header>
+    <title>NoxuNote - Dessin</title>
+    <link rel="stylesheet" href="draw.css">
+</header>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="ui ui-topleft">
+        <div id="app">
+            <p>blabla</p>
+            <p>{{ message }}</p>
         </div>
-    </body>
-    <footer>
-        <script>var exports = {"__esModule": true};</script>
-        <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="./draw.js"></script>
-    </footer>
+        <button id="enableGridButton" class="btn btn-primary">Grille (<span id="enableGrid">Off</span>)</button>
+        <button id="enableSnapButton" class="btn btn-primary">Coller à la grille (<span
+                id="enableSnap">Off</span>)</button>
+        <p class="hidden" id="zoomFactorMessage">Échelle : <span id="zoomFactor"></span></p>
+    </div>
+</body>
+<footer>
+    <script>var exports = { "__esModule": true };</script>
+    <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./draw.js"></script>
+    <script>
+       
+    </script>
+</footer>
+
 </html>

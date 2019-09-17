@@ -4,6 +4,7 @@ export class CanvasGrid {
 
   private canvas: fabric.Canvas
   private snapToGrid: boolean = false
+  private isGridShown: boolean = false
   private gridSize: number = 50
   private grid: fabric.Line[] = []
 
@@ -29,6 +30,14 @@ export class CanvasGrid {
     this.snapToGrid = snap
   } 
 
+  /**
+   * Actives ou deactives the snapToGrid option
+   */
+  public toggleSnapToGrid(): boolean {
+    this.setSnapToGrid(!this.snapToGrid)
+    return this.snapToGrid
+  }
+
   public setGridSize(s: number) {
     this.gridSize = s
     this.generateGrid()
@@ -40,7 +49,8 @@ export class CanvasGrid {
    */
   private generateGrid() {
     this.grid = []
-    for (var i = 0; i < (600 / this.gridSize); i++) {
+    let maxSize = Math.max(window.innerWidth, window.innerHeight)
+    for (var i = 0; i < (maxSize / this.gridSize); i++) {
       this.grid = [
         new fabric.Line([i * this.gridSize, 0, i * this.gridSize, 600], {
           stroke: '#ccc',
@@ -56,16 +66,21 @@ export class CanvasGrid {
     this.setSnapToGrid(this.snapToGrid)
   }
 
-  /**
-   * Hides grid from canvas
-   */
   public hideGrid() {
     this.grid.forEach(l=>this.canvas.remove(l))
+    this.isGridShown = false
   }
 
   public showGrid() {
     this.generateGrid()
     this.grid.forEach(l=>this.canvas.add(l))
+    this.isGridShown = true
+  }
+
+  public toggleGrid(): boolean {
+    if (this.isGridShown) this.hideGrid()
+    else this.showGrid()
+    return this.isGridShown
   }
 
 }

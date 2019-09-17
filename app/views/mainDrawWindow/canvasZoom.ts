@@ -15,7 +15,7 @@ export function enableZoom(canvas: fabric.Canvas): EventEmitter {
     let delta = - wheelEvent.deltaY;
     let pointer = canvas.getPointer(opt.e);
     let zoom = canvas.getZoom();
-    zoom = zoom + delta / 300;
+    zoom = zoom + delta / 200;
     if (zoom > 20) zoom = 20;
     if (zoom < 1) zoom = 1;
     let point = new fabric.Point(wheelEvent.offsetX, wheelEvent.offsetY)
