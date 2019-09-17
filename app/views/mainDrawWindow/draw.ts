@@ -2,42 +2,49 @@ import { fabric } from "fabric"
 import { enableZoom } from "./canvasZoom"
 import { enableCanvasResize } from './canvasResize'
 import { CanvasGrid } from "./CanvasGrid";
+let Vue = require('../../../node_modules/vue/dist/vue.min.js')
 
-import { Vue } from "../../../node_modules/vue/dist/vue"
-let maVue = new Vue({
-  el: '#app',
+let app = new Vue({
+  el: '#ui',
   data: {
-      message: 'Hello Vue.js!'
+    ui: {
+      zoomFactor: 1,
+      controlBars: {
+        grid: false,
+        objects: false
+      }
+    },
+    grid: {
+      snapToGrid: false,
+      showGrid: false,
+      gridSize: 50
+    }
+  },
+  methods: {
+    gridSizeChangeEvt: (evt: any) => canvasGrid.setGridSize(evt.target.value)
   }
 })
 
-// Static page elements
-let elements = {
-  zoomFactor: document.getElementById('zoomFactor'),
-  zoomFactorMessage: document.getElementById('zoomFactorMessage'),
-  enableGrid: document.getElementById('enableGrid'),
-  enableGridButton: document.getElementById('enableGridButton'),
-  enableSnap: document.getElementById('enableSnap'),
-  enableSnapButton: document.getElementById('enableSnapButton'),
-}
 
 // Fabric canvas instance 
 let canvas = new fabric.Canvas('canvas')
 
 // Fabric canvas initialization
-enableZoom(canvas).on('zoom', zoom => {
-  if (zoom == 1) elements.zoomFactorMessage.classList.add('hidden')
-  else elements.zoomFactorMessage.classList.remove('hidden')
-  elements.zoomFactor.innerText = Math.trunc(zoom).toString()
-}) 
+enableZoom(canvas).on('zoom', zoom => app.ui.zoomFactor = zoom) 
 enableCanvasResize(canvas)
 let canvasGrid = new CanvasGrid(canvas)
-elements.enableGridButton.onclick = () => {
-  elements.enableGrid.innerText = canvasGrid.toggleGrid() ? 'On' : 'Off'
+canvasGrid.showGridEmitter.on('change', (newValue: boolean) => app.grid.showGrid = newValue)
+canvasGrid.snapToGridEmitter.on('change', (newValue: boolean) => app.grid.snapToGrid = newValue)
+canvasGrid.gridSizeEmitter.on('change', (newValue: boolean) => app.grid.gridSize = newValue)
+
+/**
+ * Enables the requested 'key' control BarProp.
+ * @param key grid, objects, or a bar element
+ */
+function enableControlBar(key: string) {
+  Object.keys(app.ui.controlBars).forEach(keyItem=>app.ui.controlBars[keyItem] = keyItem==key)
 }
-elements.enableSnapButton.onclick = () => {
-  elements.enableSnap.innerText = canvasGrid.toggleSnapToGrid() ? 'On' : 'Off'
-}
+
 // Tests
 let rect = new fabric.Rect({
   left: 100,

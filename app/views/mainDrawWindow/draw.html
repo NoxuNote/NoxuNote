@@ -1,29 +1,57 @@
 <html>
+
+<head>
+</head>
 <header>
     <title>NoxuNote - Dessin</title>
+    <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="draw.css">
 </header>
 
 <body>
     <canvas id="canvas"></canvas>
-    <div class="ui ui-topleft">
-        <div id="app">
-            <p>blabla</p>
-            <p>{{ message }}</p>
+    <div id="ui">
+        <div class="ui ui-left">
+            <div class="uiBar">
+                <button class="btn"
+                    v-bind:class="{'btn-primary': ui.controlBars.grid, 'btn-secondary': !ui.controlBars.grid}"
+                    onclick="enableControlBar('grid')">
+                    Grille
+                </button>
+                <button class="btn"
+                    v-bind:class="{'btn-primary': ui.controlBars.objects, 'btn-secondary': !ui.controlBars.objects}"
+                    onclick="enableControlBar('objects')">
+                    Objets
+                </button>
+            </div>
         </div>
-        <button id="enableGridButton" class="btn btn-primary">Grille (<span id="enableGrid">Off</span>)</button>
-        <button id="enableSnapButton" class="btn btn-primary">Coller à la grille (<span
-                id="enableSnap">Off</span>)</button>
-        <p class="hidden" id="zoomFactorMessage">Échelle : <span id="zoomFactor"></span></p>
+        <div class="ui ui-topleft">
+            <div v-if="ui.controlBars.grid" class="uiBar">
+                <button class="btn btn-secondary" onclick="canvasGrid.toggleGrid()">
+                    Grille <span class="badge badge-dark">{{ grid.showGrid ? 'On' : 'Off' }}</span>
+                </button>
+                <button class="btn btn-secondary" onclick="canvasGrid.toggleSnapToGrid()">
+                    Coller à la grille <span class="badge badge-dark">{{ grid.snapToGrid ? 'On' : 'Off' }}</span>
+                </button>
+                Échelle : <input type="number" class="form-control-number" v-model="grid.gridSize"
+                    @change="gridSizeChangeEvt">
+            </div>
+            <div v-if="ui.controlBars.objects" class="uiBar">
+                <button class="btn btn-secondary" onclick="">
+                    Carré
+                </button>
+                <button class="btn btn-secondary" onclick="">
+                    Rectangle
+                </button>
+            </div>
+            <p v-if="ui.zoomFactor != 1">Échelle : {{ ui.zoomFactor }}</p>
+        </div>
     </div>
 </body>
 <footer>
     <script>var exports = { "__esModule": true };</script>
     <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="./draw.js"></script>
-    <script>
-       
-    </script>
 </footer>
 
 </html>

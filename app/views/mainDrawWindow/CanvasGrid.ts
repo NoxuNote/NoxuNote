@@ -1,16 +1,42 @@
 import { fabric } from "fabric"
+import { EventEmitter } from "events"
 
 export class CanvasGrid {
 
   private canvas: fabric.Canvas
   private snapToGrid: boolean = false
+  public snapToGridEmitter = new EventEmitter()
   private isGridShown: boolean = false
+  public showGridEmitter = new EventEmitter()
   private gridSize: number = 50
+  public gridSizeEmitter = new EventEmitter()
   private grid: fabric.Line[] = []
+  private objectMovingHandler = (options: any) => {
+    let obj: fabric.Object = options.target
+    let topLeftX = obj.left 
+    let topLeftY = obj.top
+    if (Math.round(topLeftX / this.gridSize * 6) % 6 == 0 &&
+      Math.round(topLeftY / this.gridSize * 6) % 6 == 0) {
+      obj.set({
+        left: Math.round(topLeftX / this.gridSize) * this.gridSize,
+        top: Math.round(topLeftY / this.gridSize) * this.gridSize
+      }).setCoords();
+    }
+    let topRightX = obj.left+obj.scaleX
+    console.log(obj)
+    if (Math.round(topRightX / this.gridSize * 6) % 6 == 0 &&
+      Math.round(topLeftY / this.gridSize * 6) % 6 == 0) {
+      obj.set({
+        left: Math.round(topRightX / this.gridSize) * this.gridSize,
+        top: Math.round(topLeftY / this.gridSize) * this.gridSize
+      }).setCoords();
+    }
+  }
 
   constructor(canvas: fabric.Canvas) {
     this.canvas = canvas
-    this.generateGrid()
+    this.regenerateGrid()
+    window.addEventListener('resize', () => this.setGridSize(this.gridSize))
   }
 
   /**
@@ -18,47 +44,46 @@ export class CanvasGrid {
    * @param snap should snap to grid ?
    */
   public setSnapToGrid(snap: boolean) {
-    this.canvas.on('object:moving', options => {
-      if (Math.round(options.target.left / this.gridSize * 4) % 4 == 0 &&
-        Math.round(options.target.top / this.gridSize * 4) % 4 == 0) {
-        options.target.set({
-          left: Math.round(options.target.left / this.gridSize) * this.gridSize,
-          top: Math.round(options.target.top / this.gridSize) * this.gridSize
-        }).setCoords();
-      }
-    });
     this.snapToGrid = snap
+    // Deletes handler function and re-binds it
+    this.canvas.off('object:moving', this.objectMovingHandler)
+    if (snap) this.canvas.on('object:moving', this.objectMovingHandler);
+    // Informs changes
+    this.snapToGridEmitter.emit('change', this.snapToGrid)
   } 
 
   /**
    * Actives ou deactives the snapToGrid option
    */
-  public toggleSnapToGrid(): boolean {
+  public toggleSnapToGrid() {
     this.setSnapToGrid(!this.snapToGrid)
-    return this.snapToGrid
   }
 
   public setGridSize(s: number) {
     this.gridSize = s
-    this.generateGrid()
+    if (this.isGridShown) this.grid.forEach(l=>this.canvas.remove(l))
+    this.regenerateGrid()
+    if (this.isGridShown) this.grid.forEach(l=>this.canvas.add(l))
+    // Informs changes
+    this.gridSizeEmitter.emit('change', this.gridSize)
   }
 
   /**
-   * Generates a grid and add it to local this.grid property
+   * (re)Generates the grid elements array and add it to local this.grid property
    * Updates new setSnatpToGrid handlers
    */
-  private generateGrid() {
+  private regenerateGrid() {
     this.grid = []
     let maxSize = Math.max(window.innerWidth, window.innerHeight)
     for (var i = 0; i < (maxSize / this.gridSize); i++) {
       this.grid = [
-        new fabric.Line([i * this.gridSize, 0, i * this.gridSize, 600], {
-          stroke: '#ccc',
+        new fabric.Line([i * this.gridSize, 0, i * this.gridSize, window.innerHeight], {
+          stroke: 'rgba(255, 255, 255, 0.2)',
           selectable: false
         }),
-        new fabric.Line([0, i * this.gridSize, 600, i * this.gridSize], {
-          stroke: '#ccc',
-          selectable: false
+        new fabric.Line([0, i * this.gridSize, window.innerWidth, i * this.gridSize], {
+          stroke: 'rgba(255, 255, 255, 0.2)',
+          selectable: false,
         }), 
         ...this.grid
       ]
@@ -67,20 +92,23 @@ export class CanvasGrid {
   }
 
   public hideGrid() {
-    this.grid.forEach(l=>this.canvas.remove(l))
     this.isGridShown = false
+    this.grid.forEach(l=>this.canvas.remove(l))
+    // Informs changes
+    this.showGridEmitter.emit('change', this.isGridShown)
   }
 
   public showGrid() {
-    this.generateGrid()
-    this.grid.forEach(l=>this.canvas.add(l))
     this.isGridShown = true
+    this.regenerateGrid()
+    this.grid.forEach(l=>this.canvas.add(l))
+    // Informs changes
+    this.showGridEmitter.emit('change', this.isGridShown)
   }
 
-  public toggleGrid(): boolean {
+  public toggleGrid() {
     if (this.isGridShown) this.hideGrid()
     else this.showGrid()
-    return this.isGridShown
   }
 
 }
