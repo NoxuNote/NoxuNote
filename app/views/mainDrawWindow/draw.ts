@@ -2,6 +2,7 @@ import { fabric } from "fabric"
 import { enableZoom } from "./canvasZoom"
 import { enableCanvasResize } from './canvasResize'
 import { CanvasGrid } from "./CanvasGrid";
+import { ShapeInserter } from "./ShapeInserter";
 let Vue = require('../../../node_modules/vue/dist/vue.min.js')
 
 let app = new Vue({
@@ -36,6 +37,7 @@ let canvasGrid = new CanvasGrid(canvas)
 canvasGrid.showGridEmitter.on('change', (newValue: boolean) => app.grid.showGrid = newValue)
 canvasGrid.snapToGridEmitter.on('change', (newValue: boolean) => app.grid.snapToGrid = newValue)
 canvasGrid.gridSizeEmitter.on('change', (newValue: boolean) => app.grid.gridSize = newValue)
+let shapeInserter = new ShapeInserter(canvas)
 
 /**
  * Enables the requested 'key' control BarProp.

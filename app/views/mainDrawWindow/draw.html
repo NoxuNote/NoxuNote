@@ -6,7 +6,7 @@
     <title>NoxuNote - Dessin</title>
     <link rel="stylesheet" type="text/css" href="../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.css">
-	<link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
     <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="draw.css">
 </header>
@@ -40,10 +40,10 @@
                     @change="gridSizeChangeEvt">
             </div>
             <div v-if="ui.controlBars.objects" class="uiBar">
-                <button class="btn btn-secondary" onclick="">
+                <button class="btn btn-secondary" onclick="shapeInserter.insert('square')">
                     <i class="far fa-square"></i>
                 </button>
-                <button class="btn btn-secondary" onclick="">
+                <button class="btn btn-secondary" onclick="shapeInserter.insert('circle')">
                     <i class="far fa-circle"></i>
                 </button>
             </div>
@@ -52,7 +52,7 @@
             <p v-if="ui.zoomFactor != 1" style="width: 130px">
                 Échelle : {{ ui.zoomFactor.toFixed(2) }}
             </p>
-        </div> 
+        </div>
     </div>
 </body>
 <footer>
