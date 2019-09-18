@@ -4,6 +4,9 @@
 </head>
 <header>
     <title>NoxuNote - Dessin</title>
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.css">
+	<link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
     <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="draw.css">
 </header>
@@ -12,16 +15,16 @@
     <canvas id="canvas"></canvas>
     <div id="ui">
         <div class="ui ui-left">
-            <div class="uiBar">
+            <div class="uiBar uiBar-vertical">
                 <button class="btn"
                     v-bind:class="{'btn-primary': ui.controlBars.grid, 'btn-secondary': !ui.controlBars.grid}"
                     onclick="enableControlBar('grid')">
-                    Grille
+                    <i class="fas fa-border-none"></i>
                 </button>
                 <button class="btn"
                     v-bind:class="{'btn-primary': ui.controlBars.objects, 'btn-secondary': !ui.controlBars.objects}"
                     onclick="enableControlBar('objects')">
-                    Objets
+                    <i class="fas fa-shapes"></i>
                 </button>
             </div>
         </div>
@@ -38,18 +41,23 @@
             </div>
             <div v-if="ui.controlBars.objects" class="uiBar">
                 <button class="btn btn-secondary" onclick="">
-                    Carré
+                    <i class="far fa-square"></i>
                 </button>
                 <button class="btn btn-secondary" onclick="">
-                    Rectangle
+                    <i class="far fa-circle"></i>
                 </button>
             </div>
-            <p v-if="ui.zoomFactor != 1">Échelle : {{ ui.zoomFactor }}</p>
         </div>
+        <div class="ui ui-botLeft">
+            <p v-if="ui.zoomFactor != 1" style="width: 130px">
+                Échelle : {{ ui.zoomFactor.toFixed(2) }}
+            </p>
+        </div> 
     </div>
 </body>
 <footer>
     <script>var exports = { "__esModule": true };</script>
+    <script src="../../../node_modules/html5tooltipsjs/html5tooltips.js"></script>
     <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="./draw.js"></script>
 </footer>
