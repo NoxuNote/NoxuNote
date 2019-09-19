@@ -8,6 +8,10 @@ let Vue = require('../../../node_modules/vue/dist/vue.min.js')
 let app = new Vue({
   el: '#ui',
   data: {
+    ShapeInserter: ShapeInserter,
+    selection: {
+      selectedObjs: []
+    },
     ui: {
       zoomFactor: 1,
       controlBars: {
@@ -38,6 +42,13 @@ canvasGrid.showGridEmitter.on('change', (newValue: boolean) => app.grid.showGrid
 canvasGrid.snapToGridEmitter.on('change', (newValue: boolean) => app.grid.snapToGrid = newValue)
 canvasGrid.gridSizeEmitter.on('change', (newValue: boolean) => app.grid.gridSize = newValue)
 let shapeInserter = new ShapeInserter(canvas)
+
+canvas.on('selection:created', (selection: any) => {
+  app.selection.selectedObjs = selection.selected
+});
+canvas.on('selection:cleared', () => {
+  app.selection.selectedObjs = []
+});
 
 /**
  * Enables the requested 'key' control BarProp.

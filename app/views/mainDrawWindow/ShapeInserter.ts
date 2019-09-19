@@ -27,4 +27,29 @@ export class ShapeInserter {
         }
         this.canvas.add(shape)
     }
+    static getProperties(object: fabric.Object): {name: string, type: string}[] {
+        let properties: {name: string, type: string}[] = [
+            {name: 'borderColor', type: 'color'},
+            {name: 'fill', type: 'color'},
+            {name: 'stroke', type: 'border'}
+        ]
+        switch (object.type) {
+            case 'rect':
+                properties.push({name: 'radius', type: 'number'})
+                break;
+            case 'rect':
+                properties.push({name: 'width', type: 'number'})
+                properties.push({name: 'height', type: 'number'})
+            default:
+                break;
+        }
+        return properties
+    }
+
+    static getCommonProperties(objects: fabric.Object[]): {name: string, type: string}[] {
+        let common: {name: string, type: string}[] = []
+
+        return common
+    }
+
 }

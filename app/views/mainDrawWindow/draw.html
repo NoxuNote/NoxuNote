@@ -47,6 +47,15 @@
                     <i class="far fa-circle"></i>
                 </button>
             </div>
+            <div v-if="selection.selectedObjs.length">
+                <h4>Selection</h4>
+                <div v-for="obj in selection.selectedObjs">
+                    {{ obj.type }}
+                    <div v-for="property in ShapeInserter.getProperties(obj)">
+                        {{ property.name }}
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="ui ui-botLeft">
             <p v-if="ui.zoomFactor != 1" style="width: 130px">
