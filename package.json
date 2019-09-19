@@ -64,7 +64,7 @@
     }
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.8.1",
+    "@fortawesome/fontawesome-free": "^5.11.1",
     "@types/fabric": "^3.0.1",
     "@types/mathjs": "^5.0.1",
     "ContentTools": "^1.6.10",

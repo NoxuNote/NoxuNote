@@ -47,20 +47,36 @@
                     <i class="far fa-circle"></i>
                 </button>
             </div>
-            <div v-if="selection.selectedObjs.length">
-                <h4>Selection</h4>
-                <div v-for="obj in selection.selectedObjs">
-                    {{ obj.type }}
-                    <div v-for="property in ShapeInserter.getProperties(obj)">
-                        {{ property.name }}
-                    </div>
-                </div>
-            </div>
         </div>
         <div class="ui ui-botLeft">
             <p v-if="ui.zoomFactor != 1" style="width: 130px">
                 Échelle : {{ ui.zoomFactor.toFixed(2) }}
             </p>
+        </div>
+        <div class="ui ui-right ui-solidBlock">
+            <div v-if="selection.selectedObjs.length">
+                <h4>Selection</h4>
+                <div v-if="selection.selectedObjs.length == 1">
+                    <h6>Proprietés de {{selection.selectedObjs[0].type}}</h6>
+                    <button-counter></button-counter>
+                    <div v-for="property in ShapeInserter.getProperties(selection.selectedObjs[0])">
+                        {{ property.name }} :
+                        <input v-if="property.type == 'color'" type="color" v-bind:value="property.value" @change="handlePropertyChange($event, property.name, selection.selectedObjs[0])">
+                        <input v-if="property.type == 'border'" type="text" v-bind:value="property.value">
+                        <input v-if="property.type == 'number'" type="number" v-bind:value="property.value">
+                    </div>
+                </div>
+                <div v-if="selection.selectedObjs.length > 1">
+                    <h6>Objets sélectionnées ({{selection.selectedObjs.length}}) :</h6>
+                    <div v-for="obj in selection.selectedObjs">
+                        {{ obj.type }}
+                    </div>
+                    <h6>Proprietés communes</h6>
+                    <div v-for="property in ShapeInserter.getCommonProperties(selection.selectedObjs)">
+                        {{ property.name }} : {{ property.value }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

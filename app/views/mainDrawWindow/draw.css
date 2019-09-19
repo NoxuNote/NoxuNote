@@ -11,7 +11,7 @@ input {
 .ui {
   position: fixed
 }
-.ui > p {
+.ui > p, .ui > .uiBlock {
   color: #cccccc;
   margin: 0px;
   padding: 3px;
@@ -30,9 +30,15 @@ input {
   left: 5px;
   bottom: 5px;
 }
-.ui-botRight {
-  right: 5px;
-  bottom: 5px;
+.ui-right {
+  right: 0px;
+  top: 0px;
+  height: 100vh;
+  min-width: 200px;
+}
+.ui-solidBlock {
+  background-color: rgba(255, 255, 255, 0.637);
+  padding: 10px;
 }
 .uiBar {
   padding: 5px;

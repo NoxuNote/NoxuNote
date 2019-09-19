@@ -4,6 +4,7 @@ import { enableCanvasResize } from './canvasResize'
 import { CanvasGrid } from "./CanvasGrid";
 import { ShapeInserter } from "./ShapeInserter";
 let Vue = require('../../../node_modules/vue/dist/vue.min.js')
+// import { initSelectionDetails } from './components/SelectionDetails'
 
 let app = new Vue({
   el: '#ui',
@@ -16,12 +17,12 @@ let app = new Vue({
       zoomFactor: 1,
       controlBars: {
         grid: false,
-        objects: false
+        objects: true
       }
     },
     grid: {
-      snapToGrid: false,
-      showGrid: false,
+      snapToGrid: true,
+      showGrid: true,
       gridSize: 50
     }
   },
@@ -29,7 +30,6 @@ let app = new Vue({
     gridSizeChangeEvt: (evt: any) => canvasGrid.setGridSize(evt.target.value)
   }
 })
-
 
 // Fabric canvas instance 
 let canvas = new fabric.Canvas('canvas')
@@ -43,12 +43,21 @@ canvasGrid.snapToGridEmitter.on('change', (newValue: boolean) => app.grid.snapTo
 canvasGrid.gridSizeEmitter.on('change', (newValue: boolean) => app.grid.gridSize = newValue)
 let shapeInserter = new ShapeInserter(canvas)
 
+// Events
 canvas.on('selection:created', (selection: any) => {
-  app.selection.selectedObjs = selection.selected
+  app.selection.selectedObjs = canvas.getActiveObjects()
+});
+canvas.on('selection:updated', (selection: any) => {
+  app.selection.selectedObjs = canvas.getActiveObjects()
 });
 canvas.on('selection:cleared', () => {
   app.selection.selectedObjs = []
 });
+function handlePropertyChange(evt: any, propertyName: string, object: fabric.Object) {
+  let newValue: any = evt.target.value
+  object.set({[propertyName]: newValue})
+  console.log(evt, propertyName, object, newValue)
+}
 
 /**
  * Enables the requested 'key' control BarProp.

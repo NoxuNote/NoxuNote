@@ -35,7 +35,8 @@ export class CanvasGrid {
 
   constructor(canvas: fabric.Canvas) {
     this.canvas = canvas
-    this.regenerateGrid()
+    this.showGrid()
+    this.setSnapToGrid(true)
     window.addEventListener('resize', () => this.setGridSize(this.gridSize))
   }
 
