@@ -62,8 +62,8 @@
                     <div v-for="property in ShapeInserter.getProperties(selection.selectedObjs[0])">
                         {{ property.name }} :
                         <input v-if="property.type == 'color'" type="color" v-bind:value="property.value" @change="handlePropertyChange($event, property.name, selection.selectedObjs[0])">
-                        <input v-if="property.type == 'border'" type="text" v-bind:value="property.value">
-                        <input v-if="property.type == 'number'" type="number" v-bind:value="property.value">
+                        <input v-if="property.type == 'border'" type="text" v-bind:value="property.value" @change="handlePropertyChange($event, property.name, selection.selectedObjs[0])">
+                        <input v-if="property.type == 'number'" type="number" v-bind:value="property.value" @change="handlePropertyChange($event, property.name, selection.selectedObjs[0])">
                     </div>
                 </div>
                 <div v-if="selection.selectedObjs.length > 1">

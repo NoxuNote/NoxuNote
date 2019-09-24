@@ -53,9 +53,12 @@ canvas.on('selection:updated', (selection: any) => {
 canvas.on('selection:cleared', () => {
   app.selection.selectedObjs = []
 });
+
 function handlePropertyChange(evt: any, propertyName: string, object: fabric.Object) {
+  fabric.Object.prototype.objectCaching = false;
   let newValue: any = evt.target.value
   object.set({[propertyName]: newValue})
+  canvas.renderAll()
   console.log(evt, propertyName, object, newValue)
 }
 

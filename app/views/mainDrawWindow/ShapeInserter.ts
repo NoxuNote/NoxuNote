@@ -32,17 +32,17 @@ export class ShapeInserter {
     }
     static getProperties(object: fabric.Object): PropertyList {
         let properties: PropertyList = [
-            { name: 'borderColor', type: 'color', value: object.borderColor },
             { name: 'fill', type: 'color', value: object.fill.toString() },
-            { name: 'stroke', type: 'border', value: object.stroke }
+            { name: 'stroke', type: 'border', value: object.stroke },
+            { name: 'scaleX', type: 'number', value: object.scaleX },
+            { name: 'scaleY', type: 'number', value: object.scaleY }
         ]
         switch (object.type) {
             case 'circle':
                 properties.push({ name: 'radius', type: 'number', value: (<fabric.Circle>object).radius})
                 break;
             case 'rect':
-                properties.push({ name: 'width', type: 'number', value: (<fabric.Rect>object).width})
-                properties.push({ name: 'height', type: 'number', value: (<fabric.Rect>object).height})
+                break;
             default:
                 break;
         }
