@@ -1,6 +1,13 @@
 import { fabric } from "fabric"
 
-export type PropertyList = {name: string, type: string, value: string | number }[]
+export enum PropType {
+    Number = 0,
+    StrokeWidth = 1,
+    Opacity = 2,
+    Color = 3
+}
+
+export type ObjProps = {name: string, type: PropType, value: string | number }
 
 export class ShapeInserter {
     private canvas: fabric.Canvas
@@ -11,13 +18,11 @@ export class ShapeInserter {
         let shape: fabric.Object
         let commomOptions: fabric.IObjectOptions = {
             fill: 'transparent',
-            borderColor: 'white',
             strokeUniform: true,
-            stroke: '2px solid white',
             padding: 0,
-            borderScaleFactor: 2,
+            stroke: '#FFFFFF',
             left: this.canvas.getWidth() / 2,
-            top: this.canvas.getHeight() / 2
+            top: this.canvas.getHeight() / 2,
         }
         switch (shapeStr) {
             case "circle":
@@ -30,16 +35,19 @@ export class ShapeInserter {
         }
         this.canvas.add(shape)
     }
-    static getProperties(object: fabric.Object): PropertyList {
-        let properties: PropertyList = [
-            { name: 'fill', type: 'color', value: object.fill.toString() },
-            { name: 'stroke', type: 'border', value: object.stroke },
-            { name: 'scaleX', type: 'number', value: object.scaleX },
-            { name: 'scaleY', type: 'number', value: object.scaleY }
+    static getProperties(object: fabric.Object): ObjProps[] {
+        /**
+         * type : ['border', 'number', 'color', 'opacity']
+         */
+        let properties: ObjProps[] = [
+            { name: 'opacity', type: PropType.Opacity, value: object.opacity },
+            { name: 'fill', type: PropType.Color, value: object.fill.toString() },
+            { name: 'stroke', type: PropType.Color, value: object.stroke },
+            { name: 'strokeWidth', type: PropType.StrokeWidth, value: object.strokeWidth }
         ]
         switch (object.type) {
             case 'circle':
-                properties.push({ name: 'radius', type: 'number', value: (<fabric.Circle>object).radius})
+                properties.push({ name: 'radius', type: PropType.Number, value: (<fabric.Circle>object).radius})
                 break;
             case 'rect':
                 break;
@@ -49,18 +57,18 @@ export class ShapeInserter {
         return properties
     }
 
-    static getCommonProperties(objects: fabric.Object[]): PropertyList {
-        let properties: PropertyList[] = []
-        let commonProperties: PropertyList = []
+    static getCommonProperties(objects: fabric.Object[]): ObjProps[] {
+        let properties: ObjProps[][] = []
+        let commonProperties: ObjProps[] = []
         objects.forEach(o => properties.push(ShapeInserter.getProperties(o)))
-        function isACommonOption(optionName: string, properties: PropertyList[]): boolean {
+        function isACommonOption(optionName: string, properties: ObjProps[][]): boolean {
             let output = true
-            properties.forEach( (pl: PropertyList) => {
+            properties.forEach( (pl: ObjProps[]) => {
                 output = output && pl.map(p=>p.name).includes(optionName)
             })
             return output
         }
-        properties.forEach( (pl: PropertyList) => {
+        properties.forEach( (pl: ObjProps[]) => {
             pl.forEach(property=>{
                 if (!commonProperties.map(p=>p.name).includes(property.name) && isACommonOption(property.name, properties)) {
                     property.value = null

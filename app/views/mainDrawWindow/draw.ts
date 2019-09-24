@@ -2,11 +2,12 @@ import { fabric } from "fabric"
 import { enableZoom } from "./canvasZoom"
 import { enableCanvasResize } from './canvasResize'
 import { CanvasGrid } from "./CanvasGrid";
-import { ShapeInserter } from "./ShapeInserter";
-let Vue = require('../../../node_modules/vue/dist/vue.min.js')
-// import { initSelectionDetails } from './components/SelectionDetails'
+import { ShapeInserter, ObjProps, PropType } from "./ShapeInserter";
+import { i18n } from "./plugins/i18n";
+const Vue = require('../../../node_modules/vue/dist/vue.min.js')
 
 let app = new Vue({
+  i18n,
   el: '#ui',
   data: {
     ShapeInserter: ShapeInserter,
@@ -54,12 +55,11 @@ canvas.on('selection:cleared', () => {
   app.selection.selectedObjs = []
 });
 
-function handlePropertyChange(evt: any, propertyName: string, object: fabric.Object) {
-  fabric.Object.prototype.objectCaching = false;
+function handlePropertyChange(evt: any, props: ObjProps, object: fabric.Object) {
   let newValue: any = evt.target.value
-  object.set({[propertyName]: newValue})
+  if (props.type == PropType.StrokeWidth) newValue = parseInt(newValue)
+  object.set({[props.name]: newValue})
   canvas.renderAll()
-  console.log(evt, propertyName, object, newValue)
 }
 
 /**
