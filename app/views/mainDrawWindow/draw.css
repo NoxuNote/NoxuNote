@@ -52,3 +52,7 @@ input {
   margin-top: 2px;
   margin-bottom: 2px;
 }
+.list-group-item-selected {
+  background-color: rgb(71, 71, 255);
+  color: white;
+}

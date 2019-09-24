@@ -11,7 +11,9 @@ export const i18n = new VueI18n({
       strokeWidth: "Épaisseur Bordure",
       stroke: "Couleur Bordure",
       radius: "Rayon (dépend de l'échelle)",
-      opacity: "Opacité"
+      opacity: "Opacité",
+      rect: "Rectangle",
+      circle: "Cercle"
     }
   }
 })

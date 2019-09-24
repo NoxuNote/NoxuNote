@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.css">
     <link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
     <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./custom-bootstrap.css">
     <link rel="stylesheet" href="draw.css">
 </header>
 
@@ -78,6 +79,15 @@
                     <div v-for="property in ShapeInserter.getCommonProperties(selection.selectedObjs)">
                         {{ property.name }} : {{ property.value }}
                     </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <h4>Objets</h4>
+                <div class="card" style="width: 18rem;">
+                    <ul class="list-group list-group-flush">
+                      <li v-for="obj in canvas.getObjects().filter(o=>o.selectable)" class="list-group-item" v-bind:class="{'list-group-item-selected': selection.selectedObjs.includes(obj)}">{{ $t(obj.type) }}</li>
+                    </ul>
                 </div>
             </div>
         </div>
