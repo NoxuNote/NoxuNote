@@ -1,4 +1,5 @@
 import { fabric } from "fabric"
+import { EventEmitter } from "events"
 
 export enum PropType {
     Number = 0,
@@ -9,9 +10,10 @@ export enum PropType {
 
 export type ObjProps = {name: string, type: PropType, value: string | number }
 
-export class ShapeInserter {
+export class ShapeInserter extends EventEmitter {
     private canvas: fabric.Canvas
     constructor(canvas: fabric.Canvas) {
+        super()
         this.canvas = canvas
     }
     insert(shapeStr: string) {
@@ -34,6 +36,7 @@ export class ShapeInserter {
                 break;
         }
         this.canvas.add(shape)
+        this.emit('insert')
     }
     static getProperties(object: fabric.Object): ObjProps[] {
         /**

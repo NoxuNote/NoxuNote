@@ -6,14 +6,16 @@ import { ShapeInserter, ObjProps, PropType } from "./ShapeInserter";
 import { i18n } from "./plugins/i18n";
 const Vue = require('../../../node_modules/vue/dist/vue.min.js')
 
+// Fabric canvas instance 
+let canvas = new fabric.Canvas('canvas')
+canvas.preserveObjectStacking = true
+
 let app = new Vue({
   i18n,
   el: '#ui',
   data: {
     ShapeInserter: ShapeInserter,
-    selection: {
-      selectedObjs: []
-    },
+    selected: [],
     ui: {
       zoomFactor: 1,
       controlBars: {
@@ -28,38 +30,40 @@ let app = new Vue({
     }
   },
   methods: {
-    gridSizeChangeEvt: (evt: any) => canvasGrid.setGridSize(evt.target.value)
+    gridSizeChangeEvt: (evt: any) => canvasGrid.setGridSize(evt.target.value),
   }
 })
 
-// Fabric canvas instance 
-let canvas = new fabric.Canvas('canvas')
+// Events
+function updateSelectedObjs() {
+  app.selected = canvas.getActiveObjects()
+}
+updateSelectedObjs()
 
 // Fabric canvas initialization
-enableZoom(canvas).on('zoom', zoom => app.ui.zoomFactor = zoom) 
+enableZoom(canvas).on('zoom', zoom => app.ui.zoomFactor = zoom)
 enableCanvasResize(canvas)
 let canvasGrid = new CanvasGrid(canvas)
 canvasGrid.showGridEmitter.on('change', (newValue: boolean) => app.grid.showGrid = newValue)
 canvasGrid.snapToGridEmitter.on('change', (newValue: boolean) => app.grid.snapToGrid = newValue)
 canvasGrid.gridSizeEmitter.on('change', (newValue: boolean) => app.grid.gridSize = newValue)
 let shapeInserter = new ShapeInserter(canvas)
+shapeInserter.on('insert', () => updateSelectedObjs())
 
-// Events
-canvas.on('selection:created', (selection: any) => {
-  app.selection.selectedObjs = canvas.getActiveObjects()
-});
-canvas.on('selection:updated', (selection: any) => {
-  app.selection.selectedObjs = canvas.getActiveObjects()
-});
-canvas.on('selection:cleared', () => {
-  app.selection.selectedObjs = []
-});
+canvas.on('selection:created', () => updateSelectedObjs())
+canvas.on('selection:updated', () => updateSelectedObjs())
+canvas.on('selection:cleared', () => updateSelectedObjs());
 
 function handlePropertyChange(evt: any, props: ObjProps, object: fabric.Object) {
   let newValue: any = evt.target.value
   if (props.type == PropType.StrokeWidth) newValue = parseInt(newValue)
-  object.set({[props.name]: newValue})
+  object.set({ [props.name]: newValue })
   canvas.renderAll()
+}
+function addObjToSelection(o: fabric.Object) {
+  let sel = new fabric.ActiveSelection([o, ...canvas.getActiveObjects()]);
+  canvas.setActiveObject(sel)
+  updateSelectedObjs()
 }
 
 /**
@@ -67,15 +71,5 @@ function handlePropertyChange(evt: any, props: ObjProps, object: fabric.Object) 
  * @param key grid, objects, or a bar element
  */
 function enableControlBar(key: string) {
-  Object.keys(app.ui.controlBars).forEach(keyItem=>app.ui.controlBars[keyItem] = keyItem==key)
+  Object.keys(app.ui.controlBars).forEach(keyItem => app.ui.controlBars[keyItem] = keyItem == key)
 }
-
-// Tests
-let rect = new fabric.Rect({
-  left: 100,
-  top: 100,
-  fill: 'red',
-  width: 20,
-  height: 20
-})
-canvas.add(rect)

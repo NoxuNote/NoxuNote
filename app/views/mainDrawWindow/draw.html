@@ -54,29 +54,28 @@
                 Échelle : {{ ui.zoomFactor.toFixed(2) }}
             </p>
         </div>
-        <div class="ui ui-right ui-solidBlock">
-            <div v-if="selection.selectedObjs.length">
-                <h4>Selection</h4>
-                <div v-if="selection.selectedObjs.length == 1">
-                    <h6>Proprietés de {{selection.selectedObjs[0].type}}</h6>
-                    <button-counter></button-counter>                    
+        <div v-if="canvas!=null" class="ui ui-right ui-solidBlock">
+            <div v-if="selected.length">
+                <h4>selected</h4>
+                <div v-if="selected.length == 1">
+                    <h6>Proprietés de {{ $t(selected[0].type) }}</h6>
                     <form action="javascript:void(0);">
-                        <div v-for="property in ShapeInserter.getProperties(selection.selectedObjs[0])" class="form-group">
+                        <div v-for="property in ShapeInserter.getProperties(selected[0])" class="form-group">
                             <label v-bind:for="'edit_'+property.name"></label>{{ $t(property.name) }} :
-                            <input v-if="property.type == 3" v-bind:id="'edit_'+property.name" type="color" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, selection.selectedObjs[0])">
-                            <input v-if="property.type == 1" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=8 step=1 v-bind:value="property.value" @change="handlePropertyChange($event, property, selection.selectedObjs[0])">
-                            <input v-if="property.type == 0" v-bind:id="'edit_'+property.name" type="number" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, selection.selectedObjs[0])">
-                            <input v-if="property.type == 2" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=1 step=0.05 v-bind:value="property.value" @change="handlePropertyChange($event, property, selection.selectedObjs[0])">
+                            <input v-if="property.type == 3" v-bind:id="'edit_'+property.name" type="color" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
+                            <input v-if="property.type == 1" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=8 step=1 v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
+                            <input v-if="property.type == 0" v-bind:id="'edit_'+property.name" type="number" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
+                            <input v-if="property.type == 2" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=1 step=0.05 v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
                         </div>
                     </form>
                 </div>
-                <div v-if="selection.selectedObjs.length > 1">
-                    <h6>Objets sélectionnées ({{selection.selectedObjs.length}}) :</h6>
-                    <div v-for="obj in selection.selectedObjs">
-                        {{ obj.type }}
+                <div v-if="selected.length > 1">
+                    <h6>Objets sélectionnées ({{selected.length}}) :</h6>
+                    <div v-for="obj in selected">
+                        {{ $t(obj.type) }}
                     </div>
                     <h6>Proprietés communes</h6>
-                    <div v-for="property in ShapeInserter.getCommonProperties(selection.selectedObjs)">
+                    <div v-for="property in ShapeInserter.getCommonProperties(selected)">
                         {{ property.name }} : {{ property.value }}
                     </div>
                 </div>
@@ -84,9 +83,22 @@
             <hr>
             <div>
                 <h4>Objets</h4>
+                <button v-if="canvas.getActiveObject() && canvas.getActiveObject().type == 'activeSelection'" class="btn btn-secondary" @click="canvas.getActiveObject().toGroup();updateSelectedObjs()"><i class="fas fa-object-group"></i></button>               
+                <button v-if="canvas.getActiveObject() && canvas.getActiveObject().type == 'group'" class="btn btn-secondary" @click="canvas.getActiveObject().toActiveSelection();updateSelectedObjs()"><i class="fas fa-object-ungroup"></i></button>               
+                <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.sendToBack(o))"><i class="fas fa-angle-double-down"></i></button>               
+                <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.sendBackwards(o))"><i class="fas fa-angle-down"></i></button>               
+                <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringForward(o))"><i class="fas fa-angle-up"></i></button>               
+                <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringToFront(o))"><i class="fas fa-angle-double-up"></i></button>               
                 <div class="card" style="width: 18rem;">
                     <ul class="list-group list-group-flush">
-                      <li v-for="obj in canvas.getObjects().filter(o=>o.selectable)" class="list-group-item" v-bind:class="{'list-group-item-selected': selection.selectedObjs.includes(obj)}">{{ $t(obj.type) }}</li>
+                        <li
+                            v-for="(obj, index) in canvas.getObjects().filter(o=>o.selectable).reverse()" 
+                            class="list-group-item" 
+                            v-bind:class="{'list-group-item-selected': selected.includes(obj)}"
+                            @click="addObjToSelection(obj)"
+                            >
+                            {{ index }} - {{ $t(obj.type) }}
+                        </li>
                     </ul>
                 </div>
             </div>

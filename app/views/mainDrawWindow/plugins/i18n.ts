@@ -13,7 +13,8 @@ export const i18n = new VueI18n({
       radius: "Rayon (dépend de l'échelle)",
       opacity: "Opacité",
       rect: "Rectangle",
-      circle: "Cercle"
+      circle: "Cercle",
+      group: "Groupe"
     }
   }
 })
