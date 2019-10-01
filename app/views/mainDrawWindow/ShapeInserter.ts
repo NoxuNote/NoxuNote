@@ -44,15 +44,16 @@ export class ShapeInserter extends EventEmitter {
          */
         let properties: ObjProps[] = [
             { name: 'opacity', type: PropType.Opacity, value: object.opacity },
-            { name: 'fill', type: PropType.Color, value: object.fill.toString() },
             { name: 'stroke', type: PropType.Color, value: object.stroke },
             { name: 'strokeWidth', type: PropType.StrokeWidth, value: object.strokeWidth }
         ]
         switch (object.type) {
             case 'circle':
                 properties.push({ name: 'radius', type: PropType.Number, value: (<fabric.Circle>object).radius})
+                properties.push({ name: 'fill', type: PropType.Color, value: object.fill.toString()})
                 break;
             case 'rect':
+                properties.push({ name: 'fill', type: PropType.Color, value: object.fill.toString()})    
                 break;
             default:
                 break;

@@ -14,7 +14,8 @@ export const i18n = new VueI18n({
       opacity: "Opacité",
       rect: "Rectangle",
       circle: "Cercle",
-      group: "Groupe"
+      group: "Groupe",
+      path: "Tracé"
     }
   }
 })

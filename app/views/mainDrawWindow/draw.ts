@@ -4,11 +4,13 @@ import { enableCanvasResize } from './canvasResize'
 import { CanvasGrid } from "./CanvasGrid";
 import { ShapeInserter, ObjProps, PropType } from "./ShapeInserter";
 import { i18n } from "./plugins/i18n";
+import { FreeDraw } from "./FreeDraw";
 const Vue = require('../../../node_modules/vue/dist/vue.min.js')
 
 // Fabric canvas instance 
 let canvas = new fabric.Canvas('canvas')
 canvas.preserveObjectStacking = true
+let freeDraw: FreeDraw
 
 let app = new Vue({
   i18n,
@@ -20,7 +22,8 @@ let app = new Vue({
       zoomFactor: 1,
       controlBars: {
         grid: false,
-        objects: true
+        objects: false,
+        freeDraw: true
       }
     },
     grid: {
@@ -31,6 +34,14 @@ let app = new Vue({
   },
   methods: {
     gridSizeChangeEvt: (evt: any) => canvasGrid.setGridSize(evt.target.value),
+  },
+  watch: {
+    ui: {
+      handler(val: any) {
+        val.controlBars.freeDraw ? freeDraw.enable() : freeDraw.disable()
+      },
+      deep: true
+    }
   }
 })
 
@@ -55,6 +66,8 @@ shapeInserter.on('insert', () => updateSelectedObjs())
 canvas.on('selection:created', () => updateSelectedObjs())
 canvas.on('selection:updated', () => updateSelectedObjs())
 canvas.on('selection:cleared', () => updateSelectedObjs());
+// Init freeDraw mode
+freeDraw = new FreeDraw(canvas, true)
 
 function handlePropertyChange(evt: any, props: ObjProps, object: fabric.Object) {
   let newValue: any = evt.target.value

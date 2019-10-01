@@ -18,6 +18,11 @@
         <div class="ui ui-left">
             <div class="uiBar uiBar-vertical">
                 <button class="btn"
+                    v-bind:class="{'btn-primary': ui.controlBars.freeDraw, 'btn-secondary': !ui.controlBars.freeDraw}"
+                    onclick="enableControlBar('freeDraw')">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn"
                     v-bind:class="{'btn-primary': ui.controlBars.grid, 'btn-secondary': !ui.controlBars.grid}"
                     onclick="enableControlBar('grid')">
                     <i class="fas fa-border-none"></i>
