@@ -89,18 +89,6 @@
                 <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.sendBackwards(o))"><i class="fas fa-angle-down"></i></button>               
                 <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringForward(o))"><i class="fas fa-angle-up"></i></button>               
                 <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringToFront(o))"><i class="fas fa-angle-double-up"></i></button>               
-                <div class="card" style="width: 18rem;">
-                    <ul class="list-group list-group-flush">
-                        <li
-                            v-for="(obj, index) in canvas.getObjects().filter(o=>o.selectable).reverse()" 
-                            class="list-group-item" 
-                            v-bind:class="{'list-group-item-selected': selected.includes(obj)}"
-                            @click="addObjToSelection(obj)"
-                            >
-                            {{ index }} - {{ $t(obj.type) }}
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>

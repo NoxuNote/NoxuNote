@@ -40,16 +40,18 @@ function updateSelectedObjs() {
 }
 updateSelectedObjs()
 
-// Fabric canvas initialization
+// Init zoom & resize
 enableZoom(canvas).on('zoom', zoom => app.ui.zoomFactor = zoom)
 enableCanvasResize(canvas)
+// Init canvas grid
 let canvasGrid = new CanvasGrid(canvas)
 canvasGrid.showGridEmitter.on('change', (newValue: boolean) => app.grid.showGrid = newValue)
 canvasGrid.snapToGridEmitter.on('change', (newValue: boolean) => app.grid.snapToGrid = newValue)
 canvasGrid.gridSizeEmitter.on('change', (newValue: boolean) => app.grid.gridSize = newValue)
+// Init shape insertion
 let shapeInserter = new ShapeInserter(canvas)
 shapeInserter.on('insert', () => updateSelectedObjs())
-
+// Init Selection helper
 canvas.on('selection:created', () => updateSelectedObjs())
 canvas.on('selection:updated', () => updateSelectedObjs())
 canvas.on('selection:cleared', () => updateSelectedObjs());
@@ -60,11 +62,8 @@ function handlePropertyChange(evt: any, props: ObjProps, object: fabric.Object) 
   object.set({ [props.name]: newValue })
   canvas.renderAll()
 }
-function addObjToSelection(o: fabric.Object) {
-  let sel = new fabric.ActiveSelection([o, ...canvas.getActiveObjects()]);
-  canvas.setActiveObject(sel)
-  updateSelectedObjs()
-}
+
+
 
 /**
  * Enables the requested 'key' control BarProp.
