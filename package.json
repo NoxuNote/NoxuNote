@@ -83,7 +83,7 @@
     "mathjs": "^5.10.3",
     "open-file-explorer": "^1.0.2",
     "os": "^0.1.1",
-    "popper.js": "^1.14.6",
+    "popper.js": "^1.15.0",
     "querystring": "^0.2.0",
     "summernote": "0.8.11",
     "vue": "^2.6.10",

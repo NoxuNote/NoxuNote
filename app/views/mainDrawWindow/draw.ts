@@ -1,10 +1,11 @@
 import { fabric } from "fabric"
-import { enableZoom } from "./canvasZoom"
-import { enableCanvasResize } from './canvasResize'
-import { CanvasGrid } from "./CanvasGrid";
-import { ShapeInserter, ObjProps, PropType } from "./ShapeInserter";
+import { enableZoom } from "./components/canvasZoom"
+import { enableCanvasResize } from './components/canvasResize'
+import { CanvasGrid } from "./components/CanvasGrid";
+import { ShapeInserter, ObjProps, PropType } from "./components/ShapeInserter";
 import { i18n } from "./plugins/i18n";
-import { FreeDraw } from "./FreeDraw";
+import { FreeDraw } from "./components/FreeDraw";
+import { cloneInstance, cloneObject } from "./components/duplicate";
 const Vue = require('../../../node_modules/vue/dist/vue.min.js')
 
 // Fabric canvas instance 
@@ -34,6 +35,8 @@ let app = new Vue({
   },
   methods: {
     gridSizeChangeEvt: (evt: any) => canvasGrid.setGridSize(evt.target.value),
+    cloneInstance: cloneInstance,
+    cloneObject: cloneObject
   },
   watch: {
     ui: {
@@ -73,7 +76,7 @@ function handlePropertyChange(evt: any, props: ObjProps, object: fabric.Object) 
   let newValue: any = evt.target.value
   if (props.type == PropType.StrokeWidth) newValue = parseInt(newValue)
   object.set({ [props.name]: newValue })
-  canvas.renderAll()
+  canvas.requestRenderAll()
 }
 
 

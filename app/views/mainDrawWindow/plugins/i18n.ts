@@ -15,7 +15,10 @@ export const i18n = new VueI18n({
       rect: "Rectangle",
       circle: "Cercle",
       group: "Groupe",
-      path: "Tracé"
+      path: "Tracé",
+      delete: "Supprimer",
+      duplicate: "Dupliquer",
+      duplicate_instance: "Copie liée"
     }
   }
 })

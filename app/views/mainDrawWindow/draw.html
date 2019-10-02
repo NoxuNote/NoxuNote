@@ -1,15 +1,11 @@
 <html>
 
-<head>
-</head>
 <header>
     <title>NoxuNote - Dessin</title>
     <link rel="stylesheet" type="text/css" href="../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.css">
-    <link rel="stylesheet" type="text/css" href="../../../node_modules/html5tooltipsjs/html5tooltips.animation.css">
     <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./custom-bootstrap.css">
-    <link rel="stylesheet" href="draw.css">
+    <link rel="stylesheet" href="./style/custom-bootstrap.css">
+    <link rel="stylesheet" href="./style/draw.css">
 </header>
 
 <body>
@@ -64,6 +60,15 @@
                 <h4>selected</h4>
                 <div v-if="selected.length == 1">
                     <h6>Proprietés de {{ $t(selected[0].type) }}</h6>
+                    <button class="btn btn-secondary" @click="canvas.remove(selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('delete')">
+                        <i class="fas fa-trash" style="color: #ff7676"></i>
+                    </button>
+                    <button class="btn btn-secondary" @click="cloneObject(canvas, selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('duplicate')">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="btn btn-secondary" @click="cloneInstance(canvas, selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('duplicate_instance')">
+                        <i class="fas fa-venus-double"></i>
+                    </button>
                     <form action="javascript:void(0);">
                         <div v-for="property in ShapeInserter.getProperties(selected[0])" class="form-group">
                             <label v-bind:for="'edit_'+property.name"></label>{{ $t(property.name) }} :
@@ -100,7 +105,6 @@
 </body>
 <footer>
     <script>var exports = { "__esModule": true };</script>
-    <script src="../../../node_modules/html5tooltipsjs/html5tooltips.js"></script>
     <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="./draw.js"></script>
 </footer>
