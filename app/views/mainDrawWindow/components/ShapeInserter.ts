@@ -5,7 +5,8 @@ export enum PropType {
     Number = 0,
     StrokeWidth = 1,
     Opacity = 2,
-    Color = 3
+    Color = 3,
+    Font = 4
 }
 
 export type ObjProps = {name: string, type: PropType, value: string | number }
@@ -16,14 +17,14 @@ export class ShapeInserter extends EventEmitter {
         super()
         this.canvas = canvas
     }
-    insert(shapeStr: string) {
+    insert(shapeStr: string): fabric.Object {
         let shape: fabric.Object
         let commomOptions: fabric.IObjectOptions = {
             fill: 'transparent',
             strokeUniform: true,
             padding: 0,
             stroke: '#FFFFFF',
-            left: this.canvas.getWidth() / 2,
+            left: this.canvas.getWidth() / 3,
             top: this.canvas.getHeight() / 2,
         }
         switch (shapeStr) {
@@ -32,11 +33,16 @@ export class ShapeInserter extends EventEmitter {
                 break;
             case "square":
                 shape = new fabric.Rect({ width: 100, height: 100, ...commomOptions })
+                break;
+            case "text":
+                shape = new fabric.IText('Texte', {...commomOptions, fill: 'white', strokeWidth: 0})
+                break;
             default:
                 break;
         }
         this.canvas.add(shape)
         this.emit('insert')
+        return shape
     }
     static getProperties(object: fabric.Object): ObjProps[] {
         /**
@@ -54,6 +60,10 @@ export class ShapeInserter extends EventEmitter {
                 break;
             case 'rect':
                 properties.push({ name: 'fill', type: PropType.Color, value: object.fill.toString()})    
+                break;
+            case 'i-text':
+                properties.push({ name: 'fill', type: PropType.Color, value: object.fill.toString()})    
+                properties.push({ name: 'fontFamily', type: PropType.Font, value: (object as fabric.Text).fontFamily.toString()}) 
                 break;
             default:
                 break;

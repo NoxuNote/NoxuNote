@@ -18,7 +18,9 @@ export const i18n = new VueI18n({
       path: "Tracé",
       delete: "Supprimer",
       duplicate: "Dupliquer",
-      duplicate_instance: "Copie liée"
+      duplicate_instance: "Copie liée",
+      'i-text': "Texte",
+      fontFamily: "Police"
     }
   }
 })

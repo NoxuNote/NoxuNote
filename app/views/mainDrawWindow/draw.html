@@ -19,14 +19,24 @@
                     <i class="fas fa-pencil-alt"></i>
                 </button>
                 <button class="btn"
+                v-bind:class="{'btn-primary': ui.controlBars.objects, 'btn-secondary': !ui.controlBars.objects}"
+                onclick="enableControlBar('objects')">
+                <i class="fas fa-shapes"></i>
+                </button>
+                <button class="btn"
+                    v-bind:class="{'btn-primary': ui.controlBars.text, 'btn-secondary': !ui.controlBars.text}"
+                    onclick="enableControlBar('text')">
+                    <i class="fas fa-font"></i>
+                </button>
+                <button class="btn"
+                    v-bind:class="{'btn-primary': ui.controlBars.chart, 'btn-secondary': !ui.controlBars.chart}"
+                    onclick="enableControlBar('chart')">
+                    <i class="fas fa-chart-line"></i>
+                </button>
+                <button class="btn"
                     v-bind:class="{'btn-primary': ui.controlBars.grid, 'btn-secondary': !ui.controlBars.grid}"
                     onclick="enableControlBar('grid')">
                     <i class="fas fa-border-none"></i>
-                </button>
-                <button class="btn"
-                    v-bind:class="{'btn-primary': ui.controlBars.objects, 'btn-secondary': !ui.controlBars.objects}"
-                    onclick="enableControlBar('objects')">
-                    <i class="fas fa-shapes"></i>
                 </button>
             </div>
         </div>
@@ -56,6 +66,13 @@
                     <i class="far fa-circle"></i>
                 </button>
             </div>
+            <div v-if="ui.controlBars.text" class="uiBar">
+                <button class="btn btn-secondary" onclick="shapeInserter.insert('text')">
+                    <i class="fas fa-font"></i>
+                </button>
+            </div>
+            <div v-if="ui.controlBars.chart" class="uiBar">
+            </div>
         </div>
         <div class="ui ui-botLeft">
             <p v-if="ui.zoomFactor != 1" style="width: 130px">
@@ -83,6 +100,9 @@
                             <input v-if="property.type == 1" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=15 step=1 v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
                             <input v-if="property.type == 0" v-bind:id="'edit_'+property.name" type="number" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
                             <input v-if="property.type == 2" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=1 step=0.05 v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
+                            <select v-if="property.type == 4" v-bind:id="'edit_'+property.name" class="custom-select" v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
+                                <option v-for="font in fonts" v-bind:value="font" v-bind:style="`font-family: ${font}`">{{font}}</option>
+                            </select>
                         </div>
                     </form>
                 </div>

@@ -7,6 +7,11 @@ import { i18n } from "./plugins/i18n";
 import { FreeDraw } from "./components/FreeDraw";
 import { cloneInstance, cloneObject } from "./components/duplicate";
 const Vue = require('../../../node_modules/vue/dist/vue.min.js')
+const fontList = require('font-list')
+
+let fonts: String[] = []
+// Load fonts
+fontList.getFonts().then((availableFonts: string[]) => fonts = availableFonts).catch((err: any)=>console.log(err))
 
 // Fabric canvas instance 
 let canvas = new fabric.Canvas('canvas')
@@ -24,7 +29,9 @@ let app = new Vue({
       controlBars: {
         grid: false,
         objects: false,
-        freeDraw: true
+        freeDraw: true,
+        text: false,
+        chart: false
       }
     },
     grid: {
