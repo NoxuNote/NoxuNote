@@ -9,11 +9,12 @@ export class FreeDraw {
 
   public enable() {
     this.canvas.isDrawingMode = true
-
+    this.canvas.freeDrawingBrush.color = "#FFFFFF"
+    this.canvas.freeDrawingBrush.width = 4
   }
+
   public disable() {
     this.canvas.isDrawingMode = false
   }
-
 
 }
