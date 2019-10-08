@@ -36,6 +36,10 @@ input {
   height: 100vh;
   min-width: 200px;
 }
+.ui-message {
+  top: 58px;
+  left: 10px;
+}
 .ui-solidBlock {
   background-color: rgba(255, 255, 255, 0.637);
   padding: 10px;

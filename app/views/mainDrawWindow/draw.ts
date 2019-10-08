@@ -6,6 +6,7 @@ import { ShapeInserter, ObjProps, PropType } from "./components/ShapeInserter";
 import { i18n } from "./plugins/i18n";
 import { FreeDraw } from "./components/FreeDraw";
 import { cloneInstance, cloneObject } from "./components/duplicate";
+import { LineInserter } from "./components/LineInserter";
 const Vue = require('../../../node_modules/vue/dist/vue.min.js')
 const fontList = require('font-list')
 
@@ -26,7 +27,9 @@ let app = new Vue({
     selected: [],
     ui: {
       zoomFactor: 1,
+      message: '',
       controlBars: {
+        cursor: false,
         grid: false,
         objects: false,
         freeDraw: true,
@@ -69,6 +72,11 @@ let canvasGrid = new CanvasGrid(canvas)
 canvasGrid.showGridEmitter.on('change', (newValue: boolean) => app.grid.showGrid = newValue)
 canvasGrid.snapToGridEmitter.on('change', (newValue: boolean) => app.grid.snapToGrid = newValue)
 canvasGrid.gridSizeEmitter.on('change', (newValue: boolean) => app.grid.gridSize = newValue)
+// Init line insertion
+let lineInserter = new LineInserter(canvas)
+lineInserter.on('queryFirstClick', ()=>app.ui.message="Cliquez pour définir le point de départ.")
+lineInserter.on('querySecondClick', ()=>app.ui.message="Cliquez pour définir le point d'arrivée")
+lineInserter.on('done', ()=>app.ui.message="")
 // Init shape insertion
 let shapeInserter = new ShapeInserter(canvas)
 shapeInserter.on('insert', () => updateSelectedObjs())

@@ -14,6 +14,11 @@
         <div class="ui ui-left">
             <div class="uiBar uiBar-vertical">
                 <button class="btn"
+                    v-bind:class="{'btn-primary': ui.controlBars.cursor, 'btn-secondary': !ui.controlBars.cursor}"
+                    onclick="enableControlBar('cursor')">
+                    <i class="fas fa-mouse-pointer"></i>
+                </button>
+                <button class="btn"
                     v-bind:class="{'btn-primary': ui.controlBars.freeDraw, 'btn-secondary': !ui.controlBars.freeDraw}"
                     onclick="enableControlBar('freeDraw')">
                     <i class="fas fa-pencil-alt"></i>
@@ -59,6 +64,9 @@
                     @change="gridSizeChangeEvt">
             </div>
             <div v-if="ui.controlBars.objects" class="uiBar">
+                <button class="btn btn-secondary" onclick="lineInserter.insert()">
+                    <i class="fas fa-slash"></i>
+                </button>
                 <button class="btn btn-secondary" onclick="shapeInserter.insert('square')">
                     <i class="far fa-square"></i>
                 </button>
@@ -72,12 +80,16 @@
                 </button>
             </div>
             <div v-if="ui.controlBars.chart" class="uiBar">
+                <h4>Bientôt disponible</h4>
             </div>
         </div>
         <div class="ui ui-botLeft">
             <p v-if="ui.zoomFactor != 1" style="width: 130px">
                 Échelle : {{ ui.zoomFactor.toFixed(2) }}
             </p>
+        </div>
+        <div class="ui ui-message" v-if="ui.message.length">
+            <p>{{ui.message}}</p>
         </div>
         <div v-if="canvas!=null && selected.length" class="ui ui-right ui-solidBlock">
             <div>

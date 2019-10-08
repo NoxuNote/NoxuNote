@@ -23,7 +23,6 @@ export class CanvasGrid {
       }).setCoords();
     }
     let topRightX = obj.left+obj.scaleX
-    console.log(obj)
     if (Math.round(topRightX / this.gridSize * 6) % 6 == 0 &&
       Math.round(topLeftY / this.gridSize * 6) % 6 == 0) {
       obj.set({

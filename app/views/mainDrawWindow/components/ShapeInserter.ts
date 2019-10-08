@@ -13,6 +13,7 @@ export type ObjProps = {name: string, type: PropType, value: string | number }
 
 export class ShapeInserter extends EventEmitter {
     private canvas: fabric.Canvas
+    public createdLines: fabric.Line[]
     constructor(canvas: fabric.Canvas) {
         super()
         this.canvas = canvas
@@ -24,6 +25,7 @@ export class ShapeInserter extends EventEmitter {
             strokeUniform: true,
             padding: 0,
             stroke: '#FFFFFF',
+            strokeWidth: 4,
             left: this.canvas.getWidth() / 3,
             top: this.canvas.getHeight() / 2,
         }
@@ -37,6 +39,11 @@ export class ShapeInserter extends EventEmitter {
             case "text":
                 shape = new fabric.IText('Texte', {...commomOptions, fill: 'white', strokeWidth: 0})
                 break;
+            // case "line":
+            //     shape = new fabric.Line([200, 200, 400, 400], {stroke: '#FFFFFF', strokeWidth: 4, strokeUniform: true, selectable: true})
+            //     // shape.on('mousedown', ()=>{this.canvas.discardActiveObject();this.lineHandler.handleLineClick(shape as fabric.Line)})
+            //     // this.createdLines.push(shape as fabric.Line)
+            //     break;
             default:
                 break;
         }
