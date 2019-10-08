@@ -20,21 +20,22 @@ export function enableZoom(canvas: fabric.Canvas): EventEmitter {
     if (zoom < 1) zoom = 1;
     let point = new fabric.Point(wheelEvent.offsetX, wheelEvent.offsetY)
     canvas.zoomToPoint(point, zoom);
-    let vpt = this.viewportTransform;
-    if (zoom < 400 / 1000) {
-      this.viewportTransform[4] = 200 - 1000 * zoom / 2;
-      this.viewportTransform[5] = 200 - 1000 * zoom / 2;
-    } else {
-      if (vpt[4] >= 0) {
-        this.viewportTransform[4] = 0;
-      } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
-        this.viewportTransform[4] = canvas.getWidth() - 1000 * zoom;
-      }
-      if (vpt[5] >= 0) {
-        this.viewportTransform[5] = 0;
-      } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
-        this.viewportTransform[5] = canvas.getHeight() - 1000 * zoom;
-      }
+    let vpt = canvas.viewportTransform;
+    const canvasRealWidth = canvas.getWidth() * canvas.getZoom()
+    const canvasRealHeight= canvas.getHeight() * canvas.getZoom()
+    const outOfCanvasX = canvas.getWidth() + Math.abs(canvas.viewportTransform[4]) - canvasRealWidth
+    const outOfCanvasY = canvas.getHeight() + Math.abs(canvas.viewportTransform[5]) - canvasRealHeight
+    if (vpt[4] >= 0) {
+      vpt[4] = 0;
+    } else if (outOfCanvasX > 0) {
+      // On dépasse a droite du canvas de outOfCanvasX
+      vpt[4] -= -outOfCanvasX
+    }
+    if (vpt[5] >= 0) {
+      vpt[5] = 0;
+    } else if (outOfCanvasY > 0) {
+      // On dépasse a droite du canvas de outOfCanvasX
+      vpt[5] -= -outOfCanvasY
     }
     emitter.emit('zoom', canvas.getZoom())
   });

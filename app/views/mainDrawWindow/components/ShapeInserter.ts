@@ -41,6 +41,7 @@ export class ShapeInserter extends EventEmitter {
                 break;
         }
         this.canvas.add(shape)
+        this.canvas.bringToFront(shape)
         this.emit('insert')
         return shape
     }

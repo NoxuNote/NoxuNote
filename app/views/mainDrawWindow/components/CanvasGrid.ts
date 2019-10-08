@@ -75,13 +75,17 @@ export class CanvasGrid {
    */
   private regenerateGrid() {
     this.grid = []
-    let maxSize = Math.max(window.innerWidth, window.innerHeight)
-    for (var i = 0; i < (maxSize / this.gridSize); i++) {
+    for (var i = 0; i < (window.innerWidth / this.gridSize); i++) {
       this.grid = [
         new fabric.Line([i * this.gridSize, 0, i * this.gridSize, window.innerHeight], {
           stroke: 'rgba(255, 255, 255, 0.2)',
           selectable: false
         }),
+        ...this.grid
+      ]
+    }
+    for (var i = 0; i < (window.innerHeight / this.gridSize); i++) {
+      this.grid = [
         new fabric.Line([0, i * this.gridSize, window.innerWidth, i * this.gridSize], {
           stroke: 'rgba(255, 255, 255, 0.2)',
           selectable: false,

@@ -79,11 +79,20 @@
                 Échelle : {{ ui.zoomFactor.toFixed(2) }}
             </p>
         </div>
-        <div v-if="canvas!=null" class="ui ui-right ui-solidBlock">
-            <div v-if="selected.length">
-                <h4>selected</h4>
+        <div v-if="canvas!=null && selected.length" class="ui ui-right ui-solidBlock">
+            <div>
+                <h4>Sélection</h4>
+                <div>
+                    <h5>Hauteur</h5>
+                    <button v-if="canvas.getActiveObject() && canvas.getActiveObject().type == 'activeSelection'" class="btn btn-secondary" @click="canvas.getActiveObject().toGroup();updateSelectedObjs()"><i class="fas fa-object-group"></i></button>               
+                    <button v-if="canvas.getActiveObject() && canvas.getActiveObject().type == 'group'" class="btn btn-secondary" @click="canvas.getActiveObject().toActiveSelection();updateSelectedObjs()"><i class="fas fa-object-ungroup"></i></button>               
+                    <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.sendToBack(o))"><i class="fas fa-angle-double-down"></i></button>               
+                    <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.sendBackwards(o))"><i class="fas fa-angle-down"></i></button>               
+                    <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringForward(o))"><i class="fas fa-angle-up"></i></button>               
+                    <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringToFront(o))"><i class="fas fa-angle-double-up"></i></button>               
+                </div>
                 <div v-if="selected.length == 1">
-                    <h6>Proprietés de {{ $t(selected[0].type) }}</h6>
+                    <h5>Proprietés de {{ $t(selected[0].type) }}</h5>
                     <button class="btn btn-secondary" @click="canvas.remove(selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('delete')">
                         <i class="fas fa-trash" style="color: #ff7676"></i>
                     </button>
@@ -116,16 +125,6 @@
                         {{ property.name }} : {{ property.value }}
                     </div>
                 </div>
-            </div>
-            <hr>
-            <div>
-                <h4>Objets</h4>
-                <button v-if="canvas.getActiveObject() && canvas.getActiveObject().type == 'activeSelection'" class="btn btn-secondary" @click="canvas.getActiveObject().toGroup();updateSelectedObjs()"><i class="fas fa-object-group"></i></button>               
-                <button v-if="canvas.getActiveObject() && canvas.getActiveObject().type == 'group'" class="btn btn-secondary" @click="canvas.getActiveObject().toActiveSelection();updateSelectedObjs()"><i class="fas fa-object-ungroup"></i></button>               
-                <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.sendToBack(o))"><i class="fas fa-angle-double-down"></i></button>               
-                <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.sendBackwards(o))"><i class="fas fa-angle-down"></i></button>               
-                <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringForward(o))"><i class="fas fa-angle-up"></i></button>               
-                <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringToFront(o))"><i class="fas fa-angle-double-up"></i></button>               
             </div>
         </div>
     </div>
