@@ -24,7 +24,8 @@ input {
 }
 .ui-left {
   left: 5px;
-  top: 50vh;
+  top: 50%;
+  transform: translateY(-50%)
 }
 .ui-botLeft {
   left: 5px;
@@ -35,6 +36,11 @@ input {
   top: 0px;
   height: 100vh;
   min-width: 200px;
+}
+.ui-bottom {
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5px;
 }
 .ui-message {
   top: 58px;

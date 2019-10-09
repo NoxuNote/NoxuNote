@@ -1,5 +1,6 @@
 import { fabric } from "fabric";
 import { EventEmitter } from "events";
+import { History } from "./History";
 
 export class LineInserter extends EventEmitter {
   
@@ -24,7 +25,7 @@ export class LineInserter extends EventEmitter {
     this.emit('done')
   }
 
-  constructor(public canvas: fabric.Canvas) {
+  constructor(public canvas: fabric.Canvas, private history: History) {
     super()
   }
   
@@ -41,6 +42,7 @@ export class LineInserter extends EventEmitter {
       selectable: true}
       )
     this.canvas.add(line)
+    this.history.push()
   }
 
 }

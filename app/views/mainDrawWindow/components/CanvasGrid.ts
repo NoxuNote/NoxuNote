@@ -1,5 +1,6 @@
 import { fabric } from "fabric"
 import { EventEmitter } from "events"
+import { History } from "./History";
 
 export class CanvasGrid {
 
@@ -61,9 +62,13 @@ export class CanvasGrid {
 
   public setGridSize(s: number) {
     this.gridSize = s
-    if (this.isGridShown) this.grid.forEach(l=>this.canvas.remove(l))
-    this.regenerateGrid()
-    if (this.isGridShown) this.grid.forEach(l=>this.canvas.add(l))
+    // Deep clean grid clean
+    this.canvas.getObjects().forEach(o=>{
+      if (o.type == "line" && !o.selectable) {
+        this.canvas.remove(o)
+      }
+    })
+    if (this.isGridShown) this.showGrid()
     // Informs changes
     this.gridSizeEmitter.emit('change', this.gridSize)
   }
@@ -97,7 +102,12 @@ export class CanvasGrid {
 
   public hideGrid() {
     this.isGridShown = false
-    this.grid.forEach(l=>this.canvas.remove(l))
+    // Deep clean grid clean
+    this.canvas.getObjects().forEach(o=>{
+      if (o.type == "line" && !o.selectable) {
+        this.canvas.remove(o)
+      }
+    })
     // Informs changes
     this.showGridEmitter.emit('change', this.isGridShown)
   }
@@ -105,9 +115,22 @@ export class CanvasGrid {
   public showGrid() {
     this.isGridShown = true
     this.regenerateGrid()
-    this.grid.forEach(l=>this.canvas.add(l))
+    this.grid.forEach(l=>{this.canvas.add(l); this.canvas.sendToBack(l)})
     // Informs changes
     this.showGridEmitter.emit('change', this.isGridShown)
+  }
+
+  /**
+   * Deletes background lines and regenerate them
+   */
+  public updateGrid() {
+    // Deep clean grid clean
+    this.canvas.getObjects().forEach(o=>{
+      if (o.type == "line" && !o.selectable) {
+        this.canvas.remove(o)
+      }
+    })
+    if (this.isGridShown) this.showGrid()
   }
 
   public toggleGrid() {

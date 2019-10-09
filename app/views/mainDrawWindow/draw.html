@@ -84,9 +84,15 @@
             </div>
         </div>
         <div class="ui ui-botLeft">
-            <p v-if="ui.zoomFactor != 1" style="width: 130px">
+            <p v-if="ui.zoomFactor != 1" style="width: 130px; text-align: center">
                 Échelle : {{ ui.zoomFactor.toFixed(2) }}
             </p>
+        </div>
+        <div class="ui ui-bottom">
+            <div class="uiBar">
+                <button class="btn btn-secondary" @click="history.undo()"><i class="fas fa-undo-alt"></i></button>
+                <button class="btn btn-secondary" @click="history.redo()"><i class="fas fa-redo-alt"></i></button>
+            </div>
         </div>
         <div class="ui ui-message" v-if="ui.message.length">
             <p>{{ui.message}}</p>
@@ -108,10 +114,10 @@
                     <button class="btn btn-secondary" @click="canvas.remove(selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('delete')">
                         <i class="fas fa-trash" style="color: #ff7676"></i>
                     </button>
-                    <button class="btn btn-secondary" @click="cloneObject(canvas, selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('duplicate')">
+                    <button class="btn btn-secondary" @click="duplicate.cloneObject(selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('duplicate')">
                         <i class="fas fa-copy"></i>
                     </button>
-                    <button class="btn btn-secondary" @click="cloneInstance(canvas, selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('duplicate_instance')">
+                    <button class="btn btn-secondary" @click="duplicate.cloneInstance(selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('duplicate_instance')">
                         <i class="fas fa-venus-double"></i>
                     </button>
                     <form action="javascript:void(0);">
