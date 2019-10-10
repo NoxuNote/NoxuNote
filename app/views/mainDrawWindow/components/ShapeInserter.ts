@@ -93,7 +93,6 @@ export class ShapeInserter extends EventEmitter {
         properties.forEach( (pl: ObjProps[]) => {
             pl.forEach(property=>{
                 if (!commonProperties.map(p=>p.name).includes(property.name) && isACommonOption(property.name, properties)) {
-                    property.value = null
                     commonProperties.push(property)
                 }
             })

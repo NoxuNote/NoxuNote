@@ -101,33 +101,36 @@
             <div>
                 <h4>Sélection</h4>
                 <div>
-                    <h5>Hauteur</h5>
+                    <h5>Gérer</h5>
+                    <button class="btn btn-secondary" @click="canvas.getActiveObjects().forEach(o=>canvas.remove(o))" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('delete')">
+                        <i class="fas fa-trash" style="color: #ff7676"></i>
+                    </button>     
                     <button v-if="canvas.getActiveObject() && canvas.getActiveObject().type == 'activeSelection'" class="btn btn-secondary" @click="canvas.getActiveObject().toGroup();updateSelectedObjs()"><i class="fas fa-object-group"></i></button>               
                     <button v-if="canvas.getActiveObject() && canvas.getActiveObject().type == 'group'" class="btn btn-secondary" @click="canvas.getActiveObject().toActiveSelection();updateSelectedObjs()"><i class="fas fa-object-ungroup"></i></button>               
+                    <div v-if="selected.length == 1" class="d-inline">
+                        <button class="btn btn-secondary" @click="duplicate.cloneObject(selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('duplicate')">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="btn btn-secondary" @click="duplicate.cloneInstance(selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('duplicate_instance')">
+                            <i class="fas fa-venus-double"></i>
+                        </button>
+                    </div>
+                    <h5>Hauteur</h5>
                     <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.sendToBack(o))"><i class="fas fa-angle-double-down"></i></button>               
                     <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.sendBackwards(o))"><i class="fas fa-angle-down"></i></button>               
                     <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringForward(o))"><i class="fas fa-angle-up"></i></button>               
-                    <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringToFront(o))"><i class="fas fa-angle-double-up"></i></button>               
+                    <button class="btn btn-secondary" @click="selected.forEach(o=>canvas.bringToFront(o))"><i class="fas fa-angle-double-up"></i></button>          
                 </div>
                 <div v-if="selected.length == 1">
                     <h5>Proprietés de {{ $t(selected[0].type) }}</h5>
-                    <button class="btn btn-secondary" @click="canvas.remove(selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('delete')">
-                        <i class="fas fa-trash" style="color: #ff7676"></i>
-                    </button>
-                    <button class="btn btn-secondary" @click="duplicate.cloneObject(selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('duplicate')">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                    <button class="btn btn-secondary" @click="duplicate.cloneInstance(selected[0])" data-toggle="tooltip" data-placement="bottom" v-bind:title="$t('duplicate_instance')">
-                        <i class="fas fa-venus-double"></i>
-                    </button>
                     <form action="javascript:void(0);">
                         <div v-for="property in ShapeInserter.getProperties(selected[0])" class="form-group">
                             <label v-bind:for="'edit_'+property.name"></label>{{ $t(property.name) }} :
-                            <input v-if="property.type == 3" v-bind:id="'edit_'+property.name" type="color" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
-                            <input v-if="property.type == 1" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=15 step=1 v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
-                            <input v-if="property.type == 0" v-bind:id="'edit_'+property.name" type="number" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
-                            <input v-if="property.type == 2" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=1 step=0.05 v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
-                            <select v-if="property.type == 4" v-bind:id="'edit_'+property.name" class="custom-select" v-bind:value="property.value" @change="handlePropertyChange($event, property, selected[0])">
+                            <input v-if="property.type == 3" v-bind:id="'edit_'+property.name" type="color" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, [selected[0]])">
+                            <input v-if="property.type == 1" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=15 step=1 v-bind:value="property.value" @change="handlePropertyChange($event, property, [selected[0]])">
+                            <input v-if="property.type == 0" v-bind:id="'edit_'+property.name" type="number" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, [selected[0]])">
+                            <input v-if="property.type == 2" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=1 step=0.05 v-bind:value="property.value" @change="handlePropertyChange($event, property, [selected[0]])">
+                            <select v-if="property.type == 4" v-bind:id="'edit_'+property.name" class="custom-select" v-bind:value="property.value" @change="handlePropertyChange($event, property, [selected[0]])">
                                 <option v-for="font in fonts" v-bind:value="font" v-bind:style="`font-family: ${font}`">{{font}}</option>
                             </select>
                         </div>
@@ -139,9 +142,18 @@
                         {{ $t(obj.type) }}
                     </div>
                     <h6>Proprietés communes</h6>
-                    <div v-for="property in ShapeInserter.getCommonProperties(selected)">
-                        {{ property.name }} : {{ property.value }}
-                    </div>
+                    <form action="javascript:void(0);">
+                        <div v-for="property in ShapeInserter.getCommonProperties(selected)" class="form-group">
+                            <label v-bind:for="'edit_'+property.name"></label>{{ $t(property.name) }} :
+                            <input v-if="property.type == 3" v-bind:id="'edit_'+property.name" type="color" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, selected)">
+                            <input v-if="property.type == 1" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=15 step=1 v-bind:value="property.value" @change="handlePropertyChange($event, property, selected)">
+                            <input v-if="property.type == 0" v-bind:id="'edit_'+property.name" type="number" class="form-control" v-bind:value="property.value" @change="handlePropertyChange($event, property, selected)">
+                            <input v-if="property.type == 2" v-bind:id="'edit_'+property.name" type="range" class="form-control custom-range" min=0 max=1 step=0.05 v-bind:value="property.value" @change="handlePropertyChange($event, property, selected)">
+                            <select v-if="property.type == 4" v-bind:id="'edit_'+property.name" class="custom-select" v-bind:value="property.value" @change="handlePropertyChange($event, property, selected)">
+                                <option v-for="font in fonts" v-bind:value="font" v-bind:style="`font-family: ${font}`">{{font}}</option>
+                            </select>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

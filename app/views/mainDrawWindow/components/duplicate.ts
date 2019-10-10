@@ -14,10 +14,10 @@ export class Duplicate {
   }
 
   public cloneObject(obj: fabric.Object) {
-    obj.clone(function(c: fabric.Object) {
+    obj.clone((c: fabric.Object) => {
       this.canvas.add(c.set({ left: obj.left+5, top: obj.top+5 }))
+      this.history.push()
     })
-    this.history.push()
   }
 
 }

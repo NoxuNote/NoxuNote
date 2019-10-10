@@ -2,7 +2,7 @@ import { History } from "./History";
 
 export class EnableShortcuts {
 
-  private _clipboard: any
+  private _clipboard: fabric.Object
 
   constructor(private canvas: fabric.Canvas, private history: History) {
     document.addEventListener('keydown', (ev: KeyboardEvent) => {

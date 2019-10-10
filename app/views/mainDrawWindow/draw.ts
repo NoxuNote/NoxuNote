@@ -8,7 +8,7 @@ import { FreeDraw } from "./components/FreeDraw";
 import { Duplicate } from "./components/Duplicate";
 import { LineInserter } from "./components/LineInserter";
 import { History } from "./components/History";
-import { EnableShortcuts } from "./components/enableShortcuts";
+import { EnableShortcuts } from "./components/EnableShortcuts";
 const Vue = require('../../../node_modules/vue/dist/vue.min.js')
 const fontList = require('font-list')
 
@@ -93,10 +93,10 @@ freeDraw = new FreeDraw(canvas, true, history)
 let duplicate = new Duplicate(canvas, history)
 let shortcuts = new EnableShortcuts(canvas, history)
 
-function handlePropertyChange(evt: any, props: ObjProps, object: fabric.Object) {
+function handlePropertyChange(evt: any, props: ObjProps, objects: fabric.Object[]) {
   let newValue: any = evt.target.value
   if (props.type == PropType.StrokeWidth) newValue = parseInt(newValue)
-  object.set({ [props.name]: newValue })
+  objects.forEach(o=>o.set({ [props.name]: newValue }))
   history.push()
   canvas.requestRenderAll()
 }
