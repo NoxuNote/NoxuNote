@@ -115,7 +115,7 @@ function setLoadedNote(note: Note): void {
 	loadedNote = note; // Mise à jour de la var locale.
 	// Mise à jour de l'affichage
 	if (note) {
-		elts.header.titrePrincipal.innerText = note.meta.title
+		elts.header.titrePrincipal.innerText = note.meta.title.length ? note.meta.title : '(Sans titre)'
 		// Si une matière est précisée
 		let mat: Matiere = browser.matieres.find(m=>m.id==note.meta.matiere)
 		if (mat) {
@@ -195,7 +195,7 @@ function save_as_noxunote() {
 	} else {
 		console.debug("Sauvegarde d'une nouvelle note", editor.summernote('code'))
 		// On définit la note actuellement editée
-		setLoadedNote(ipc.sendSync('db_notes_saveNewNote', '(Sans titre)', editor.summernote('code').toString()))
+		setLoadedNote(ipc.sendSync('db_notes_saveNewNote', '', editor.summernote('code').toString()))
 		// On affiche la note sauvegardée dans la liste des notes.
 		
 	}
