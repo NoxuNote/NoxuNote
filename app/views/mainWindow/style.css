@@ -289,23 +289,55 @@ span#optionnal {
 	font-size: 0.8em;
 	color: #9FA2A1;
 }
+h6 {
+	margin-top: 15px;
+	margin-bottom: 5px;
+	margin-left: 10px;
+	font-size: 1.1em;
+}
+h5 {
+	margin-top: 15px;
+	margin-bottom: 5px;
+	margin-left: 10px;
+	font-size: 1.1em;
+}
+h4 {
+	margin-top: 15px;
+	margin-left: 10px;
+	margin-bottom: 5px;
+	font-size: 1.1em;
+}
 h3 {
 	margin-top: 25px;
+	margin-left: 10px;
 	margin-bottom: 5px;
+	font-size: 18px;
 }
 h2 {
 	margin-left: auto;
 	font-family: FlatLight;
+	margin-top: 1.5em;
+	margin-left: 10px;
+	font-size: 30px;
 }
 h1 {
 	text-align: center;
+	font-family: FlatLight;
+	margin-bottom: 1em;
+	padding-top: 10px;
+	font-size: 40px;
 }
-em {
+p {
+	width: 100%;
+	line-height: 1.3em;
+	margin-bottom: 0.6em;
+}
+/* em {
 	color: #16150B;
     background-color: rgba(229, 234, 65, 0.89);
     padding: 0.1em;
     font-style: normal;
-}
+} */
 .flat_text {
 	margin-left: 1%;
 }
@@ -630,7 +662,7 @@ div.pastille {
 }
 
 /*
- * â”€â”€â”€ BROWSE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * BROWSE
  */
 	
 @media screen and (max-width: 991px) {
