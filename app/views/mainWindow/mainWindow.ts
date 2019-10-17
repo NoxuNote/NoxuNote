@@ -476,7 +476,6 @@ function initializeSummernote() {
 						}
 					}
 				}
-				console.log(e)
 				if (e.ctrlKey || e.metaKey) {
 					if (e.code == 'KeyE') {
 						e.preventDefault()
