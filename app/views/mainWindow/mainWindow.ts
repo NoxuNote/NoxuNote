@@ -25,7 +25,7 @@ import { ModalManager } from "./ModalManager";
 import { EquationManager } from "./EquationManager";
 import { InfoPlugin } from "./plugins/info";
 
-let editor: any
+let editor: any = $('#summernote')
 
 const elts = {
 	header: {
@@ -337,7 +337,6 @@ $(document).ready(initializeSummernote)
 function initializeSummernote() {
 	const wordsDictionnary = ipcRenderer.sendSync('db_getAssocList').map((element: { output: any; }) => element.output)
 	// @ts-ignore
-	editor = $('#summernote')
 	editor.summernote({
 		lang: 'fr-FR',
 		focus: true,
