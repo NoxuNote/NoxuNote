@@ -25,10 +25,7 @@ import { ModalManager } from "./ModalManager";
 import { EquationManager } from "./EquationManager";
 import { InfoPlugin } from "./plugins/info";
 
-
-declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
-
-const editor = $('#summernote')
+let editor: any
 
 const elts = {
 	header: {
@@ -275,8 +272,8 @@ var EquationButton = function (context: any) {
 	var ui = ($ as any).summernote.ui;
 	// create button
 	var button = ui.button({
-		contents: '<i class="fas fa-calculator"/>',
-		tooltip: `Équation (${metaKey}+e)`,
+		contents: '<i class="fas fa-square-root-alt"></i>',
+		tooltip: `Formule (${metaKey}+e)`,
 		click: () => {
 			editor.summernote('saveRange')
 			modalManager.openModal("equationModal")
@@ -340,10 +337,11 @@ $(document).ready(initializeSummernote)
 function initializeSummernote() {
 	const wordsDictionnary = ipcRenderer.sendSync('db_getAssocList').map((element: { output: any; }) => element.output)
 	// @ts-ignore
+	editor = $('#summernote')
 	editor.summernote({
 		lang: 'fr-FR',
 		focus: true,
-    blockquoteBreakingLevel: 1,
+    blockquoteBreakingLevel: 2,
 		/**
 		 * Suggestion automatique de mots
 		 */
@@ -361,13 +359,12 @@ function initializeSummernote() {
 		 */
 		toolbar: [
 			['info', ['informations']],
-			['magic', ['style', 'specialChar']],
-			['create', ['schemaCreation']],
-			['fontsize', ['fontname', 'fontsize', 'color']],
-			['style', ['bold', 'italic', 'underline']],
+			['spacer', []],
+			['magic', ['style', 'clear']],
+			['fontsize', ['fontsize', 'backcolor', 'bold', 'italic', 'underline']],
 			['para', ['ol', 'paragraph']],
 			['font', ['superscript', 'subscript']],
-			['insert', ['media', 'equation', 'table']]
+			['insert', ['media', 'schemaCreation', 'equation', 'hr', 'table']]
 		],
 		/**
 		 * Boutons proposés lors du clic sur une image

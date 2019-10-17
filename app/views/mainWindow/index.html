@@ -279,7 +279,7 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Insérer une équation</h5>
+						<h5 class="modal-title" id="exampleModalLabel">Insérer une formule</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span>&times;</span>
 						</button>
@@ -357,11 +357,12 @@
 	<script src="../../../node_modules/popper.js/dist/umd/popper.min.js"></script>
 	<script src="../../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
 	<script src="../../../node_modules/summernote/dist/summernote-bs4.min.js"></script>
-	<script src="../../../node_modules/summernote/lang/summernote-fr-FR.js"></script>
 	<script src="../../../node_modules/mathjax/MathJax.js?config=AM_HTMLorMML-full"></script>
 	<script src="draggable.js"></script>
-	<script src="mainWindow.js"></script> <!-- Electron Script -->
-	<script src="keyShortcuts.js"></script> <!-- Electron Script -->
+	<script src="mainWindow.js"></script>
+	<script>let jQuery = $;</script>
+	<script src="../../../node_modules/summernote/lang/summernote-fr-FR.js"></script>
+	<script src="keyShortcuts.js"></script>
 	<script src="fab.js"></script>
 	<script src="osAdaptation.js"></script>
 </footer>
