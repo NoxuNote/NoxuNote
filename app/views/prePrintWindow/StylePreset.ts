@@ -68,11 +68,11 @@ export class StylePreset {
         return `
             p {
                 font-family: ${s.p.fontFamily};
-                font-size: ${s.p.fontSize};
+                font-size: ${s.p.fontSize}px;
                 text-align: ${s.p.textAlign};
-                margin-left: ${s.p.marginLeft};
-                margin-top: ${s.p.marginTop};
-                margin-right: ${s.p.marginRight};
+                margin-left: ${s.p.marginLeft}px;
+                margin-top: ${s.p.marginTop}px;
+                margin-right: ${s.p.marginRight}px;
             }
             h3 {
                 page-break-inside:avoid; page-break-after:auto;
@@ -84,7 +84,6 @@ export class StylePreset {
             }
             h2 {
                 page-break-inside:avoid; page-break-after:auto;
-                margin-top: 5px;
                 font-family: ${s.h2.fontFamily};
                 font-size: ${s.h2.fontSize}px;
                 text-align: ${s.h2.textAlign};
