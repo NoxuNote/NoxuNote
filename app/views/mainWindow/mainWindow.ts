@@ -25,7 +25,15 @@ import { ModalManager } from "./ModalManager";
 import { EquationManager } from "./EquationManager";
 import { InfoPlugin } from "./plugins/info";
 
+/***************************************************************************************************
+ *                                         INITIALISATION                                          *
+ ***************************************************************************************************/
 let editor: any = $('#summernote')
+
+// Manageur de modales
+const modalManager = new ModalManager()
+const notificationService: NotificationService = new NotificationService()
+const equationManager = new EquationManager(modalManager, editor)
 
 const elts = {
 	header: {
@@ -153,11 +161,6 @@ function setIsFileModified(b: boolean) {
  */
 let saveConfirmationModalAction: Function = function () {}
 
-// Manageur de modales
-const modalManager = new ModalManager()
-const notificationService: NotificationService = new NotificationService()
-const equationManager = new EquationManager(modalManager, editor)
-
 /***************************************************************************************************
  *                                    DÉCLARATION DES FONCTIONS                                    *
  ***************************************************************************************************/
@@ -253,8 +256,17 @@ function closeWindow() {
 	}
 }
 
+function undo() {
+	editor.summernote('undo')
+	setTimeout(()=>reattachEventListeners(), 0)
+}
+function redo() {
+	editor.summernote('redo')
+	setTimeout(()=>reattachEventListeners(), 0)
+}
+
 /***************************************************************************************************
- *										SUMMERNOTE      			               			       *
+ *										SUMMERNOTE      			               			      														 *
  ***************************************************************************************************/
 var MediaButton = function (context: any) {
 	var ui = ($ as any).summernote.ui;
@@ -332,6 +344,27 @@ var InformationButton = function (context: any) {
 	return button.render();   // return button as jquery object
 }
 
+var CustomUndoButton = function (context: any) {
+	var ui = ($ as any).summernote.ui;
+	// create button
+	var button = ui.button({
+		contents: '<i class="fas fa-undo"></i>',
+		tooltip: 'Annuler l\'action (Ctrl/Cmd + Z)',
+		click: undo
+	});
+	return button.render();   // return button as jquery object
+}
+var CustomRedoButton = function (context: any) {
+	var ui = ($ as any).summernote.ui;
+	// create button
+	var button = ui.button({
+		contents: '<i class="fas fa-redo"></i>',
+		tooltip: 'Rétablir l\'action (Ctrl/Cmd + Y)',
+		click: redo
+	});
+	return button.render();   // return button as jquery object
+}
+
 $(document).ready(initializeSummernote)
 
 function initializeSummernote() {
@@ -340,6 +373,7 @@ function initializeSummernote() {
 	editor.summernote({
 		lang: 'fr-FR',
 		focus: true,
+		shortcuts: false,
     blockquoteBreakingLevel: 2,
 		/**
 		 * Suggestion automatique de mots
@@ -358,7 +392,7 @@ function initializeSummernote() {
 		 */
 		toolbar: [
 			['info', ['informations']],
-			['spacer', []],
+			['spacer', ['customUndo', 'customRedo']],
 			['magic', ['style', 'clear']],
 			['fontsize', ['fontsize', 'backcolor', 'bold', 'italic', 'underline']],
 			['para', ['ol', 'paragraph']],
@@ -391,7 +425,9 @@ function initializeSummernote() {
 			equation: EquationButton,
 			schemaCreation: SchemaCreationButton,
 			schemaEdition: SchemaEditionButton,
-			informations: InformationButton
+			informations: InformationButton,
+			customUndo: CustomUndoButton,
+			customRedo: CustomRedoButton
 		},
 		/**
 		 * Evenements de sortie de summernote
@@ -405,12 +441,14 @@ function initializeSummernote() {
 			onChange: function (contents: any, $editable: any) {
 				setIsFileModified(true)
 			},
-			onKeydown: function (e: KeyboardEvent) {
+			onKeydown: function (event: JQuery.KeyDownEvent) {
+				// get original event instead of jQuery event
+				let e = event.originalEvent
 				/**
 				 * Lors d'un appui sur entrée, on vérifie si la ligne débute par un marqueur NoxuNote
 				 * Par exemple ##Titre doit transformer la ligne en un titre de niveau 2.
 				 */
-				if (e.keyCode === 13) {
+				if (e.code === 'Enter') {
 					const selection = window.getSelection()
 					const data = (<CharacterData>selection.getRangeAt(0).commonAncestorContainer).data // Stocke le contenu de la ligne entrée
 					if (data) {
@@ -436,6 +474,43 @@ function initializeSummernote() {
 							parent.innerText = parent.innerText.toString().replace(/^[#\s]*/g, "")
 							setCursorAfterElement(parent, e)
 						}
+					}
+				}
+				console.log(e)
+				if (e.ctrlKey || e.metaKey) {
+					if (e.code == 'KeyE') {
+						e.preventDefault()
+						editor.summernote('saveRange')
+						modalManager.openModal("equationModal")
+						equationManager.refreshHistory()
+					}
+					else if (e.code == 'KeyW') {
+						e.preventDefault()
+						undo()
+					}
+					else if (e.code == 'KeyY') {
+						e.preventDefault()
+						redo()
+					}
+					else if (e.code == 'KeyB') {
+						e.preventDefault()
+						editor.summernote('bold')
+					}
+					else if (e.code == 'KeyU') {
+						e.preventDefault()
+						editor.summernote('underline')
+					}
+					else if (e.code == 'KeyI') {
+						e.preventDefault()
+						editor.summernote('italic')
+					}
+					else if (e.code == 'KeyI') {
+						e.preventDefault()
+						editor.summernote('italic')
+					}
+					else if (e.code == 'KeyS') {
+						e.preventDefault()
+						save_as_noxunote()
 					}
 				}
 			},
@@ -623,6 +698,8 @@ notificationService.showNotification("Bienvenue dans NoxuNote", `version ${ipcRe
 /***************************************************************************************************
  *      ASSOCIATION DES ÉVÈNEMENTS DE L'IPC AUX FONCTIONS DU PROCESSUS GRAPHIQUE (AU DESSUS).      *
  ***************************************************************************************************/
+ipcRenderer.on('undo', (event: any) => undo())
+ipcRenderer.on('redo', (event: any) => redo())
 // ipcRenderer.on('setNoteTitle', (event: any, title: any) => setNoteTitle(title))
 // ipcRenderer.on('setNoteMatiere', (event: any, matiere: any) => setNoteMatiere(matiere))
 ipcRenderer.on('loadNote', (event: any, note: Note) => loadNote(note))

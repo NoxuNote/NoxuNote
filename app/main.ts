@@ -33,9 +33,6 @@ let noxuApp: NoxuNoteApp;
 
 // Handles the renderer process instanciation when app is ready, used most of the time.
 app.on('ready', () => {
-	function undo() {
-		if (noxuApp.mainDrawWindow) noxuApp.mainDrawWindow.browserWindow.webContents.send('undo')
-	}
 	// Création de la fenêtre principale
 	noxuApp = new NoxuNoteApp(DEBUG)
 
@@ -53,9 +50,6 @@ app.on('ready', () => {
         ]}, {
         label: "Editer",
         submenu: [
-            { label: "Annuler", accelerator: "CmdOrCtrl+Z", selector: "undo:", click: ()=>undo() },
-            { label: "Rétablir", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-            { type: "separator" },
             { label: "Couper", accelerator: "CmdOrCtrl+X", selector: "cut:" },
             { label: "Copier", accelerator: "CmdOrCtrl+C", selector: "copy:" },
             { label: "Coller", accelerator: "CmdOrCtrl+V", selector: "paste:" },
