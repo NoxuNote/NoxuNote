@@ -1,0 +1,68 @@
+.canvas-container {
+  background-color: #36404c;
+}
+input {
+  display: inline-block;
+  border-radius: 3px;
+  border: none;
+  padding: 3px;
+  width: 100px;
+}
+.ui {
+  position: fixed
+}
+.ui > p, .ui > .uiBlock {
+  color: #cccccc;
+  margin: 0px;
+  padding: 3px;
+  border-radius: 3px;
+  background-color: #0000006b;
+}
+.ui-topleft {
+  top: 5px;
+  left: 5px;
+}
+.ui-left {
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%)
+}
+.ui-botLeft {
+  left: 5px;
+  bottom: 5px;
+}
+.ui-right {
+  right: 0px;
+  top: 0px;
+  height: 100vh;
+  min-width: 200px;
+}
+.ui-bottom {
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5px;
+}
+.ui-message {
+  top: 58px;
+  left: 10px;
+}
+.ui-solidBlock {
+  background-color: rgba(255, 255, 255, 0.637);
+  padding: 10px;
+}
+.uiBar {
+  padding: 5px;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.637);
+}
+.uiBar-vertical > button {
+  width: 44px;
+  height: 35px;
+  display: block;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.list-group-item-selected {
+  background-color: rgb(71, 71, 255);
+  color: white;
+}
