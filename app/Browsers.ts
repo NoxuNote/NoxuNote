@@ -60,19 +60,19 @@ class MainDrawWindow implements INoxunoteWindow {
     webContents: WebContents;
     constructor(url: any) {
         this.browserWindow = new BrowserWindow({
+            width: 950,
+            height: 600,
             titleBarStyle: "default",
             center: false,
             movable: true,
             frame: true,
             transparent: false,
             backgroundColor: '#1E232A',
+            resizable: false,
             autoHideMenuBar: true,
         })
         this.browserWindow.loadURL(`file://${__dirname}/views/mainDrawWindow/draw.html`) // Loads the renderer process
-        if (url) this.browserWindow.webContents.once('dom-ready', () => {
-            this.load(url)
-            this.browserWindow.maximize()
-        });
+        if (url) this.browserWindow.webContents.once('dom-ready', () => this.load(url));
     }
 
     load(url: any) {

@@ -14,7 +14,7 @@ export {};
  */
 
 // Verbose
-const DEBUG = true
+const DEBUG = false
 
 // Importing electron library
 const { Menu, dialog, app, BrowserWindow, ipcMain  } = require('electron')
