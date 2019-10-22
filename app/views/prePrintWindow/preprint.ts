@@ -133,7 +133,7 @@ function onFormChange() {
     s.general.paddingLeft = <number>getSelectedValue('#pagePaddingLeft')
     s.general.paddingRight = <number>getSelectedValue('#pagePaddingRight')
     // h3
-    s.h3.fontFamily = <string>('#policeTitre3')
+    s.h3.fontFamily = <string>getSelectedValue('#policeTitre3')
     s.h3.fontSize = <number>getSelectedValue('#sizeTitre3')
     s.h3.textAlign = <string>getSelectedValue('#alignTitre3')
     s.h3.marginLeft = <number>getSelectedValue('#marginLeftTitre3')

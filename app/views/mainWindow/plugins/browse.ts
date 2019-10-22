@@ -270,6 +270,7 @@ export class BrowsePlugin implements NoxunotePlugin {
     input.id = "fileTitleInput"
     input.classList.add('form-control')
     input.value = meta.title
+    input.placeholder = "(Sans titre)"
     input.type = "text"
     input.addEventListener('blur', () => {
       if (input.value.trim().length > 0) {
@@ -333,7 +334,7 @@ export class BrowsePlugin implements NoxunotePlugin {
       title.appendChild(star)
     }
     
-    title.append(' ' + meta.title)
+    title.append(' ' + (meta.title.length>0 ? meta.title : '(Sans titre)'))
     // title.innerHTML = title.innerHTML + star + meta.title
     el.appendChild(title)
     let subEl = document.createElement('div')
