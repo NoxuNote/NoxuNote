@@ -16,28 +16,28 @@ export class StylePreset {
                     paddingRight: 12
                 },
                 h3: {
-                    fontFamily: 'Arial',
-                    fontSize: 12,
+                    fontFamily: 'sans-serif',
+                    fontSize: 16,
                     textAlign: 'left',
-                    marginLeft: 0,
-                    marginTop: 0
+                    marginLeft: 10,
+                    marginTop: 13
                 },
                 h2: {
                     fontFamily: 'FlatLight',
-                    fontSize: 15,
+                    fontSize: 28,
                     textAlign: 'left',
-                    marginLeft: 0,
-                    marginTop: 0
+                    marginLeft: 10,
+                    marginTop: 20
                 },
                 h1: {
                     fontFamily: 'FlatLight',
-                    fontSize: 32,
+                    fontSize: 40,
                     textAlign: 'center',
                     marginLeft: 0,
                     marginTop: 5
                 },
                 p: {
-                    fontFamily: 'Arial',
+                    fontFamily: 'sans-serif',
                     fontSize: 11,
                     textAlign: 'left',
                     marginLeft: 0,
@@ -66,30 +66,37 @@ export class StylePreset {
     generateCss(): string {
         let s = this.preset.jcss
         return `
+            p {
+                font-family: ${s.p.fontFamily};
+                font-size: ${s.p.fontSize}px;
+                text-align: ${s.p.textAlign};
+                margin-left: ${s.p.marginLeft}px;
+                margin-top: ${s.p.marginTop}px;
+                margin-right: ${s.p.marginRight}px;
+            }
             h3 {
                 page-break-inside:avoid; page-break-after:auto;
                 font-family: ${s.h3.fontFamily};
                 font-size: ${s.h3.fontSize}px;
                 text-align: ${s.h3.textAlign};
-                margin-left: ${s.h3.marginLeft}mm;
-                margin-top: ${s.h3.marginTop}mm;
+                margin-left: ${s.h3.marginLeft}px;
+                margin-top: ${s.h3.marginTop}px;
             }
             h2 {
                 page-break-inside:avoid; page-break-after:auto;
-                margin-top: 5mm;
                 font-family: ${s.h2.fontFamily};
                 font-size: ${s.h2.fontSize}px;
                 text-align: ${s.h2.textAlign};
-                margin-left: ${s.h2.marginLeft}mm;
-                margin-top: ${s.h2.marginTop}mm;
+                margin-left: ${s.h2.marginLeft}px;
+                margin-top: ${s.h2.marginTop}px;
             }
             h1 {
                 page-break-inside:avoid; page-break-after:auto;
                 font-family: ${s.h1.fontFamily};
                 font-size: ${s.h1.fontSize}px;
                 text-align: ${s.h1.textAlign};
-                margin-left: ${s.h1.marginLeft}mm;
-                margin-top: ${s.h1.marginTop}mm;
+                margin-left: ${s.h1.marginLeft}px;
+                margin-top: ${s.h1.marginTop}px;
             }
             table {
                 width: auto;
@@ -98,9 +105,9 @@ export class StylePreset {
                 border: ${s.table.borderLength}px solid black;
                 backgroundColor: ${s.table.backgroundColor};
                 color: ${s.table.color};
-                margin-left: ${s.table.marginLeft}mm;
-                margin-top: ${s.table.marginTop}mm;
-                margin-bottom: ${s.table.marginBottom}mm;
+                margin-left: ${s.table.marginLeft}px;
+                margin-top: ${s.table.marginTop}px;
+                margin-bottom: ${s.table.marginBottom}px;
             }
             td, tr {
                 font-family: ${s.table.fontFamily};
@@ -147,15 +154,6 @@ export class StylePreset {
                 page-break-inside:avoid; page-break-after:auto;
                 border: 2px solid #121212;
                 padding: 1px;
-            }
-            .flat_text {
-                display: block;
-                margin-left: ${s.p.marginLeft}mm;
-                margin-right: ${s.p.marginRight}mm;
-                margin-top: ${s.p.marginTop}mm;
-                font-size: ${s.p.fontSize}px;
-                font-family: ${s.p.fontFamily};
-                text-align: ${s.p.textAlign};
             }
             xmp {
                 page-break-inside:avoid; page-break-after:auto;

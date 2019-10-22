@@ -25,10 +25,15 @@ import { ModalManager } from "./ModalManager";
 import { EquationManager } from "./EquationManager";
 import { InfoPlugin } from "./plugins/info";
 
+/***************************************************************************************************
+ *                                         INITIALISATION                                          *
+ ***************************************************************************************************/
+let editor: any = $('#summernote')
 
-declare var HTML5TooltipUIComponent: any; // html5tooltips has no type.d.ts file
-
-const editor = $('#summernote')
+// Manageur de modales
+const modalManager = new ModalManager()
+const notificationService: NotificationService = new NotificationService()
+const equationManager = new EquationManager(modalManager, editor)
 
 const elts = {
 	header: {
@@ -115,7 +120,7 @@ function setLoadedNote(note: Note): void {
 	loadedNote = note; // Mise à jour de la var locale.
 	// Mise à jour de l'affichage
 	if (note) {
-		elts.header.titrePrincipal.innerText = note.meta.title
+		elts.header.titrePrincipal.innerText = note.meta.title.length ? note.meta.title : '(Sans titre)'
 		// Si une matière est précisée
 		let mat: Matiere = browser.matieres.find(m=>m.id==note.meta.matiere)
 		if (mat) {
@@ -156,11 +161,6 @@ function setIsFileModified(b: boolean) {
  */
 let saveConfirmationModalAction: Function = function () {}
 
-// Manageur de modales
-const modalManager = new ModalManager()
-const notificationService: NotificationService = new NotificationService()
-const equationManager = new EquationManager(modalManager, editor)
-
 /***************************************************************************************************
  *                                    DÉCLARATION DES FONCTIONS                                    *
  ***************************************************************************************************/
@@ -195,7 +195,7 @@ function save_as_noxunote() {
 	} else {
 		console.debug("Sauvegarde d'une nouvelle note", editor.summernote('code'))
 		// On définit la note actuellement editée
-		setLoadedNote(ipc.sendSync('db_notes_saveNewNote', '(Sans titre)', editor.summernote('code').toString()))
+		setLoadedNote(ipc.sendSync('db_notes_saveNewNote', '', editor.summernote('code').toString()))
 		// On affiche la note sauvegardée dans la liste des notes.
 		
 	}
@@ -256,8 +256,17 @@ function closeWindow() {
 	}
 }
 
+function undo() {
+	editor.summernote('undo')
+	setTimeout(()=>reattachEventListeners(), 0)
+}
+function redo() {
+	editor.summernote('redo')
+	setTimeout(()=>reattachEventListeners(), 0)
+}
+
 /***************************************************************************************************
- *										SUMMERNOTE      			               			       *
+ *										SUMMERNOTE      			               			      														 *
  ***************************************************************************************************/
 var MediaButton = function (context: any) {
 	var ui = ($ as any).summernote.ui;
@@ -275,8 +284,8 @@ var EquationButton = function (context: any) {
 	var ui = ($ as any).summernote.ui;
 	// create button
 	var button = ui.button({
-		contents: '<i class="fas fa-calculator"/>',
-		tooltip: `Équation (${metaKey}+e)`,
+		contents: '<i class="fas fa-square-root-alt"></i>',
+		tooltip: `Formule (${metaKey}+e)`,
 		click: () => {
 			editor.summernote('saveRange')
 			modalManager.openModal("equationModal")
@@ -335,6 +344,27 @@ var InformationButton = function (context: any) {
 	return button.render();   // return button as jquery object
 }
 
+var CustomUndoButton = function (context: any) {
+	var ui = ($ as any).summernote.ui;
+	// create button
+	var button = ui.button({
+		contents: '<i class="fas fa-undo"></i>',
+		tooltip: 'Annuler l\'action (Ctrl/Cmd + Z)',
+		click: undo
+	});
+	return button.render();   // return button as jquery object
+}
+var CustomRedoButton = function (context: any) {
+	var ui = ($ as any).summernote.ui;
+	// create button
+	var button = ui.button({
+		contents: '<i class="fas fa-redo"></i>',
+		tooltip: 'Rétablir l\'action (Ctrl/Cmd + Y)',
+		click: redo
+	});
+	return button.render();   // return button as jquery object
+}
+
 $(document).ready(initializeSummernote)
 
 function initializeSummernote() {
@@ -343,7 +373,8 @@ function initializeSummernote() {
 	editor.summernote({
 		lang: 'fr-FR',
 		focus: true,
-    blockquoteBreakingLevel: 1,
+		shortcuts: false,
+    blockquoteBreakingLevel: 2,
 		/**
 		 * Suggestion automatique de mots
 		 */
@@ -361,13 +392,12 @@ function initializeSummernote() {
 		 */
 		toolbar: [
 			['info', ['informations']],
-			['magic', ['style', 'specialChar']],
-			['create', ['schemaCreation']],
-			['fontsize', ['fontname', 'fontsize', 'color']],
-			['style', ['bold', 'italic', 'underline']],
+			['spacer', ['customUndo', 'customRedo']],
+			['magic', ['style', 'clear']],
+			['fontsize', ['fontsize', 'backcolor', 'bold', 'italic', 'underline']],
 			['para', ['ol', 'paragraph']],
 			['font', ['superscript', 'subscript']],
-			['insert', ['media', 'equation', 'table']]
+			['insert', ['media', 'schemaCreation', 'equation', 'hr', 'table']]
 		],
 		/**
 		 * Boutons proposés lors du clic sur une image
@@ -395,7 +425,9 @@ function initializeSummernote() {
 			equation: EquationButton,
 			schemaCreation: SchemaCreationButton,
 			schemaEdition: SchemaEditionButton,
-			informations: InformationButton
+			informations: InformationButton,
+			customUndo: CustomUndoButton,
+			customRedo: CustomRedoButton
 		},
 		/**
 		 * Evenements de sortie de summernote
@@ -409,12 +441,14 @@ function initializeSummernote() {
 			onChange: function (contents: any, $editable: any) {
 				setIsFileModified(true)
 			},
-			onKeydown: function (e: KeyboardEvent) {
+			onKeydown: function (event: JQuery.KeyDownEvent) {
+				// get original event instead of jQuery event
+				let e = event.originalEvent
 				/**
 				 * Lors d'un appui sur entrée, on vérifie si la ligne débute par un marqueur NoxuNote
 				 * Par exemple ##Titre doit transformer la ligne en un titre de niveau 2.
 				 */
-				if (e.keyCode === 13) {
+				if (e.code === 'Enter') {
 					const selection = window.getSelection()
 					const data = (<CharacterData>selection.getRangeAt(0).commonAncestorContainer).data // Stocke le contenu de la ligne entrée
 					if (data) {
@@ -440,6 +474,42 @@ function initializeSummernote() {
 							parent.innerText = parent.innerText.toString().replace(/^[#\s]*/g, "")
 							setCursorAfterElement(parent, e)
 						}
+					}
+				}
+				if (e.ctrlKey || e.metaKey) {
+					if (e.code == 'KeyE') {
+						e.preventDefault()
+						editor.summernote('saveRange')
+						modalManager.openModal("equationModal")
+						equationManager.refreshHistory()
+					}
+					else if (e.code == 'KeyW') {
+						e.preventDefault()
+						undo()
+					}
+					else if (e.code == 'KeyY') {
+						e.preventDefault()
+						redo()
+					}
+					else if (e.code == 'KeyB') {
+						e.preventDefault()
+						editor.summernote('bold')
+					}
+					else if (e.code == 'KeyU') {
+						e.preventDefault()
+						editor.summernote('underline')
+					}
+					else if (e.code == 'KeyI') {
+						e.preventDefault()
+						editor.summernote('italic')
+					}
+					else if (e.code == 'KeyI') {
+						e.preventDefault()
+						editor.summernote('italic')
+					}
+					else if (e.code == 'KeyS') {
+						e.preventDefault()
+						save_as_noxunote()
 					}
 				}
 			},
@@ -627,6 +697,8 @@ notificationService.showNotification("Bienvenue dans NoxuNote", `version ${ipcRe
 /***************************************************************************************************
  *      ASSOCIATION DES ÉVÈNEMENTS DE L'IPC AUX FONCTIONS DU PROCESSUS GRAPHIQUE (AU DESSUS).      *
  ***************************************************************************************************/
+ipcRenderer.on('undo', (event: any) => undo())
+ipcRenderer.on('redo', (event: any) => redo())
 // ipcRenderer.on('setNoteTitle', (event: any, title: any) => setNoteTitle(title))
 // ipcRenderer.on('setNoteMatiere', (event: any, matiere: any) => setNoteMatiere(matiere))
 ipcRenderer.on('loadNote', (event: any, note: Note) => loadNote(note))

@@ -217,97 +217,48 @@ button#headerButton:hover {
 	transition: background-color 0.1s ease;
 	color: white;
 }
-button#edit {
-	border: none;
-	width: 100px;
-	height: 25px;
-	background-color: #5AC258;
-	color: white;
-	font-size: 0.5em;
-	border-radius: 10px;
-	width: 60px;
-	float: right;
-	z-index: 5;
-	margin-left: 5px;
-}
-button#delete {
-	border: none;
-	width: 100px;
-	height: 25px;
-	background-color: #FB5B6B;
-	color: white;
-	font-size: 0.5em;
-	border-radius: 10px;
-	width: 70px;
-	z-index: 5;
-	float: right;
-}
-button#edit:hover {
-	background-color: #449344;
-	z-index: 5;
-}
-button#delete:hover {
-	background-color: #D65160;
-	z-index: 5;
-}
-.line {
-	color: rgb(209, 209, 209);
-	cursor: text;
-	-webkit-transition: color 0.2s;
-}
-.line:hover {
-	color: #FFFFFF;
-	-webkit-transition: color 0.2s;
-}
-span#important {
-	background-color: #C95705;
-	border-radius: 3px;
-	color: #FFFFFF;
-	padding: 5px;
-	display: inline-block;
-	margin-top: 3px;
-}
-span#success {
-	background-color: #03e08e;
-	border-radius: 3px;
-	color: #FFFFFF;
-	padding: 5px;
-	display: inline-block;
-	margin-top: 3px;
-}
-span#error {
-	background-color: #dc3545;
-	border-radius: 3px;
-	color: #FFFFFF;
-	padding: 5px;
-	display: inline-block;
-	margin-top: 3px;
-}
-span#optionnal {
-	display: block;
-	text-align: right;
-	font-size: 0.8em;
-	color: #9FA2A1;
-}
-h3 {
-	margin-top: 25px;
+.note-editable >h6 {
+	margin-top: 15px;
 	margin-bottom: 5px;
+	margin-left: 10px;
+	font-size: 1.1em;
 }
-h2 {
+.note-editable >h5 {
+	margin-top: 15px;
+	margin-bottom: 5px;
+	margin-left: 10px;
+	font-size: 1.1em;
+}
+.note-editable >h4 {
+	margin-top: 15px;
+	margin-left: 10px;
+	margin-bottom: 5px;
+	font-size: 1.1em;
+}
+.note-editable >h3 {
+	margin-top: 25px;
+	margin-left: 10px;
+	margin-bottom: 5px;
+	font-size: 18px;
+}
+.note-editable > h2 {
 	margin-left: auto;
 	font-family: FlatLight;
+	margin-top: 1.5em;
+	margin-left: 10px;
+	font-size: 30px;
 }
-h1 {
+.note-editable > h1 {
 	text-align: center;
+	font-family: FlatLight;
+	margin-bottom: 1em;
+	padding-top: 10px;
+	font-size: 40px;
 }
-em {
-	color: #16150B;
-    background-color: rgba(229, 234, 65, 0.89);
-    padding: 0.1em;
-    font-style: normal;
-}
-.flat_text {
-	margin-left: 1%;
+.note-editable > p {
+	width: 100%;
+	line-height: 1.3em;
+	margin-bottom: 0.6em;
 }
 /***************************************************************************************************
  *                                         MENUS LATÃ‰RAUX                                          *
@@ -456,6 +407,7 @@ input#calc, input#calcDerivative{
 	font-size: 1.1em;
 	margin-left: 5px;
 	float: left;
+	color: black;
 }
 .calcText {
 	float: left;
@@ -630,7 +582,7 @@ div.pastille {
 }
 
 /*
- * â”€â”€â”€ BROWSE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * BROWSE
  */
 	
 @media screen and (max-width: 991px) {
