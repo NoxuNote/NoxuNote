@@ -102,7 +102,7 @@ class MainOutputWindow implements INoxunoteWindow {
     }
 }
 
-class SettingsWindow implements INoxunoteWindow, ISettingsWindow {
+class SettingsWindow implements ISettingsWindow {
     allowClose: boolean;
     browserWindow: BrowserWindow;
     constructor() {
