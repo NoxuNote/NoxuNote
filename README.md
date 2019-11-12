@@ -90,7 +90,7 @@ Pour comprendre l'architecture des classes, vous pouvez utiliser ce document, pa
 ### Compter les Listeners dans la page
 - Vous pouvez vérifier que la page ne se surcharge pas en EventListeners au fil du temps en utilisant recopiant le code suivant dans la console de déboguage, il vous retournera un objet décrivant le nombre de listeners de chaque type dans votre document.
 
-`
+```javascript
   Array.from(document.querySelectorAll('*'))
   .reduce(function(pre, dom){
     var evtObj = getEventListeners(dom)
@@ -115,4 +115,4 @@ Pour comprendre l'architecture des classes, vous pouvez utiliser ce document, pa
     error: 1
   }
   /*
-`
+```
