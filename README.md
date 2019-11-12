@@ -24,7 +24,6 @@ NoxuNote est une application de note pour étudiants et professionnels fonctionn
 - Export en PDF avec beaucoup d'options de personnalisation
 - Économiser de la batterie en diminuant les pixels blancs à l'écran
 
-
 ## Installation
 
 Rendez vous sur le site, [noxunote.fr](https://www.noxunote.fr) pour télécharger l'installeur du projet.
@@ -36,12 +35,13 @@ Rendez vous sur le site, [noxunote.fr](https://www.noxunote.fr) pour télécharg
 2) Clonez le projet : `git clone https://github.com/leorolland/NoxuNote`
 3) Naviguez dans le dossier crée : `cd NoxuNote`
 4) Ouvrez un terminal, et installez TypeScript : `npm i -g typescript` 
-5) Installez les dépendances du projet : `npm install`
-6) Compilez et lancez NoxuNote `npm start`
+5) Installez les dépendances du projet : `npm install` ou `npm i` (alias)
+6) Compilez et lancez NoxuNote : `npm start` ou `npm run start` (alias)
 
 ## Contribuer
 Description de la structure des fichiers : (Les éléments importants sont mis en gras)
 
+### Architecture de fichiers
 - **/app** - La source de l'application
   - components - Quelques composants dynamiques individuels
     - ConfirmationPrompt.ts - Pop-up de confirmation
@@ -74,3 +74,45 @@ Description de la structure des fichiers : (Les éléments importants sont mis e
   - main.ts - Point de départ et point central de l'IPC (IPCMain)
   - parser.ts - Gère les anciennes versions de NoxuNote pour la conversion
   - types.ts - Définit les types
+
+## Architecture des classes
+Pour comprendre l'architecture des classes, vous pouvez utiliser ce document, partant du point d'entrée de l'application "main.ts"
+[<img src="./doc/arch.png">](./doc/arch.png)
+
+## Tests
+
+### Tests unitaires
+- Aucun test unitaire n'est implémenté actuellement. C'est à prévoir dans les prochaines versions.
+
+### Assertions
+- Essayez d'utiliser la librairie **assert** de NodeJS pour vérifier que les paramètres d'entrée de vos fonctions sont corrects, et ainsi éviter des bugs (element undefined, element null ..).
+
+### Compter les Listeners dans la page
+- Vous pouvez vérifier que la page ne se surcharge pas en EventListeners au fil du temps en utilisant recopiant le code suivant dans la console de déboguage, il vous retournera un objet décrivant le nombre de listeners de chaque type dans votre document.
+
+`
+  Array.from(document.querySelectorAll('*'))
+  .reduce(function(pre, dom){
+    var evtObj = getEventListeners(dom)
+    Object.keys(evtObj).forEach(function (evt) {
+      if (typeof pre[evt] === 'undefined') {
+        pre[evt] = 0
+      }
+      pre[evt] += evtObj[evt].length
+    })
+    return pre
+  }, {})
+
+  /* output :
+  {
+    blur: 9
+    change: 2
+    click: 163
+    dragenter: 1
+    dragleave: 1
+    dragover: 1
+    drop: 1
+    error: 1
+  }
+  /*
+`
