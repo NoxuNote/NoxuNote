@@ -76,11 +76,13 @@
             </div>
             <div v-if="ui.controlBars.text" class="uiBar">
                 <button class="btn btn-secondary" onclick="shapeInserter.insert('text')">
-                    <i class="fas fa-font"></i>
+                    <i class="fas fa-font"></i> Ligne de texte
                 </button>
             </div>
             <div v-if="ui.controlBars.chart" class="uiBar">
-                <h4>Bientôt disponible</h4>
+                <button class="btn btn-secondary" data-toggle="modal" data-target="#plotModal">
+                    <i class="fas fa-chart-line"></i> Fonction
+                </button>
             </div>
         </div>
         <div class="ui ui-botLeft">
@@ -157,6 +159,57 @@
                 </div>
             </div>
         </div>
+
+         <!-- Modale d'insertion de formule -->
+        <div class="modal fade" id="plotModal" tabindex="-1" role="dialog" aria-labelledby="plotModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Formule</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">f(x) = </span>
+                        </div>
+                        <input type="text" class="form-control" v-model="plot.expression">
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                xMin : <input type="number" class="form-control-number" v-model="plot.xMin">
+                            </div>
+                            <div class="col-sm">
+                                xMax : <input type="number" class="form-control-number" v-model="plot.xMax">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm">
+                                yMin : <input type="number" class="form-control-number" v-model="plot.yMin">
+                            </div>
+                            <div class="col-sm">
+                                yMax : <input type="number" class="form-control-number" v-model="plot.yMax">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label" for="plotRepere">
+                            Repères
+                        </label>
+                        <input class="form-check-input" type="checkbox" v-model="plot.repere" id="plotRepere">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="shapeInserter.insert('text')"><i class="fas fa-chart-line"></i> Insérer</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </body>
 <footer>

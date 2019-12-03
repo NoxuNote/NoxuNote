@@ -43,6 +43,14 @@ let app = new Vue({
       snapToGrid: true,
       showGrid: true,
       gridSize: 50
+    },
+    plot: {
+      expression: "x^2",
+      xMin: -2,
+      xMax: 2,
+      yMin: -2,
+      yMax: 2,
+      repere: true
     }
   },
   methods: {
