@@ -91,7 +91,7 @@
     "@types/fs-extra": "^8.0.0",
     "@types/jquery": "^3.3.30",
     "@types/mathjax": "0.0.35",
-    "@types/node": "^12.0.10",
+    "@types/node": "^13.13.5",
     "@types/summernote": "^0.8.0",
     "copyfiles": "^2.1.0",
     "electron": "^4.0.0",
