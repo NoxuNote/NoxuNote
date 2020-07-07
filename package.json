@@ -94,7 +94,7 @@
     "@types/node": "^12.0.10",
     "@types/summernote": "^0.8.0",
     "copyfiles": "^2.1.0",
-    "electron": "^4.0.0",
+    "electron": "^9.1.0",
     "tsc-watch": "^4.0.0",
     "typescript": "^3.7.2"
   }
