@@ -10,6 +10,9 @@
 
 NoxuNote est une application de note pour étudiants et professionnels fonctionnant sur Windows, Mac, et Linux. Elle intègre les fonctionnalités de base d'un traiteur de texte, en proposant des outils innovants pour faire exploser votre productivité.
 
+**NON MAINTENU DEPUIS Janvier 2020**
+Une nouvelle version majeure de NoxuNote (NoxuNote 2 ou encore NoxuNoteNG) est au centre des préoccupations depuis 2020. Consultez le dépot "NoxuNoteNG".
+
 ## Fonctionnalités
 
 - Noter ses cours plus vite en devinant les mots compliqués
