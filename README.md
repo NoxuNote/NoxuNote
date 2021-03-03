@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://noxunote.fr/prototype/assets/img/logo_256.png" width="100"><br><br>
+  <img src="https://noxunote.fr/assets/img/logo_256.png" width="100"><br><br>
   <img src="https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Version&query=version&url=https%3A%2F%2Fraw.githubusercontent.com%2Fleorolland%2FNoxuNote%2Fmaster%2Fpackage.json">
   <img src="https://img.shields.io/badge/dynamic/json?color=blue&label=Licence&query=license&url=https%3A%2F%2Fraw.githubusercontent.com%2Fleorolland%2FNoxuNote%2Fmaster%2Fpackage.json">
   <img src="https://img.shields.io/badge/dynamic/json?color=blueviolet&label=Utilisateurs%20cette%20semaine&query=stats.byPeriod.lastWeek&url=http%3A%2F%2Fnoxunote.fr%3A35200">
